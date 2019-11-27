@@ -1,0 +1,32 @@
+.label {
+	-fx-wrap-text: true;
+	-fx-background-radius:40 40 40 40 ;
+}
+
+
+#addMyMessage {
+    -fx-background-color:khaki;
+    -fx-background-radius:40 200 40 40;
+    -fx-padding:0 15 0 8 ;
+}
+
+#addTalkerMessage {
+    -fx-background-color:mediumaquamarine;
+    -fx-background-radius:40 40 40 200 ;
+    -fx-padding:0 8 0 15 ;
+}
+
+#addSystemMessage {
+    -fx-background-color:thistle;
+    -fx-padding:0 8 0 8 ;
+}
+
+
+#buttom-send {
+	-fx-background-color: linear-gradient(#61a2b1, #2A5058);
+}
+
+#buttom-send:hover {
+	-fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+

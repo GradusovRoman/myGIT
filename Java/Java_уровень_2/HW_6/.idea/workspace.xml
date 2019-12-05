@@ -12,6 +12,7 @@
       <list>
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -27,6 +28,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Xokyopo/HW_6/EchoServer" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\GIT\Java\Java_уровень_2\HW_6\src\Xokyopo\HW_6\EchoServer" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.MyClient">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
@@ -39,7 +46,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MyClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="MyClient" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Xokyopo.HW_6.Client.MyClient" />
       <module name="HW_6" />
       <extension name="coverage">
@@ -65,6 +72,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.MyClient" />
+      <item itemvalue="Application.MyServer" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MyClient" />
@@ -97,31 +109,48 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state x="734" y="249" key="#com.intellij.ide.util.MemberChooser" timestamp="1575452775131">
+    <state x="383" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575482474205">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state x="734" y="249" key="#com.intellij.ide.util.MemberChooser/0.0.1858.1080@0.0.1858.1080" timestamp="1575452775131" />
-    <state x="659" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1575451289135">
+    <state x="383" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1858.1080@0.0.1858.1080" timestamp="1575482474205" />
+    <state x="734" y="249" key="#com.intellij.ide.util.MemberChooser" timestamp="1575564994752">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state x="659" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1858.1080@0.0.1858.1080" timestamp="1575451289135" />
-    <state width="1815" height="364" key="GridCell.Tab.0.bottom" timestamp="1575459749481">
+    <state x="734" y="249" key="#com.intellij.ide.util.MemberChooser/0.0.1858.1080@0.0.1858.1080" timestamp="1575564994752" />
+    <state x="659" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1575479946954">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="1815" height="364" key="GridCell.Tab.0.bottom/0.0.1858.1080@0.0.1858.1080" timestamp="1575459749481" />
-    <state width="1815" height="364" key="GridCell.Tab.0.center" timestamp="1575459749481">
+    <state x="659" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1858.1080@0.0.1858.1080" timestamp="1575479946954" />
+    <state width="1815" height="287" key="GridCell.Tab.0.bottom" timestamp="1575571564760">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="1815" height="364" key="GridCell.Tab.0.center/0.0.1858.1080@0.0.1858.1080" timestamp="1575459749481" />
-    <state width="1815" height="364" key="GridCell.Tab.0.left" timestamp="1575459749481">
+    <state width="1815" height="287" key="GridCell.Tab.0.bottom/0.0.1858.1080@0.0.1858.1080" timestamp="1575571564760" />
+    <state width="1815" height="287" key="GridCell.Tab.0.center" timestamp="1575571564760">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="1815" height="364" key="GridCell.Tab.0.left/0.0.1858.1080@0.0.1858.1080" timestamp="1575459749481" />
-    <state width="1815" height="364" key="GridCell.Tab.0.right" timestamp="1575459749481">
+    <state width="1815" height="287" key="GridCell.Tab.0.center/0.0.1858.1080@0.0.1858.1080" timestamp="1575571564760" />
+    <state width="1815" height="287" key="GridCell.Tab.0.left" timestamp="1575571564760">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="1815" height="364" key="GridCell.Tab.0.right/0.0.1858.1080@0.0.1858.1080" timestamp="1575459749481" />
+    <state width="1815" height="287" key="GridCell.Tab.0.left/0.0.1858.1080@0.0.1858.1080" timestamp="1575571564760" />
+    <state width="1815" height="287" key="GridCell.Tab.0.right" timestamp="1575571564760">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="287" key="GridCell.Tab.0.right/0.0.1858.1080@0.0.1858.1080" timestamp="1575571564760" />
     <state width="1815" height="364" key="GridCell.Tab.1.bottom" timestamp="1575459749482">
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
@@ -138,5 +167,9 @@
       <screen x="0" y="0" width="1858" height="1080" />
     </state>
     <state width="1815" height="364" key="GridCell.Tab.1.right/0.0.1858.1080@0.0.1858.1080" timestamp="1575459749482" />
+    <state x="592" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1575570245289">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="592" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1858.1080@0.0.1858.1080" timestamp="1575570245289" />
   </component>
 </project>

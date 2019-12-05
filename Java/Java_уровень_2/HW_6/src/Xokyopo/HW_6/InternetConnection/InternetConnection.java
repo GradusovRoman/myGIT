@@ -1,114 +1,82 @@
 package Xokyopo.HW_6.InternetConnection;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 
-public class InternetConnection implements InputOtput {
+public class InternetConnection {
     private InputOtput parent;
-    private boolean isConnection = false;
-    private DataInputStream dataInputStream;
-    private DataOutputStream dataOutputStream;
-    private Socket socket;
-    private String exitText = "\\exit";
+    private Vector<NewConnect> newConnectList = new Vector<>();
 
     public InternetConnection(InputOtput _parent) {
         this.parent = _parent;
     }
 
     public void startAsServer(int _port) throws IOException {
-        //TODO многопоток ???
         ServerSocket serverSocket = new ServerSocket(_port);
-        this.isConnection = true;
-        System.out.println("Сервер запущен запущен");
-        this.printSystemInfo();
-        //TODO это вывести в многопоток нужно, но требуется контроль открытых соединений.
-        this.socket = serverSocket.accept();
-        this.initializeInputOutputStream(socket);
-        this.waitInput();
+        System.out.println(this.getSystemInfo());
 
-    }
-
-    public void startAsClient(String _host, int _port) throws IOException {
-        this.socket = new Socket(_host, _port);
-        this.initializeInputOutputStream(this.socket);
-        this.isConnection = true;
-        System.out.println("Клиент запущен");
-        this.waitInput();
-        this.printSystemInfo();
-    }
-
-    private void initializeInputOutputStream(Socket _socket) throws IOException {
-        this.dataInputStream = new DataInputStream(socket.getInputStream());
-        this.dataOutputStream = new DataOutputStream(socket.getOutputStream());
-    }
-
-    @Override
-    public void input(String _string) {
-        //TODO метод записывает данные в поток (а как в многопотоке???)
-        if (this.isConnection) {
-            try {
-                this.dataOutputStream.writeUTF(_string);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("this.isConnection = " + this.isConnection);
-        }
-    }
-
-    @Override
-    public void output(String _string) {
-        //метод передает данные родителю на дальнейшую обработку.
-        this.parent.input(_string);
-    }
-
-    private void waitInput() {
-        //создаем отдельный поток для входящего соединения.
-        new Thread(new Runnable(){
+        final InternetConnection internetConnection = this;
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    readInputSream();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while (true) {
+                    try {
+                        NewConnect newConnect = new NewConnect(serverSocket.accept(), internetConnection);
+                        newConnect.sendMessage(getSystemInfo());
+                        subscribe(newConnect);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
     }
 
-    private void readInputSream() throws IOException {
-        String msg = "";
-        try {
-            while (!msg.contains(this.exitText)) {
-                msg = this.dataInputStream.readUTF();
-                this.output(msg);
+    public void startAsClient(String _host, int _port) throws IOException {
+        this.subscribe(new NewConnect(new Socket(_host, _port), this));
+    }
+
+
+    protected void broadcastMsg(String _string) {
+        parent.input(_string);
+    }
+
+    public void sendMessageALL(String _string) {
+        while (this.newConnectList.iterator().hasNext()) {
+            NewConnect newConnection = this.newConnectList.iterator().next();
+
+            if (newConnection.isConnection() && !_string.contains(SystemCommand.EXIT.getText())) {
+                newConnection.sendMessage(_string);
+            } else {
+                newConnection.disconnection();
+                this.unsubscribe(newConnection);
             }
-        } catch (IOException e) {
-            closeConnection();
-            e.printStackTrace();
-        }finally {
-            this.input(msg);
-            closeConnection();
         }
     }
 
-    private void closeConnection() throws IOException {
-        System.out.println("закрываем сокет");
-        this.dataOutputStream.close();
-        this.dataInputStream.close();
-        this.socket.close();
-        this.isConnection = false;
+    public void subscribe(NewConnect _newConnect) {
+        this.newConnectList.add(_newConnect);
     }
 
-    public boolean isConnection() {
-        //Установлено ли соединение.
-        return this.isConnection;
+    public void unsubscribe(NewConnect _newConnect) {
+        this.newConnectList.remove(_newConnect);
     }
 
-    private void printSystemInfo() {
-        System.out.println("\t\t*Информация*\nДля выхода наберите \t" + exitText);
+    private String getSystemInfo() {
+        String msg = String.format("\t\t*Системная информация*\n %s \n %s", SystemCommand.EXIT.getInfo(), SystemCommand.PRIVATE.getInfo());
+        return msg;
     }
+
+    public boolean isConnected() {
+        return this.newConnectList.size() > 0 ;
+    }
+
+    public void disconnect() {
+        for (NewConnect newConnect: this.newConnectList) {
+            newConnect.disconnection();
+        }
+    }
+
 }

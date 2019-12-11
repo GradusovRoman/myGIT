@@ -1,22 +1,17 @@
 package Xokyopo.HW_7.Server;
 
-import Xokyopo.HW_7.Template.Client;
+import Xokyopo.HW_7.MessageParser.MessageParser;
 import Xokyopo.HW_7.Template.InputMessage;
-import Xokyopo.HW_7.Template.InternetConnection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
 
-//TODO обрыв соединения
-//TODO клиент отключился от сети (как обрабатывать будем?)
 public class Server implements InputMessage {
     private final int port = 8183;
-    private String PrivateSplitText = "\\P";
-    //private Map<String, InternetConnection> clientLIst = Collections.synchronizedMap(new HashMap<>());
-    private Vector<Client> clientLIst = new Vector<>();
-    //TODO создание соединения.
-    //TODO Управление клиентами
+    public static final MessageParser messageParser = new MessageParser();
+    private Vector<ServerInternetConnection> clientsLIst = new Vector<>();
+
 
     public static void main(String[] args) {
         Server server = new Server();
@@ -37,96 +32,115 @@ public class Server implements InputMessage {
         }
     }
 
-    public void subscribe(String _name, InternetConnection _client) {
+    public void subscribe(ServerInternetConnection _client) {
         //добавить клиента
-        System.out.println("подключен " + _name);
-        this.clientLIst.add(new Client(_name, _client));
-        this.serverUpdateClientList(_name, true);
+        if (_client != null) {
+            this.clientsLIst.add(_client);
+            this.serverUpdateClientList(_client.getClientName(), true);
+        }
     }
 
-    private void unsubscribe(String _name) {
+    private void unsubscribe(ServerInternetConnection _client) {
         //удаляем клиента
-        System.out.println("отключен " + _name);
-        Client client = this.getClientByName(_name);
-        disconnect(client.getInternetConnection());
-        this.clientLIst.remove(client);
-        this.serverUpdateClientList(_name, false);
+        if (_client != null) {
+            this.clientsLIst.remove(_client);
+            disconnect(_client);
+            this.serverUpdateClientList(_client.getClientName(), false);
+        }
     }
 
-    private void disconnect(InternetConnection _internetConnection) {
+    private void disconnect(ServerInternetConnection _client) {
         //Удаление клиента
-        _internetConnection.disconnection();
+        _client.disconnection();
     }
 
     @Override
     public void inputMessage(String _msg) {
-        Message message = new Message(_msg);
-        if (_msg.contains("\\quit\\")) {
-            this.sendPrivateMessage("Сервер" , message.getAuthorName(), message.getMessage());
-            this.unsubscribe(message.getAuthorName());
-        } else if (_msg.contains(":\\P ")) {
-            this.sendPrivateMessage(message.getAuthorName(), message.getPrivateTarget(), message.getMessage());
-        } else {
-            this.sendMessage( message.getAuthorName(), message.getMessage());
+        Map<MessageParser.Tag, String> message = messageParser.parseStringByTags(_msg);
+
+        if (message.get(MessageParser.Tag.SERVERCOMANDTAG) != null) {
+            //TODO секция для команд серверу (все которые не определены пока что)
+            if (message.get(MessageParser.Tag.SERVERCOMANDTAG).contains("\\quit\\")){
+                this.sendMessagePrivate(message.get(MessageParser.Tag.ID), message.get(MessageParser.Tag.SERVERCOMANDTAG));
+                this.unsubscribe(this.getClientByName(message.get(MessageParser.Tag.NICKNAMETAG)));
+            }
+        } else if (message.get(MessageParser.Tag.BLACKLISTTAG) != null) {
+            this.addInBlackList(message.get(MessageParser.Tag.NICKNAMETAG), message.get(MessageParser.Tag.BLACKLISTTAG));
+        } else if (message.get(MessageParser.Tag.PRIVATETAG) != null) {
+            //операция c приватным сообщением
+            this.sendMessagePrivate(message.get(MessageParser.Tag.PRIVATETAG), _msg);
+        } else if (message.get(MessageParser.Tag.MESSAGETAG) != null) {
+            //отправка сообщения всем
+            this.sendMessageAll(_msg);
         }
     }
 
-    private void sendMessage(final String _from, final String _msg) {
+    private void sendMessage(ServerInternetConnection _client, String _msg) {
+        if (_client.isConnection()) {
+            if (_client.isNameInBlackLIst(Server.messageParser.getValueInStringByTag(_msg, MessageParser.Tag.NICKNAMETAG))) {
+                _client.sendMessage(_msg);
+            }
+        }
+        else {
+            unsubscribe(_client);
+        }
+    }
+
+    private void sendMessageAll(String _msg) {
         //Рассылка сообщений всем чатам
-//        for (Map.Entry<String, InternetConnection> client : clientLIst.entrySet()) {
-//            if (client.getValue().isConnection()) {
-//                client.getValue().sendMessage(String.format("%s:%s\n", _from, _msg));
-//            }
-//            else {
-//                unsubscribe(client.getKey());
-//            }
-//        }
-        Vector<Client> c = new Vector<>();
-        c.addAll(this.clientLIst);
-        for (Client client : c) {
-            if (client.getInternetConnection().isConnection()) {
-                client.getInternetConnection().sendMessage(String.format("%s:%s\n", _from, _msg));
-            }
-            else {
-                unsubscribe(client.getName());
-            }
+        Vector<ServerInternetConnection> c = new Vector<>();
+        c.addAll(this.clientsLIst);
+        for (ServerInternetConnection client : c) {
+            this.sendMessage(client, _msg);
         }
     }
 
-    private void sendPrivateMessage(final String _from, final String _to, final String _msg) {
+    private void sendMessagePrivate(final String _to, final String _msg) {
         //Отсылка приватного сообщения
-        InternetConnection to = this.getClientByName(_to).getInternetConnection();
+        ServerInternetConnection to = this.getClientByName(_to);
         if (to != null) {
-            if (to.isConnection()) {
-                to.sendMessage(String.format("private from %s:%s\n", _from, _msg));
-            }
-            else {
-                unsubscribe(_to);
-            }
+            this.sendMessage(to, _msg);
         }
     }
 
     private void serverUpdateClientList(String _name, boolean _connected) {
-        this.sendMessage("Сервер", _name + ((_connected)? " подключился к чату" : "  отключился от чата" ));
-        //высылаем список клиентов
-        this.sendMessage("Сервер", Arrays.toString(getClientList()));
+        //Сообщаем об изменении списка, и высылаем сам список.
+        StringBuffer msg = new StringBuffer();
+        msg.append(messageParser.buildStringByTag(_name + ((_connected)? " подключился к чату" : "  отключился от чата" ), MessageParser.Tag.SERVERINFOTAG));
+        //TODO вывод системного сообщения
+        this.printServerInfo(this.messageParser.getValueInStringByTag(msg.toString(), MessageParser.Tag.SERVERINFOTAG));
+        //закончили вывод
+        msg.append(messageParser.buildStringByTag(Arrays.toString(getClientList()), MessageParser.Tag.CLIENTLISTTAG));
+        this.sendMessageAll(msg.toString());
     }
 
-    private Client getClientByName(String _name) {
-        Vector<Client> c = new Vector<>();
-        c.addAll(this.clientLIst);
-        for (Client client : c) {
-            if (client.getName().equals(_name)) return client;
+    private ServerInternetConnection getClientByName(String _name) {
+        Vector<ServerInternetConnection> clients = new Vector(this.clientsLIst);
+        for (ServerInternetConnection client : clients) {
+            if (client.getClientName().equals(_name)) return client;
         }
         return null;
     }
 
     private String[] getClientList() {
-        Vector<Client> clients = new Vector(this.clientLIst);
+        Vector<ServerInternetConnection> clients = new Vector(this.clientsLIst);
         String[] list = new String[clients.size()];
         for (int i = 0; i < list.length; i++) {
-            list[i] = clients.get(i).getName();
+            list[i] = clients.get(i).getClientName();
         }
         return list;
+    }
+
+    private void printServerInfo(String _msg) {
+        //TODO распечатываем сообщения для сервера вообще и для отладки
+        System.out.println(_msg);
+    }
+
+    private void addInBlackList(String _clientName, String _banName) {
+        ServerInternetConnection client = this.getClientByName(_clientName);
+        if (client != null) {
+            //TODO добавляем бан в базу данных еще
+            client.changeBlackList(_banName);
+        }
     }
 }

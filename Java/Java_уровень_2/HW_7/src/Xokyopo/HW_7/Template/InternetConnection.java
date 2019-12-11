@@ -39,7 +39,7 @@ public class InternetConnection extends Thread{
                     }
                     break;
                 } else {
-                    this.parent.inputMessage(msg);
+                    this.sendMessageToParent(msg);
                 }
             }
         } catch (IOException e) {
@@ -83,5 +83,9 @@ public class InternetConnection extends Thread{
 
     public void setParent(InputMessage _parent) {
         this.parent = _parent;
+    }
+
+    protected void sendMessageToParent(String _msg) {
+        this.parent.inputMessage(_msg);
     }
 }

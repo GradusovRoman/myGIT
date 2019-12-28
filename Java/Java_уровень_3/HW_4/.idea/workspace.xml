@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="425eea4f-f35e-4590-b9c2-71adb0a6f552" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1VZsIjktxbgqjIzK0MmR1rUBRAj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.pathVariables" />
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Xokyopo.Main" />
+      <module name="HW_4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Xokyopo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Robot" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Xokyopo.robot.Robot" />
+      <module name="HW_4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Xokyopo.robot.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Robot" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="425eea4f-f35e-4590-b9c2-71adb0a6f552" name="Default Changelist" comment="" />
+      <created>1577471873563</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1577471873563</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="734" y="250" key="#com.intellij.ide.util.MemberChooser" timestamp="1577477445705">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="734" y="250" key="#com.intellij.ide.util.MemberChooser/0.0.1858.1080@0.0.1858.1080" timestamp="1577477445705" />
+    <state width="1815" height="241" key="GridCell.Tab.0.bottom" timestamp="1577525048807">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="241" key="GridCell.Tab.0.bottom/0.0.1858.1080@0.0.1858.1080" timestamp="1577525048807" />
+    <state width="1815" height="241" key="GridCell.Tab.0.center" timestamp="1577525048807">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="241" key="GridCell.Tab.0.center/0.0.1858.1080@0.0.1858.1080" timestamp="1577525048807" />
+    <state width="1815" height="241" key="GridCell.Tab.0.left" timestamp="1577525048807">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="241" key="GridCell.Tab.0.left/0.0.1858.1080@0.0.1858.1080" timestamp="1577525048807" />
+    <state width="1815" height="241" key="GridCell.Tab.0.right" timestamp="1577525048807">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="241" key="GridCell.Tab.0.right/0.0.1858.1080@0.0.1858.1080" timestamp="1577525048807" />
+    <state x="592" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577473692434">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state x="592" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1858.1080@0.0.1858.1080" timestamp="1577473692434" />
+  </component>
+</project>

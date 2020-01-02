@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class GameField {
     private int[][] map;
-    private int number = 2;
+    private int number = 2; //Собственно стартовое число
     private Random random = new Random();
     private boolean noMoves;
 
@@ -40,25 +40,21 @@ public class GameField {
         return map[_row][_col] ==  0;
     }
 
-    public void slidingBorder(int _key) {
-        switch (_key) {
-            case (Comand.Keys.LEFT):
-                this.slidingToLeft();
-                break;
-            case (Comand.Keys.RIGHT):
-                this.slidingToRight();
-                break;
-            case (Comand.Keys.DOWN):
-                this.slidingToDown();
-                break;
-            case (Comand.Keys.UP):
-                this.slidingToUP();
-                break;
+    public void slidingBorder(Command _key) {
+        if (_key == Command.LEFT) {
+            this.slidingToLeft();
+        } else if (_key == Command.RIGHT) {
+            this.slidingToRight();
+        } else if (_key == Command.DOWN) {
+            this.slidingToDown();
+        } else if (_key == Command.UP) {
+            this.slidingToUP();
         }
+
         if (!this.isMapFull()) {
             this.addNewNumberOnMap();
         } else {
-            this.noMoves = !isHaveCombination();
+            this.noMoves = !this.isHaveCombination();
         }
     }
 
@@ -178,4 +174,5 @@ public class GameField {
     public boolean isNoMoves(){
         return this.noMoves;
     }
+
 }

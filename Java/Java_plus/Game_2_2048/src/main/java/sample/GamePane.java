@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 public class GamePane extends GridPane {
     private Button[][] buttonsArray;
@@ -34,7 +35,7 @@ public class GamePane extends GridPane {
                 else {
                     this.buttonsArray[row][col].setText("");
                 }
-                this.buttonsArray[row][col].setStyle("-Fx-font:" + this.buttonsArray[row][col].getHeight()/this.game.getGameField().getMap().length + " arial;");
+                this.buttonsArray[row][col].setStyle(this.getFont(this.buttonsArray[row][col]) + this.getColorByButton(this.buttonsArray[row][col]));
             }
         }
     }
@@ -44,22 +45,28 @@ public class GamePane extends GridPane {
     }
 
     //TODO слишком муторно
-    private String getColorByInt(int _number) {
-        String color = "SILVER";
-        if (_number % 32  == 0) {
-            color = "PERU";
-        }else if (_number % 16  == 0) {
-            color = "ORANGERED";
-        } else if (_number % 8  == 0) {
-            color = "PURPLE";
-        }  else if (_number % 6  == 0) {
-            color = "VIOLET";
-        }  else if (_number % 4  == 0) {
-            color = "BLUE";
-        }  else if (_number % 2  == 0) {
-            color = "yellow";
+    private String getFont(Button _button) {
+        return String.format("-Fx-font: %s arial;", this.getNewFontSize(_button));
+    }
+
+    private double getNewFontSize(Button _button) {
+        return (_button.getHeight()/this.game.getGameField().getMap().length);
+    }
+
+    private String getColorByButton(Button _button) {
+        if (!_button.getText().equals("")) {
+            return ("-fx-background-color:#" + getColorByInt(Integer.parseInt(_button.getText())) + ";");
         }
-        return color;
+        return "";
+    }
+
+    private String getColorByInt(int _number) {
+        int n = (16777215 / 2048); //16777215 это ffffff в 16 ричной системе
+        String hexNumber = Integer.toHexString(n * (_number % 2048));
+        while (hexNumber.length() < 6 ) {
+            hexNumber = "0" + hexNumber;
+        }
+        return hexNumber;
     }
     //конец
 }

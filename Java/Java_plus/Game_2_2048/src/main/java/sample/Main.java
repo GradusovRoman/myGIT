@@ -15,6 +15,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.gamePane = new GamePane();
+        primaryStage.setTitle("2048");
         primaryStage.setMinHeight(minSize);
         primaryStage.setMinWidth(minSize);
         primaryStage.setScene(new Scene(this.gamePane, minSize, minSize));
@@ -23,13 +24,13 @@ public class Main extends Application {
             public void handle(KeyEvent keyEvent) {
                 if (!gamePane.getGame().isEndGame()) {
                     if (keyEvent.getCode().equals(KeyCode.LEFT))
-                        gamePane.getGame().getGameField().slidingBorder(Comand.Keys.LEFT);
+                        gamePane.getGame().getGameField().slidingBorder(Command.LEFT);
                     else if (keyEvent.getCode().equals(KeyCode.RIGHT))
-                        gamePane.getGame().getGameField().slidingBorder(Comand.Keys.RIGHT);
+                        gamePane.getGame().getGameField().slidingBorder(Command.RIGHT);
                     else if (keyEvent.getCode().equals(KeyCode.UP))
-                        gamePane.getGame().getGameField().slidingBorder(Comand.Keys.UP);
+                        gamePane.getGame().getGameField().slidingBorder(Command.UP);
                     else if (keyEvent.getCode().equals(KeyCode.DOWN))
-                        gamePane.getGame().getGameField().slidingBorder(Comand.Keys.DOWN);
+                        gamePane.getGame().getGameField().slidingBorder(Command.DOWN);
                     gamePane.ubdateSourceByMap();
                 } else {
                     showMsg();

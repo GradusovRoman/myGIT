@@ -1,7 +1,6 @@
-sample\Comand$Keys.class
+sample\Main$1.class
+sample\Command.class
+sample\GamePane.class
 sample\Game.class
 sample\GameField.class
-sample\Main$1.class
-sample\GamePane.class
 sample\Main.class
-sample\Comand.class

@@ -1,5 +1,6 @@
 package org.xokyopo.filesharing.DAO.DataBase;
 
+import org.springframework.stereotype.Repository;
 import org.xokyopo.filesharing.DAO.DataBase.Adapter.DataBaseAOut;
 import org.xokyopo.filesharing.Domain.Template.DBTable;
 import org.xokyopo.filesharing.Domain.Template.FilePathID;
@@ -12,6 +13,7 @@ import java.sql.*;
 работа с базой данных
  */
 
+@Repository
 public class DataBase implements DataBaseAOut {
     //TODO переместить обработчики исключений
     private Connection connection;
@@ -20,9 +22,9 @@ public class DataBase implements DataBaseAOut {
     private final String DBName;
     private final String connectionString;
 
-    public DataBase(String bdName) {
+    public DataBase() {
         //TODO подключение к базе данных
-        this.DBName = bdName;
+        this.DBName = "D:\\temp\\filesharing.sqlite3";
         this.connectionString = String.format("jdbc:sqlite:%s", this.DBName);
         this.connection();
     }

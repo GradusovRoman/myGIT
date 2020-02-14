@@ -1,5 +1,7 @@
 package org.xokyopo.filesharing.DAO.Repository;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import org.xokyopo.filesharing.DAO.Repository.Adapter.RepositoryAOut;
 import org.xokyopo.filesharing.Domain.Template.FilePathID;
 
@@ -10,21 +12,21 @@ import java.util.Random;
 Определяет что и гре и как дут храниться будет храниться
  */
 
-public class Repository implements RepositoryAOut {
+@Repository
+public class MyRepository implements RepositoryAOut {
     private final String path;
 
-    public Repository(String path) {
-        this.path = path;
+    public MyRepository() {
+        this.path = "D:\\temp";
     }
 
     @Override
-    public FilePathID save(File file) {
+    public FilePathID save(MultipartFile file) {
         //сохраняем файл
         //для начала нужно создать уникальную папку где будем хранить файл.
         //потом в эту папку положить файл.
         String newPath = this.getNewEmptyDir(this.path);
-        System.out.println("файл " + file.getAbsolutePath() + " сохранен по пути ");
-        System.out.println(newPath);
+
         File newFile = moveFileTo(file, newPath);
         return new FilePathID(newFile.getAbsolutePath());
     }
@@ -45,16 +47,17 @@ public class Repository implements RepositoryAOut {
         return file.delete();
     }
 
-    private File moveFileTo(File fileIn, String newPath) {
+    private File moveFileTo(MultipartFile fileIn, String newPath) {
+        //TODO изменение из за спринга
         File fileOut = new File(newPath);
         fileOut.mkdir();
-        fileOut = new File(newPath, fileIn.getName());
+        fileOut = new File(newPath, new File(fileIn.getOriginalFilename()).getName());
         return this.moveFile(fileIn, fileOut);
     }
 
-    private File moveFile(File fileIn, File fileOut) {
+    private File moveFile(MultipartFile fileIn, File fileOut) {
         try {
-            InputStream in = new FileInputStream(fileIn);
+            InputStream in = fileIn.getResource().getInputStream();
             OutputStream out = new FileOutputStream(fileOut);
             byte[] buffer = new byte[1024];
             int length;
@@ -64,6 +67,7 @@ public class Repository implements RepositoryAOut {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return fileOut;
     }
 
@@ -83,8 +87,13 @@ public class Repository implements RepositoryAOut {
         String newPath = path;
         int startLength = 10;
         File file = new File(path);
+        int count = startLength * startLength;
         while (new File(newPath).exists()) {
-            if (startLength < 100) startLength++;
+            count--;
+            if (count <=0 && startLength < 100){
+                startLength++;
+                count = startLength * startLength;
+            }
             newPath = path +"\\"+ getRandomName(startLength);
         }
         return newPath;

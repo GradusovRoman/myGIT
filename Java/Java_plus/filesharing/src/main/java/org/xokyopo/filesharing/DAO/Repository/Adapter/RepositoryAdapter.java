@@ -1,5 +1,8 @@
 package org.xokyopo.filesharing.DAO.Repository.Adapter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import org.xokyopo.filesharing.Domain.Template.FilePathID;
 
 import java.io.File;
@@ -9,15 +12,17 @@ import java.io.File;
  * Он описывает взаимодействие основного класса с репозиторием файлов
  */
 
+@Component
 public class RepositoryAdapter implements RepositoryAInput {
     private final RepositoryAOut repositoryAOut;
 
+    @Autowired
     public RepositoryAdapter(RepositoryAOut repositoryA) {
         this.repositoryAOut = repositoryA;
     }
 
     @Override
-    public FilePathID save(File file) {
+    public FilePathID save(MultipartFile file) {
         FilePathID result = this.repositoryAOut.save(file);
         return result;
     }

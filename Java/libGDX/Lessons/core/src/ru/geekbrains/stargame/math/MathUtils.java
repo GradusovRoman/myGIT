@@ -3,8 +3,9 @@ package ru.geekbrains.stargame.math;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-
 import ru.geekbrains.stargame.template.Rect;
+
+import java.util.Random;
 
 public class MathUtils {
 
@@ -26,6 +27,18 @@ public class MathUtils {
                 .translate(-src.getCenter().x, -src.getCenter().y); //(-300, -400)
         //                .translate(src.getCenter()); // почуму так не работает то???? ппц Ж(
         return matrix3;
+    }
+
+    public static float genRandomByRange(float min, float max) {
+        Random random = new Random();
+        //Так небольшая подстраховка, на всякий случай.
+        if (min > max) {
+            float a = min;
+            min = max;
+            max = a;
+        }
+
+        return min + random.nextFloat() * (max - min);
     }
 
 }

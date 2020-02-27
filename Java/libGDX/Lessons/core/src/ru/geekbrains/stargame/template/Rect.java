@@ -8,6 +8,10 @@ public class Rect {
     private float halfWidth;
     private float halfHeight;
 
+    public Rect() {
+        this(new Vector2(0,0), 0, 0);
+    }
+
     public Rect(Vector2 center, float halfWidth, float halfHeight) {
         this.center = center;
         this.halfWidth = halfWidth;
@@ -22,9 +26,23 @@ public class Rect {
         this(new Vector2(0,0), halfWidth, halfHeight);
     }
 
+    public void setRect(Rect rect) {
+        this.center.set(rect.getCenter());
+        this.halfWidth = rect.getHalfWidth();
+        this.halfHeight = rect.getHalfHeight();
+    }
+
     public void setSize(float width, float height) {
         this.halfHeight = height/2f;
         this.halfWidth = width/2f;
+    }
+
+    public void setHalfWidth(float halfWidth) {
+        this.halfWidth = halfWidth;
+    }
+
+    public void setHalfHeight(float halfHeight) {
+        this.halfHeight = halfHeight;
     }
 
     public void setCenter(Vector2 center) {
@@ -64,11 +82,11 @@ public class Rect {
     }
 
     public float getWidth() {
-        return halfWidth * 2f;
+        return this.halfWidth * 2f;
     }
 
     public float getHeight() {
-        return halfHeight * 2f;
+        return this.halfHeight * 2f;
     }
 
     public boolean isInside(Vector2 pset) {
@@ -93,7 +111,14 @@ public class Rect {
     }
 
     @Override
-    protected Rect clone() {
+    public Rect clone() {
         return new Rect(this.center, this.halfWidth, this.halfHeight);
     }
+
+    public void printingInfo() {
+        System.out.println("this.center.x =" + this.center.x + "\tthis.center.y = " + this.center.y);
+        System.out.println("this.halfHeight = " + this.halfHeight);
+        System.out.println("this.halfWidth =" + this.halfWidth);
+    }
 }
+

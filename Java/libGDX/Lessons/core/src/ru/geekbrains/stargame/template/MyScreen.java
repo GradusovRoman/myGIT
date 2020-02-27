@@ -1,5 +1,6 @@
 package ru.geekbrains.stargame.template;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -8,10 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-
+import ru.geekbrains.stargame.intefaces.Resizable;
+import ru.geekbrains.stargame.intefaces.Touchable;
 import ru.geekbrains.stargame.math.MathUtils;
 
-public abstract class MyScreen implements Screen, InputProcessor {
+public abstract class MyScreen implements Screen, InputProcessor, Touchable, Resizable {
     protected SpriteBatch spriteBatch;
     protected Rect screenRect;
     protected Rect worldRect;
@@ -19,8 +21,14 @@ public abstract class MyScreen implements Screen, InputProcessor {
     protected final Rect GlRECT = new Rect(1f,1f);
     protected Matrix4 worldToGl;
     protected Matrix3 screenToWorld;
+    protected Game game;
+
+    public MyScreen(Game game) {
+        this.game = game;
+    }
 
     //TODO конечная цель что бы в спрайт банч лежал наш шаблон конвертирования матриц.
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
@@ -55,18 +63,27 @@ public abstract class MyScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public boolean touchDown(Vector2 vector2, int pointer, int button) {
-        return false;
+    @Override
+    public void touchDown(Vector2 vector2, int pointer, int button) {
+
+    }
+
+    @Override
+    public void touchUp(Vector2 vector2, int pointer, int button) {
+
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 normVector = new Vector2(screenX, this.screenRect.getHeight() - screenY).mul(this.screenToWorld);
-        return this.touchDown(normVector, pointer, button);
+        this.touchDown(normVector, pointer, button);
+        return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        Vector2 normVector = new Vector2(screenX, this.screenRect.getHeight() - screenY).mul(this.screenToWorld);
+        this.touchUp(normVector, pointer, button);
         return false;
     }
 
@@ -85,7 +102,8 @@ public abstract class MyScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public void resize(Rect world) {
+    @Override
+    public void resize(Rect rect) {
 
     }
 

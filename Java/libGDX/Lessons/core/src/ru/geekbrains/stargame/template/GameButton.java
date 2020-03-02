@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.intefaces.Commandable;
 import ru.geekbrains.stargame.intefaces.Touchable;
 
-public class GameButton extends Sprite implements Touchable, Commandable {
+public abstract class GameButton extends Sprite implements Touchable, Commandable {
     private final float PRESSSCALE = 0.9f;
     private int currentButton;
     private int currentPointer;

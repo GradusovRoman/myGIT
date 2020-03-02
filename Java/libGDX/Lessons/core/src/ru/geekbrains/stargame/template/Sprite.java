@@ -59,8 +59,32 @@ public abstract class Sprite extends Rect implements Drawable, Resizable {
         }
     }
 
+    public float getHeightProportion() {
+        return heightProportion;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public TextureRegion getTextureRegion() {
+        return this.textureRegions[this.frame];
+    }
+
+    public TextureRegion[] getTextureRegions() {
+        return textureRegions;
+    }
+
     public void setAngle(float angle) {
         //TODO при вращении нужно будет переписать проверку на прикосновение, так так как обект будет под углом
         this.angle = angle;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public int getFrame() {
+        return frame;
     }
 }

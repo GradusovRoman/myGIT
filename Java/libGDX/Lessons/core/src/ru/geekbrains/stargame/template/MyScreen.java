@@ -9,19 +9,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import ru.geekbrains.stargame.intefaces.Calculatable;
 import ru.geekbrains.stargame.intefaces.Resizable;
 import ru.geekbrains.stargame.intefaces.Touchable;
-import ru.geekbrains.stargame.math.MathUtils;
+import ru.geekbrains.stargame.math.GameUtils;
 
-public abstract class MyScreen implements Screen, InputProcessor, Touchable, Resizable {
+public abstract class MyScreen implements Screen, InputProcessor, Touchable, Resizable, Calculatable {
     protected SpriteBatch spriteBatch;
-    protected Rect screenRect;
-    protected Rect worldRect;
-    protected final float WORLDSIZE = 100f;
-    protected final Rect GlRECT = new Rect(1f,1f);
-    protected Matrix4 worldToGl;
-    protected Matrix3 screenToWorld;
     protected Game game;
+    private Rect screenRect;
+    private Rect worldRect;
+    private final float WORLDSIZE = 100f;
+    private final Rect GlRECT = new Rect(1f,1f);
+    private Matrix4 worldToGl;
+    private Matrix3 screenToWorld;
+    private boolean paused = false;
 
     public MyScreen(Game game) {
         this.game = game;
@@ -38,7 +40,13 @@ public abstract class MyScreen implements Screen, InputProcessor, Touchable, Res
     }
 
     @Override
+    public void calculate() {
+
+    }
+
+    @Override
     public void render(float delta) {
+        if (!this.paused) this.calculate();
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
@@ -114,9 +122,9 @@ public abstract class MyScreen implements Screen, InputProcessor, Touchable, Res
 
         this.worldRect.setSize(this.WORLDSIZE * width/(float)height, this.WORLDSIZE);
 
-        this.worldToGl = MathUtils.calcTransitionMatrix4(this.worldRect, this.GlRECT);
+        this.worldToGl = GameUtils.calcTransitionMatrix4(this.worldRect, this.GlRECT);
 
-        this.screenToWorld = MathUtils.calcTransitionMatrix3(this.screenRect, this.worldRect);
+        this.screenToWorld = GameUtils.calcTransitionMatrix3(this.screenRect, this.worldRect);
 
         this.spriteBatch.setProjectionMatrix(this.worldToGl);
 
@@ -125,16 +133,16 @@ public abstract class MyScreen implements Screen, InputProcessor, Touchable, Res
 
     @Override
     public void pause() {
-
+        this.paused = true;
     }
 
     @Override
     public void resume() {
-
+        this.paused = false;
     }
 
     @Override
     public void hide() {
-
+        this.paused = true;
     }
 }

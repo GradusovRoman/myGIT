@@ -97,8 +97,13 @@ public class Rect {
     }
 
     public boolean isTouch(Rect rect) {
-        //TODO получить точку между векторами и проверяем лежит ли она внутри нашего квадрата
-        Vector2 touchVector = rect.getCenter().sub(this.center).scl(0.5f).add(this.center);// где то так
+        // получить точку между векторами и проверяем лежит ли она внутри нашего квадрата (fix)
+        Vector2 touchVector = rect.getCenter().sub(this.center).scl(
+                new Vector2(
+                        this.getHalfWidth()/(rect.getHalfWidth() + this.getHalfWidth()),
+                        this.getHalfHeight()/(rect.getHalfHeight() + this.getHalfHeight())
+                )).add(this.center);// где то так
+
         return this.isInside(touchVector) && rect.isInside(touchVector);
     }
 
@@ -120,5 +125,6 @@ public class Rect {
         System.out.println("this.halfHeight = " + this.halfHeight);
         System.out.println("this.halfWidth =" + this.halfWidth);
     }
+
 }
 

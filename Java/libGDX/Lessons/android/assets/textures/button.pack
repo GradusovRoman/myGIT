@@ -1,0 +1,26 @@
+
+button.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bt_exit
+  rotate: false
+  xy: 1, 13
+  size: 250, 230
+  orig: 250, 230
+  offset: 0, 0
+  index: -1
+bt_play
+  rotate: false
+  xy: 253, 13
+  size: 250, 230
+  orig: 250, 230
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 1, 1
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1

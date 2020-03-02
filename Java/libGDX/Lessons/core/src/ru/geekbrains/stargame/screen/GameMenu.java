@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import ru.geekbrains.stargame.gameobject.Background;
-import ru.geekbrains.stargame.gameobject.ButtonMenu;
+import ru.geekbrains.stargame.gameobject.gamearea.Background;
+import ru.geekbrains.stargame.gameobject.gamearea.ButtonMenu;
+import ru.geekbrains.stargame.gameobject.gamearea.Star;
+import ru.geekbrains.stargame.gameobject.gamearea.StarEmulator;
 import ru.geekbrains.stargame.gameobject.buttons.ExitButton;
 import ru.geekbrains.stargame.gameobject.buttons.PlayButton;
 import ru.geekbrains.stargame.template.MyScreen;
@@ -18,6 +20,7 @@ public class GameMenu extends MyScreen {
     private ButtonMenu buttonMenu;
     private PlayButton playButton;
     private ExitButton exitButton;
+    private StarEmulator starEmulator;
 
     public GameMenu(Game game) {
         super(game);
@@ -26,16 +29,22 @@ public class GameMenu extends MyScreen {
     @Override
     public void show() {
         super.show();
-        this.background = new Background(new TextureRegion(new Texture("background.png")));
-        this.atlas = new TextureAtlas("button.pack");
+        this.background = new Background(new TextureRegion(new Texture("textures/background.png")));
+        this.atlas = new TextureAtlas("textures/button.pack");
         this.playButton = new PlayButton(atlas, this.game);
         this.exitButton = new ExitButton(atlas);
         this.buttonMenu = new ButtonMenu();
         this.buttonMenu.addButton(exitButton);
         this.buttonMenu.addButton(playButton);
-
         this.buttonMenu.setSize(100,25);
 
+        this.starEmulator = new StarEmulator(new Star(0.005f, this.atlas.findRegion("star")), 25);
+    }
+
+    @Override
+    public void calculate() {
+        super.calculate();
+        this.starEmulator.calculate();
     }
 
     @Override
@@ -44,6 +53,7 @@ public class GameMenu extends MyScreen {
         this.spriteBatch.begin();
 
         this.background.draw(this.spriteBatch);
+        this.starEmulator.draw(this.spriteBatch);
         this.buttonMenu.draw(this.spriteBatch);
 
         this.spriteBatch.end();
@@ -59,6 +69,7 @@ public class GameMenu extends MyScreen {
     public void resize(Rect world) {
         this.background.resize(world);
         this.buttonMenu.resize(world);
+        this.starEmulator.resize(world);
     }
 
     @Override

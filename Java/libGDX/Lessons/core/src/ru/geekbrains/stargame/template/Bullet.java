@@ -1,31 +1,35 @@
 package ru.geekbrains.stargame.template;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import ru.geekbrains.stargame.intefaces.Calculatable;
-import ru.geekbrains.stargame.intefaces.PoolFree;
 
-public class Bullet extends Sprite implements Calculatable {
+import com.badlogic.gdx.math.Vector2;
+import ru.geekbrains.stargame.intefaces.Updatable;
+import ru.geekbrains.stargame.intefaces.Damageable;
+import ru.geekbrains.stargame.template.configclass.BulletConfig;
+
+public class Bullet extends Sprite implements Updatable, Damageable {
     private Rect worldBound = new Rect();
     private Vector2 speed = new Vector2();
-    private PoolFree<Bullet> parentPool;
+    private Pool<Bullet> parentPool;
+    private int bulletDamage;
+    private float bulletSpedRate;
 
-    private float speedRate = 1f;
-    private Ship owner;
+    public Bullet(Pool<Bullet> parentPool) {
+        this.parentPool = parentPool;
+    }
 
-    public Bullet(float heightProportion, TextureRegion... textureRegions) {
-        super(heightProportion, textureRegions);
+    public void setBulletConfig(BulletConfig bulletConfig) {
+        this.bulletSpedRate = bulletConfig.speedRate;
+        this.bulletDamage = bulletConfig.damage;
+        this.setTextureRegions(bulletConfig.textureRegions);
+        this.setHeightProportion(bulletConfig.heightProportion);
+        super.resize(this.worldBound);
     }
 
     @Override
-    public void calculate() {
-        this.setCenter(this.getCenter().add(this.speed.cpy().scl(this.speedRate)));
+    public void update(float dTime) {
+        this.setCenter(this.getCenter().add(this.speed.cpy().scl(this.bulletSpedRate)));
         if (!this.worldBound.isTouch(this)) {
-            if (parentPool != null) {
-                parentPool.imFree(this);
-            } else {
-                System.err.println("Утечка памяти в классе Bullet");
-            }
+            this.imDestroyed();
         }
     }
 
@@ -35,20 +39,28 @@ public class Bullet extends Sprite implements Calculatable {
         this.worldBound = rectWorld;
     }
 
-    public void config(Ship owner, float speedRate) {
-        this.owner = owner;
-        this.speedRate = speedRate;
+    public void config(Ship owner, BulletConfig bulletConfig) {
+        this.setBulletConfig(bulletConfig);
         this.setCenter(owner.getCenter().add(owner.getShipOrientation().scl(owner.getHalfHeight())));
-        this.speed.set(owner.getShipOrientation()).scl(this.speedRate);
+        //TODO нужно не забывать что у корабля есть скорость и нужно отталкиваться от нее.
+        //TODO стер теперь сам не помню что там было
+        this.speed.set(owner.getShipOrientation());
     }
 
-    private void setParentPool(PoolFree<Bullet> parentPool) {
-        this.parentPool = parentPool;
+    private void imDestroyed() {
+        if (parentPool != null) {
+            parentPool.imFree(this);
+        }
     }
 
-    public Bullet clone(PoolFree<Bullet> parentPool) {
-        Bullet bullet= new Bullet(this.getHeightProportion(), this.getTextureRegions());
-        bullet.setParentPool(parentPool);
-        return bullet;
+    @Override
+    public void takeDamage(Damageable damage) {
+        this.bulletDamage -= damage.getDamage();
+        if (this.bulletDamage <= 0) this.imDestroyed();
+    }
+
+    @Override
+    public int getDamage() {
+        return this.bulletDamage;
     }
 }

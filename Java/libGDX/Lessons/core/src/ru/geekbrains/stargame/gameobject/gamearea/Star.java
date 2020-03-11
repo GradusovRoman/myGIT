@@ -2,25 +2,29 @@ package ru.geekbrains.stargame.gameobject.gamearea;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import ru.geekbrains.stargame.intefaces.Calculatable;
+import ru.geekbrains.stargame.intefaces.Updatable;
 import ru.geekbrains.stargame.math.GameUtils;
 import ru.geekbrains.stargame.template.Rect;
 import ru.geekbrains.stargame.template.Sprite;
 
-public class Star extends Sprite implements Calculatable {
+public class Star extends Sprite implements Updatable {
     private Rect worldBounds = new Rect();
-    private int timer = 60;
-    private int count = 0;
-    private float scaleSpeed = 0.05f;
-    private float scaleMin = 0.0005f;
-    private float scaleMax = 0.01f;
-    private float spedRateMin = 0.01f;
-    private float spedRateMax = 0.3f;
-    private float spedRate = 1f;
+    private float scaleSeed = 0.0005f;
+    private float scaleOffset = this.scaleSeed/1.1f;
+    private float spedSeed = 2f;
+    private float spedRateOffset = this.spedSeed/2f;
+
     private Vector2 speed = new Vector2(0f,-1f);
+    private float scaleSpeed;
+    private float spedRate;
+    private float scaleProportion = 5f;
+    private float startHeightProportion;
+    private float minHeightProportion;
 
     public Star(float heightProportion, TextureRegion textureRegion) {
         super(heightProportion, textureRegion);
+        this.startHeightProportion = heightProportion;
+        this.minHeightProportion = startHeightProportion / this.scaleProportion;
     }
 
     public void init () {
@@ -30,7 +34,7 @@ public class Star extends Sprite implements Calculatable {
     }
 
     private void setRandomSpeedRate() {
-        this.spedRate = GameUtils.getRandomByRange(this.spedRateMin, this.spedRateMax);
+        this.spedRate = GameUtils.getRandomByRange(this.spedSeed - this.spedRateOffset, this.spedSeed + this.spedRateOffset);
     }
 
     private void setRandomCenter() {
@@ -38,7 +42,7 @@ public class Star extends Sprite implements Calculatable {
     }
 
     private void setRandomScaleSpeed() {
-        this.scaleSpeed = GameUtils.getRandomByRange(this.scaleMin, this.scaleMax);
+        this.scaleSpeed = GameUtils.getRandomByRange(this.scaleSeed - this.scaleOffset, this.scaleSeed + scaleOffset);
     }
 
     @Override
@@ -48,23 +52,20 @@ public class Star extends Sprite implements Calculatable {
     }
 
     @Override
-    public void calculate() {
-        if (count >= timer) {
-            count = 0;
+    public void update(float dTime) {
+        if (this.getHeightProportion() > this.minHeightProportion) {
+            this.setHeightProportion(this.getHeightProportion() - this.scaleSpeed*dTime);
         } else {
-            count++;
-            this.setScale(this.getScale() - this.scaleSpeed);
+            this.setHeightProportion(this.startHeightProportion);
         }
 
-        if (this.getScale() <= 0.3f) this.setScale(1f);
-
-        this.setCenter(this.getCenter().add(this.speed.cpy().scl(this.spedRate)));
+        this.setCenter(this.getCenter().add(this.speed.cpy().scl(this.spedRate).scl(dTime)));
 
         if (!this.worldBounds.isTouch(this)) this.init();
     }
 
     public Star getNewStar(Rect worldBounds) {
-        Star star = new Star(this.getHeightProportion(), this.getTextureRegion());
+        Star star = new Star(this.getHeightProportion(), this.getTextureRegions()[0]);
         star.resize(worldBounds);
         star.init();
 

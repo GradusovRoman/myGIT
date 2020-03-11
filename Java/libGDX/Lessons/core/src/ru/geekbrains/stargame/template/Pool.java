@@ -1,22 +1,22 @@
 package ru.geekbrains.stargame.template;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.geekbrains.stargame.intefaces.Calculatable;
+import ru.geekbrains.stargame.intefaces.Updatable;
 import ru.geekbrains.stargame.intefaces.Drawable;
 import ru.geekbrains.stargame.intefaces.PoolFree;
 import ru.geekbrains.stargame.intefaces.Resizable;
 
 import java.util.*;
 
-public abstract class Pool <T extends  Sprite > implements Calculatable, Drawable, Resizable, PoolFree<T> {
+public abstract class Pool <T extends  Sprite > implements Updatable, Drawable, Resizable, PoolFree<T> {
     private List<T> listOfFree = new ArrayList<>();
     private List<T> listOfUse = new ArrayList<>();
     private Rect worldBounds = new Rect();
 
     @Override
-    public void calculate() {
-        for (T element : new ArrayList<>(this.listOfUse)) {
-                ((Calculatable) element).calculate();
+    public void update(float dTime) {
+        for (T element : this.getListOfUse()) {
+                ((Updatable) element).update(dTime);
         }
     }
 
@@ -62,5 +62,9 @@ public abstract class Pool <T extends  Sprite > implements Calculatable, Drawabl
 
     public Rect getWorldBounds() {
         return worldBounds.clone();
+    }
+
+    public List<T> getListOfUse() {
+        return new ArrayList<>(listOfUse);
     }
 }

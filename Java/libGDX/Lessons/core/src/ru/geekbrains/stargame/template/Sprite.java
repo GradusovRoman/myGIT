@@ -8,29 +8,31 @@ import ru.geekbrains.stargame.intefaces.Resizable;
 
 public abstract class Sprite extends Rect implements Drawable, Resizable {
     private TextureRegion[] textureRegions;
-    private int frame = 0;
-    private float scale = 1f;
+    protected int frame = 0;
     private float angle = 0f;
-    private float baseHeight;
-    private float baseWidth;
     private float heightProportion = 1f;
+    private float textureRotateAngle = 0f;
 
-    //TODO нужно помозговать.
     public Sprite(float heightProportion,  TextureRegion... textureRegions) {
-        this.baseWidth = textureRegions[0].getRegionWidth();
-        this.baseHeight = textureRegions[0].getRegionHeight();
-        this.textureRegions = textureRegions;
-        this.setHeightProportion(heightProportion);
+            this.textureRegions = textureRegions;
+            this.setHeightProportion(heightProportion);
+    }
+
+    public Sprite(){
+
     }
 
     public void draw(SpriteBatch spriteBatch) {
-        TextureRegion texture = this.textureRegions[frame];
-        spriteBatch.draw(texture,
-                this.getLeft() , this.getBottom(),
-                this.getHalfWidth(), this.getHalfHeight(),
-                this.getWidth(), this.getHeight(),
-                1, 1 ,
-                this.angle);
+        if (this.getTextureRegions() != null) {
+            spriteBatch.draw(this.getCurrentTextureRegion(),
+                    this.getLeft(), this.getBottom(),
+                    this.getHalfWidth(), this.getHalfHeight(),
+                    this.getWidth(), this.getHeight(),
+                    1, 1,
+                    this.getAngle() + this.getTextureRotateAngle());
+        } else {
+            System.err.println("Sprite нет текстуры");
+        }
     }
 
     public void setFrame(int frame) {
@@ -39,36 +41,20 @@ public abstract class Sprite extends Rect implements Drawable, Resizable {
 
     @Override
     public void resize(Rect rectWorld) {
-        this.setHalfHeight(rectWorld.getHalfHeight() * this.heightProportion * this.scale);
-        this.setHalfWidth(this.baseWidth/2 * this.getHeight()/this.baseHeight);
+        if (this.getTextureRegions() != null) {
+            this.setHalfHeight(rectWorld.getHalfHeight() * this.heightProportion);
+            this.setHalfWidth(this.getCurrentTextureRegion().getRegionWidth() / 2f * this.getHeight() / this.getCurrentTextureRegion().getRegionHeight());
+        }
     }
 
     public void setHeightProportion(float heightProportion) {
-        if (heightProportion > 0) {
-            this.setHalfHeight(this.getHalfHeight() * heightProportion / this.heightProportion);
-            this.setHalfWidth(this.getHalfWidth() * heightProportion / this.heightProportion);
-            this.heightProportion = heightProportion;
-        }
-    }
-
-    public void setScale(float scale) {
-        if (this.scale > 0) {
-            this.setHalfHeight(this.getHalfHeight() * scale / this.scale);
-            this.setHalfWidth(this.getHalfWidth() * scale / this.scale);
-            this.scale = scale;
-        }
+        this.setHalfHeight(this.getHalfHeight() * heightProportion / this.heightProportion);
+        this.setHalfWidth(this.getHalfWidth() * heightProportion / this.heightProportion);
+        this.heightProportion = heightProportion;
     }
 
     public float getHeightProportion() {
-        return heightProportion;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
-    public TextureRegion getTextureRegion() {
-        return this.textureRegions[this.frame];
+        return this.heightProportion;
     }
 
     public TextureRegion[] getTextureRegions() {
@@ -82,6 +68,23 @@ public abstract class Sprite extends Rect implements Drawable, Resizable {
 
     public float getAngle() {
         return angle;
+    }
+
+    public float getTextureRotateAngle() {
+        return textureRotateAngle;
+    }
+
+    public void setTextureRotateAngle(float textureRotateAngle) {
+        this.textureRotateAngle = textureRotateAngle;
+    }
+
+    public void setTextureRegions(TextureRegion... textureRegions) {
+        this.textureRegions = textureRegions;
+        this.frame = 0;
+    }
+
+    private TextureRegion getCurrentTextureRegion() {
+        return this.textureRegions[this.frame];
     }
 
     public int getFrame() {

@@ -1,32 +1,31 @@
 package ru.geekbrains.stargame.gameobject.Player;
 
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.intefaces.KeyPressable;
 import ru.geekbrains.stargame.intefaces.Touchable;
 import ru.geekbrains.stargame.template.Ship;
+import ru.geekbrains.stargame.template.configclass.ShipConfig;
 
 //TODO пофиксить нажатие клавишь вынести движения в отдельный метод
 public class Player extends Ship implements Touchable, KeyPressable {
-    private int currentKey =  -1;
+    private int currentKey = -1;
     private int currentMouseButton = -1;
     private int currentPointer = -1;
 
-    public Player(float heightProportion, TextureRegion... textureRegions) {
-        super(heightProportion, textureRegions);
+    public Player(ShipConfig shipConfig) {
+        super(shipConfig);
     }
 
     private void moveLeft() {
-        this.setSpeed(new Vector2(-1,0));
+        this.setSpeed(new Vector2(-1, 0));
     }
 
     private void moveRight() {
-        this.setSpeed(new Vector2(1,0));
+        this.setSpeed(new Vector2(1, 0));
     }
 
     private void moveStop() {
-        this.setSpeed(new Vector2(0,0));
+        this.setSpeed(new Vector2(0, 0));
     }
 
     @Override
@@ -34,7 +33,7 @@ public class Player extends Ship implements Touchable, KeyPressable {
         if (keycode == 21 || keycode == 29) {
             this.moveLeft();
             this.currentKey = keycode;
-        }else if (keycode == 22 || keycode == 32) {
+        } else if (keycode == 22 || keycode == 32) {
             this.moveRight();
             this.currentKey = keycode;
         }
@@ -51,7 +50,7 @@ public class Player extends Ship implements Touchable, KeyPressable {
     public void touchDown(Vector2 vector2, int pointer, int button) {
         this.currentPointer = pointer;
         this.currentMouseButton = button;
-        if (vector2.sub(0,0).nor().x > 0) this.moveRight();
+        if (vector2.sub(0, 0).nor().x > 0) this.moveRight();
         else this.moveLeft();
     }
 
@@ -70,4 +69,5 @@ public class Player extends Ship implements Touchable, KeyPressable {
             this.setCenter(this.getWorldBound().getRight() - this.getHalfWidth(), this.getCenter().y);
         }
     }
+
 }

@@ -1,15 +1,33 @@
 package ru.geekbrains.stargame.gameobject.enemy;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import ru.geekbrains.stargame.intefaces.Damageable;
 import ru.geekbrains.stargame.template.Pool;
 import ru.geekbrains.stargame.template.Ship;
+import ru.geekbrains.stargame.template.configclass.ShipConfig;
 
 public class EnemyShip extends Ship {
     private Pool<EnemyShip> enemyShipPool;
 
-    public EnemyShip(float heightProportion, TextureRegion... textureRegions) {
-        super(heightProportion, textureRegions);
+    public EnemyShip(Pool<EnemyShip> enemyShipPool) {
+        this.enemyShipPool = enemyShipPool;
+        this.setSoundVolume(1f);
+    }
+
+    private boolean imOnScreen() {
+        return this.getWorldBound()
+                .isInside(new Vector2(this.getLeft(), this.getTop()))
+                && this.getWorldBound()
+                .isInside(new Vector2(this.getRight(), this.getBottom()));
+    }
+
+    @Override
+    public void update(float dTime) {
+        if (this.imOnScreen()) {
+            super.update(dTime);
+        } else {
+            this.setCenter(this.getCenter().add(this.getShipOrientation().cpy().scl(dTime * 5)));
+        }
     }
 
     @Override
@@ -22,36 +40,33 @@ public class EnemyShip extends Ship {
         if (this.enemyShipPool != null) this.enemyShipPool.imFree(this);
     }
 
-    public void config(float startX, float speedRate) {
-        this.setSpeedRate(speedRate);
-        this.setCenter(startX, this.getWorldBound().getTop() + this.getHalfHeight());
+    public void startOnXAxis(float startX, ShipConfig shipConfig) {
+        this.setShipConfig(shipConfig);
+
+        float newX = startX;
+        if(startX - this.getHalfWidth() < this.getWorldBound().getLeft()) {
+            newX = this.getWorldBound().getLeft() + this.getHalfWidth();
+        }
+        if (startX + this.getHalfWidth() > this.getWorldBound().getRight()) {
+            newX = this.getWorldBound().getRight() - this.getHalfWidth();
+        }
+
+        this.setCenter(newX, this.getWorldBound().getTop() + this.getHalfHeight());
+        this.setAngle(-180); // вражеские корабли должны лететь вниз
         this.setSpeed(this.getShipOrientation());
     }
 
-    public EnemyShip clone(Pool<EnemyShip> shipPool) {
-        EnemyShip enemyShip = new EnemyShip(this.getHeightProportion(), getTextureRegions());
-        enemyShip.setShotSound(this.getShotSound());
-        enemyShip.setBulletPool(this.getBulletPool());
-        enemyShip.setEnemyShipPool(shipPool);
-        enemyShip.setAngle(this.getAngle());
-        return enemyShip;
-    }
-
-    private void setEnemyShipPool(Pool<EnemyShip> enemyShipPool) {
-        this.enemyShipPool = enemyShipPool;
-    }
-
-    //TODO текстуры врагов вверх ногами, а я все завязал на поворот, так как задумался о том что корабли могут летать и под углами.
-    //TODO это конечно было жест ькогда кораблики не туда полетели :)
     @Override
-    public void draw(SpriteBatch spriteBatch) {
-        TextureRegion texture = this.getTextureRegions()[this.getFrame()];
-        spriteBatch.draw(texture,
-                this.getLeft() , this.getBottom(),
-                this.getHalfWidth(), this.getHalfHeight(),
-                this.getWidth(), this.getHeight(),
-                1, 1 ,
-                this.getAngle() - 180);
+    protected void imDestroyed() {
+        super.imDestroyed();
+        this.imOutOfBound();
     }
 
+    @Override
+    public void takeDamage(Damageable damage) {
+        //TODO пока на экране полностью не отрисавался у корабля имунитет к урону.
+        if(this.imOnScreen()) {
+            super.takeDamage(damage);
+        }
+    }
 }

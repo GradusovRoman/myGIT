@@ -2,6 +2,7 @@ package ru.geekbrains.stargame.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -42,21 +43,17 @@ public class GameMenu extends MyScreen {
     }
 
     @Override
-    public void calculate() {
-        super.calculate();
-        this.starEmulator.calculate();
+    public void update(float dTime) {
+        super.update(dTime);
+        this.starEmulator.update(dTime);
     }
 
     @Override
-    public void render(float delta) {
-        super.render(delta);
-        this.spriteBatch.begin();
-
+    public void draw(SpriteBatch spriteBatch) {
+        super.draw(spriteBatch);
         this.background.draw(this.spriteBatch);
         this.starEmulator.draw(this.spriteBatch);
         this.buttonMenu.draw(this.spriteBatch);
-
-        this.spriteBatch.end();
     }
 
     @Override

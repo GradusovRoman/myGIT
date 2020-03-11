@@ -7,6 +7,7 @@ import ru.geekbrains.stargame.intefaces.Touchable;
 
 public abstract class GameButton extends Sprite implements Touchable, Commandable {
     private final float PRESSSCALE = 0.9f;
+    private final float NORMSCALE = 1f;
     private int currentButton;
     private int currentPointer;
     private boolean pressed;
@@ -21,7 +22,7 @@ public abstract class GameButton extends Sprite implements Touchable, Commandabl
             this.currentButton = button;
             this.pressed = true;
             this.currentPointer = pointer;
-            this.setScale(this.PRESSSCALE);
+            this.setHeightProportion(this.PRESSSCALE);
         }
     }
 
@@ -31,7 +32,7 @@ public abstract class GameButton extends Sprite implements Touchable, Commandabl
             this.run();
         }
         this.pressed = false;
-        this.setScale(1f);
+        this.setHeightProportion(this.NORMSCALE);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package ru.geekbrains.stargame.gameobject.gamearea;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ru.geekbrains.stargame.intefaces.Calculatable;
+import ru.geekbrains.stargame.intefaces.Updatable;
 import ru.geekbrains.stargame.intefaces.Drawable;
 import ru.geekbrains.stargame.intefaces.Resizable;
 import ru.geekbrains.stargame.math.GameUtils;
@@ -10,7 +10,7 @@ import ru.geekbrains.stargame.template.Rect;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StarEmulator extends Rect implements Drawable, Calculatable, Resizable {
+public class StarEmulator extends Rect implements Drawable, Updatable, Resizable {
     private List<Star> starPool = new ArrayList<>();
     private Star starTemplate;
     private int count;
@@ -31,9 +31,9 @@ public class StarEmulator extends Rect implements Drawable, Calculatable, Resiza
     }
 
     @Override
-    public void calculate() {
+    public void update(float dTime) {
         for(Star star : this.starPool) {
-            star.calculate();
+            star.update(dTime);
         }
     }
 

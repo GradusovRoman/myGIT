@@ -9,12 +9,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import ru.geekbrains.stargame.intefaces.Calculatable;
+import ru.geekbrains.stargame.intefaces.Drawable;
+import ru.geekbrains.stargame.intefaces.Updatable;
 import ru.geekbrains.stargame.intefaces.Resizable;
 import ru.geekbrains.stargame.intefaces.Touchable;
 import ru.geekbrains.stargame.math.GameUtils;
 
-public abstract class MyScreen implements Screen, InputProcessor, Touchable, Resizable, Calculatable {
+public abstract class MyScreen implements Screen, InputProcessor, Touchable, Resizable, Updatable, Drawable {
     protected SpriteBatch spriteBatch;
     protected Game game;
     private Rect screenRect;
@@ -40,15 +41,23 @@ public abstract class MyScreen implements Screen, InputProcessor, Touchable, Res
     }
 
     @Override
-    public void calculate() {
+    public void update(float dTime) {
+
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch) {
 
     }
 
     @Override
     public void render(float delta) {
-        if (!this.paused) this.calculate();
+        if (!this.paused) this.update(delta);
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        this.spriteBatch.begin();
+        draw(this.spriteBatch);
+        this.spriteBatch.end();
     }
 
     @Override

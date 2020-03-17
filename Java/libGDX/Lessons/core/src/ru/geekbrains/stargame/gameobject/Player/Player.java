@@ -4,17 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.intefaces.KeyPressable;
 import ru.geekbrains.stargame.intefaces.Touchable;
 import ru.geekbrains.stargame.template.Ship;
-import ru.geekbrains.stargame.template.configclass.ShipConfig;
 
 //TODO пофиксить нажатие клавишь вынести движения в отдельный метод
 public class Player extends Ship implements Touchable, KeyPressable {
     private int currentKey = -1;
     private int currentMouseButton = -1;
     private int currentPointer = -1;
-
-    public Player(ShipConfig shipConfig) {
-        super(shipConfig);
-    }
 
     private void moveLeft() {
         this.setSpeed(new Vector2(-1, 0));

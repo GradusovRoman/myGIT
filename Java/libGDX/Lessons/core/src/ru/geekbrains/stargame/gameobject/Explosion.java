@@ -7,6 +7,7 @@ import ru.geekbrains.stargame.template.Pool;
 import ru.geekbrains.stargame.template.Rect;
 import ru.geekbrains.stargame.template.Sprite;
 
+//TODO Explosion не привязан к Дтайм.
 public class Explosion extends Sprite implements Updatable {
     private Pool<Explosion> explosionPool;
     private Sound explosionSound;

@@ -1,4 +1,4 @@
-package ru.geekbrains.stargame.gameobject.gamearea;
+package ru.geekbrains.stargame.gameobject;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;

@@ -1,7 +1,9 @@
 package ru.geekbrains.stargame.template;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.intefaces.Drawable;
 import ru.geekbrains.stargame.intefaces.Resizable;
 
@@ -83,11 +85,12 @@ public abstract class Sprite extends Rect implements Drawable, Resizable {
         this.frame = 0;
     }
 
-    private TextureRegion getCurrentTextureRegion() {
+    public TextureRegion getCurrentTextureRegion() {
         return this.textureRegions[this.frame];
     }
 
     public int getFrame() {
         return frame;
     }
+
 }

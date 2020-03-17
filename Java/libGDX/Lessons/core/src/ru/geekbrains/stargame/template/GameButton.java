@@ -6,8 +6,8 @@ import ru.geekbrains.stargame.intefaces.Commandable;
 import ru.geekbrains.stargame.intefaces.Touchable;
 
 public abstract class GameButton extends Sprite implements Touchable, Commandable {
-    private final float PRESSSCALE = 0.9f;
-    private final float NORMSCALE = 1f;
+    private float PRESSSCALE = 0.9f;
+    private float NORMSCALE = 1f;
     private int currentButton;
     private int currentPointer;
     private boolean pressed;
@@ -44,5 +44,13 @@ public abstract class GameButton extends Sprite implements Touchable, Commandabl
     public void resize(Rect rectWorld) {
         super.resize(rectWorld);
         this.setCenter(rectWorld.getCenter());
+        this.heightProportionFixForButton(rectWorld);
     }
+
+    private void heightProportionFixForButton(Rect rectWorld) {
+        this.setHeightProportion(Math.min(1f, 1f * (this.getCurrentTextureRegion().getRegionHeight()/rectWorld.getHeight())/( this.getCurrentTextureRegion().getRegionWidth()/rectWorld.getWidth())));
+        this.NORMSCALE = this.getHeightProportion();
+        this.PRESSSCALE = NORMSCALE * 0.9f;
+    }
+
 }

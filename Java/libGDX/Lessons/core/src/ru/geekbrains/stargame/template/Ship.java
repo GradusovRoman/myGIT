@@ -42,7 +42,7 @@ public abstract class Ship extends Sprite implements Updatable, Damageable {
         this.setTextureRegions(shipConfig.textureRegions);
         this.setHeightProportion(shipConfig.heightProportion);
         this.setTextureRotateAngle(shipConfig.textureRotateAngle);
-
+        this.reloadingDTime = 0;
         super.resize(this.worldBound); //вызываем что бы изменить размеры можедльки.
     }
 
@@ -129,7 +129,6 @@ public abstract class Ship extends Sprite implements Updatable, Damageable {
     }
 
     protected void imDestroyed() {
-        this.reloadingDTime = 0;
         if (this.explosionPool != null) {
             this.explosionPool.getFreeObject().startOnRect(this);
         }
@@ -167,5 +166,9 @@ public abstract class Ship extends Sprite implements Updatable, Damageable {
 
     public void setReloadingDTime(float reloadingDTime) {
         this.reloadingDTime = reloadingDTime;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

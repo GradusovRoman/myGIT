@@ -1,6 +1,7 @@
 package ru.geekbrains.stargame.gameobject.gamearea;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.geekbrains.stargame.gameobject.Star;
 import ru.geekbrains.stargame.intefaces.Updatable;
 import ru.geekbrains.stargame.intefaces.Drawable;
 import ru.geekbrains.stargame.intefaces.Resizable;

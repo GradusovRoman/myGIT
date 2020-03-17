@@ -45,7 +45,7 @@ public class ShipConfiguration {
         shipConfig.heightProportion = 0.1f;
         shipConfig.speedRate = 25f;
         shipConfig.reloadingTime = 1f;
-        shipConfig.health = 100;
+        shipConfig.health = 10;
 
         shipConfig.bulletConfig.heightProportion = 0.01f;
         shipConfig.bulletConfig.speedRate = 1f;

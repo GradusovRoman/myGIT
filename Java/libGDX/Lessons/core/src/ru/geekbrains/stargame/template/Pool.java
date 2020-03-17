@@ -67,4 +67,9 @@ public abstract class Pool <T extends  Sprite > implements Updatable, Drawable, 
     public List<T> getListOfUse() {
         return new ArrayList<>(listOfUse);
     }
+
+    public void  releaseListOfUse() {
+        this.listOfFree.addAll(this.listOfUse);
+        this.listOfUse.clear();
+    }
 }

@@ -98,13 +98,17 @@ public class Rect {
 
     public boolean isTouch(Rect rect) {
         // получить точку между векторами и проверяем лежит ли она внутри нашего квадрата (fix)
-        Vector2 touchVector = rect.getCenter().sub(this.center).scl(
-                new Vector2(
-                        this.getHalfWidth()/(rect.getHalfWidth() + this.getHalfWidth()),
-                        this.getHalfHeight()/(rect.getHalfHeight() + this.getHalfHeight())
-                )).add(this.center);// где то так
-
+        Vector2 touchVector = this.getTouchVector(this, rect);
         return this.isInside(touchVector) && rect.isInside(touchVector);
+    }
+
+    public Vector2 getTouchVector(Rect rect1, Rect rect2) {
+        Vector2 touchVector = rect2.getCenter().sub(rect1.center).scl(
+                new Vector2(
+                        rect1.getHalfWidth()/(rect2.getHalfWidth() + rect1.getHalfWidth()),
+                        rect1.getHalfHeight()/(rect2.getHalfHeight() + rect1.getHalfHeight())
+                )).add(this.center);// где то так
+        return touchVector;
     }
 
     public boolean isOutOfBound(Rect rect) {

@@ -40,7 +40,7 @@ public class EnemyShip extends Ship {
         if (this.enemyShipPool != null) this.enemyShipPool.imFree(this);
     }
 
-    public void startOnXAxis(float startX, ShipConfig shipConfig) {
+    public void config(float startX, ShipConfig shipConfig) {
         this.setShipConfig(shipConfig);
 
         float newX = startX;

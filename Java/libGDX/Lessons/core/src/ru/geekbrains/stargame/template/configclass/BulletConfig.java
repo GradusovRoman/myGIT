@@ -18,4 +18,9 @@ public class BulletConfig {
         this.speedRate = bulletConfig.speedRate;
         this.damage = bulletConfig.damage;
     }
+
+    public void setPower(float power) {
+        this.speedRate *= power;
+        this.damage *= power;
+    }
 }

@@ -13,6 +13,7 @@ import ru.geekbrains.stargame.gameobject.ExplosionPool;
 import ru.geekbrains.stargame.gameobject.Player.BulletPool;
 import ru.geekbrains.stargame.gameobject.Player.Player;
 import ru.geekbrains.stargame.gameobject.ShipConfiguration;
+import ru.geekbrains.stargame.gameobject.StatusPanel;
 import ru.geekbrains.stargame.gameobject.buttons.GameOver;
 import ru.geekbrains.stargame.gameobject.buttons.NewGame;
 import ru.geekbrains.stargame.gameobject.enemy.EnemyShip;
@@ -50,6 +51,11 @@ public class GameScene extends MyScreen {
     private List<Object> gameObject;
     private ButtonLayout buttonLayout = new ButtonLayout();
     private boolean endGame = false;
+    private StatusPanel statusPanel;
+    private float fontSize = 5f;
+    private int frags;
+    private int level;
+    private int fragsToLevelUp = 10;
 
     public GameScene(Game game) {
         super(game);
@@ -70,6 +76,8 @@ public class GameScene extends MyScreen {
         this.buttonLayout.setSize(100,20);
         this.buttonLayout.setAlign(ButtonLayout.align.CENTER);
         this.buttonLayout.setLayout(ButtonLayout.layout.VERTICAL);
+        this.statusPanel = new StatusPanel("font/gamefont.fnt", "font/gamefont.png");
+        this.statusPanel.setSize(this.fontSize);
 
         this.createPool();
         this.createObject();
@@ -113,6 +121,7 @@ public class GameScene extends MyScreen {
         this.gameObject.add(this.enemyShipPool);
         this.gameObject.add(this.player);
         this.gameObject.add(this.explosionPool);
+        this.gameObject.add(this.statusPanel);
     }
 
     @Override
@@ -139,7 +148,9 @@ public class GameScene extends MyScreen {
                 if (enemyShip.isTouch(this.player)) {
                     this.player.takeDamage(enemyShip);
                     enemyShip.takeDamage(this.player);
+
                 }
+                if (enemyShip.getHealth() <= 0) this.frags++;
             }
 
             //TODO вражеские пули и наш корабль
@@ -152,6 +163,11 @@ public class GameScene extends MyScreen {
 
             if (player.getHealth() <= 0) this.endGame = true;
         }
+
+        this.level = 1 + this.frags/this.fragsToLevelUp;
+        this.enemyShipPool.setDiffLevel(this.level);
+        this.statusPanel.setStatus(this.frags, this.player.getHealth(), this.level);
+
     }
 
     @Override
@@ -231,6 +247,8 @@ public class GameScene extends MyScreen {
         this.enemyBulletPool.releaseListOfUse();
         this.enemyShipPool.releaseListOfUse();
         this.explosionPool.releaseListOfUse();
+        this.frags = 0;
+        this.level = 1;
         this.endGame = false;
     }
 }

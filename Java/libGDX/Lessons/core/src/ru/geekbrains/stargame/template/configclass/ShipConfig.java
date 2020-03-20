@@ -25,4 +25,10 @@ public class ShipConfig {
         this.reloadingTime = shipConfig.reloadingTime;
         this.health = shipConfig.health;
     }
+
+    public void setPower(float power) {
+        this.bulletConfig.setPower(power);
+        this.speedRate *= power;
+        this.health *= power;
+    }
 }

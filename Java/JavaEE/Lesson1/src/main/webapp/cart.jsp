@@ -10,10 +10,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv=​"Content-Type"​ content=​"text/html; charset=UTF-8"​>
-    <title>404</title>
-</head>
-<body>
-<%@include file="navigationBar.jsp"%>
-<h1 align="center">404 Error</h1>
+    <head>
+        <meta http-equiv=​"Content-Type"​ content=​"text/html; charset=UTF-8"​>
+        <title>Cart</title>
+    </head>
+    <body>
+        <%@include file="navigationBar.jsp"%>
+        <h1 align="center">Это корзина покупок</h1>
+
+    </body>
+</html>

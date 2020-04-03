@@ -23,9 +23,6 @@ public class ContentTypeFilter implements Filter {
         this.logger.info("---->>> filter is running");
         this.logger.info(servletRequest.getCharacterEncoding());
 
-        //так русские буквы русские но не с UTF-8
-//        servletResponse.setCharacterEncoding("cp1251");
-
         servletResponse.setContentType("text/html;charset=UTF-8");
         filterChain.doFilter(servletRequest, servletResponse);
 

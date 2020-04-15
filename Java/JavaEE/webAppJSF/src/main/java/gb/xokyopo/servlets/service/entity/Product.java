@@ -1,4 +1,4 @@
-package gb.xokyopo.servlets.entity;
+package gb.xokyopo.servlets.service.entity;
 
 public class Product {
     private int id;

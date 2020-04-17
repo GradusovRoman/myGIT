@@ -1,14 +1,14 @@
-package gb.xokyopo.servlets.service.entity;
+package gb.xokyopo.servlets.service.represantations;
 
-public class Product {
+public class ProductRep {
     private int id;
     private String name;
     private int price;
 
-    public Product() {
+    public ProductRep() {
     }
 
-    public Product(int id, String name, int price) {
+    public ProductRep(int id, String name, int price) {
         this.id = id;
         this.name = name;
         this.price = price;

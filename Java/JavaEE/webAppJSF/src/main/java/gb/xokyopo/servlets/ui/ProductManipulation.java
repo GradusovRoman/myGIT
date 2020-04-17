@@ -1,7 +1,7 @@
 package gb.xokyopo.servlets.ui;
 
 
-import gb.xokyopo.servlets.service.entity.Product;
+import gb.xokyopo.servlets.service.represantations.ProductRep;
 import gb.xokyopo.servlets.service.ProductsService;
 
 import javax.enterprise.context.SessionScoped;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Named
 @SessionScoped
 public class ProductManipulation implements Serializable {
-    private Product product;
+    private ProductRep productRep;
     private ProductsService productsService;
 
     @Inject
@@ -20,31 +20,36 @@ public class ProductManipulation implements Serializable {
         this.productsService = productsService;
     }
 
-    public String editingProduct(Product product) {
-        this.product = product;
+    public String editingProduct(ProductRep productRep) {
+        this.productRep = productRep;
         return "/product.xhtml";
     }
 
     public String addProduct() {
-        this.product = new Product();
+        this.productRep = new ProductRep();
         return "/product.xhtml";
     }
 
+    public String deleteProduct(ProductRep productRep) {
+        this.productsService.deleteProduct(productRep);
+        return "/catalog.xhtml";
+    }
+
     public String saveChanges() {
-        if (this.product.getId() > 0) {
-            this.productsService.updateProduct(product);
+        if (this.productRep.getId() > 0) {
+            this.productsService.updateProduct(productRep);
         } else {
-            this.productsService.addProduct(product);
+            this.productsService.addProduct(productRep);
         }
         return "/catalog.xhtml?faces-redirect=true";
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductRep getProductRep() {
+        return productRep;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductRep(ProductRep productRep) {
+        this.productRep = productRep;
     }
 
     public String cancel() {

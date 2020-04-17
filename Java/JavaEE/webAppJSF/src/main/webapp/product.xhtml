@@ -18,10 +18,10 @@
                     <f:facet name="Value"/>
 
                     <h:outputLabel value="Имя"/>
-                    <h:inputText value="#{productManipulation.product.name}" label="Имя" required="true"/>
+                    <h:inputText value="#{productManipulation.productRep.name}" label="Имя" required="true"/>
 
                     <h:outputLabel value="Цена"/>
-                    <h:inputText value="#{productManipulation.product.price}" label="Цена" required="true"/>
+                    <h:inputText value="#{productManipulation.productRep.price}" label="Цена" required="true"/>
                 </h:panelGrid>
                 <h:commandButton value="Сохранить" action="#{productManipulation.saveChanges()}"/>
                 <h:commandButton value="Отмена" action="#{productManipulation.cancel()}"/>

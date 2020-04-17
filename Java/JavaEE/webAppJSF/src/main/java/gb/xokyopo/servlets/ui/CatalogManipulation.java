@@ -1,16 +1,16 @@
 package gb.xokyopo.servlets.ui;
 
-import gb.xokyopo.servlets.service.entity.Product;
+import gb.xokyopo.servlets.service.represantations.ProductRep;
 import gb.xokyopo.servlets.service.ProductsService;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 
 @Named
-@ApplicationScoped
+@SessionScoped
 public class CatalogManipulation implements Serializable {
     private ProductsService productsService;
 
@@ -19,12 +19,7 @@ public class CatalogManipulation implements Serializable {
         this.productsService = productsService;
     }
 
-    public List<Product> getAll() {
+    public List<ProductRep> getAll() {
         return this.productsService.getAll();
-    }
-
-    public String deleteProduct(Product product) {
-        this.productsService.deleteProduct(product);
-        return "/catalog.xhtml";
     }
 }

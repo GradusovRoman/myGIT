@@ -13,28 +13,28 @@
         <h1 align="center">Это каталог товаров</h1>
 
         <div align="center">
+            <h:commandButton value="addProduct" action="#{productManipulation.addProduct()}" />
             <h:form>
-                <h:dataTable value="#{catalogManipulation.all}" var="product">
+                <h:dataTable value="#{catalogManipulation.all}" var="productRep">
                     <h:column>
                         <f:facet name="header">Id</f:facet>
-                        #{product.id}
+                        #{productRep.id}
                     </h:column>
                     <h:column>
                         <f:facet name="header">Name</f:facet>
-                        #{product.name}
+                        #{productRep.name}
                     </h:column>
                     <h:column>
                         <f:facet name="header">Price</f:facet>
-                        #{product.price}
+                        #{productRep.price}
                     </h:column>
                     <h:column>
                         <f:facet name="header">Actions</f:facet>
-                        <h:commandButton value="edit" action="#{productManipulation.editingProduct(product)}"/>
-                        <h:commandButton value="delete" action="#{catalogManipulation.deleteProduct(product)}"/>
-                        <h:commandButton value="addToCart" action="#{cartManipulation.addProduct(product)}"/>
+                        <h:commandButton value="edit" action="#{productManipulation.editingProduct(productRep)}"/>
+                        <h:commandButton value="delete" action="#{productManipulation.deleteProduct(productRep)}"/>
+                        <h:commandButton value="addToCart" action="#{cartManipulation.addProduct(productRep)}"/>
                     </h:column>
                 </h:dataTable>
-                <h:commandButton value="addProduct" action="#{productManipulation.addProduct()}"/>
             </h:form>
         </div>
 

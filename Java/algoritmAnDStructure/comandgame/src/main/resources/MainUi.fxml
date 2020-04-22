@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" scaleShape="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gb.xokyopo.game.ui.MainUiController">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="200.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="426.0" minWidth="10.0" prefWidth="365.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="328.0" minWidth="10.0" prefWidth="200.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+         <children>
+            <Label text="Команда" />
+            <TextField fx:id="leftTeamNameField" maxWidth="1.7976931348623157E308" promptText="введите название команды" />
+            <Label text="Добавить героя">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></Label>
+            <HBox alignment="TOP_CENTER" fillHeight="false" maxWidth="1.7976931348623157E308" prefHeight="100.0" VBox.vgrow="NEVER">
+               <children>
+                  <ComboBox fx:id="leftHeroClassBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="195.0" />
+                  <Button fx:id="leftAddHeroButton" minWidth="70.0" mnemonicParsing="false" onAction="#addLeftHero" text="Добавить" />
+               </children>
+            </HBox>
+            <Label text="Список Героев" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+              <content>
+                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <ListView fx:id="leftHeroList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets left="1.0" right="1.0" />
+         </padding>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+         <children>
+            <CheckBox fx:id="changeBoxUnique" mnemonicParsing="false" onAction="#changeUniqueSetup" text="Только уникальные герои">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin></CheckBox>
+            <Label text="Размер команды">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="teamSize" alignment="CENTER_RIGHT" maxWidth="100.0" promptText="размер команд" text="3" />
+            <Button fx:id="runButton" mnemonicParsing="false" onAction="#runProgram" prefWidth="100.0" text="Пуск">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="35.0" />
+               </VBox.margin></Button>
+            <Label text="Лог боя" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+              <content>
+                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <TextArea fx:id="combatLog" layoutX="36.0" layoutY="172.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets left="1.0" right="1.0" />
+         </padding>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+         <children>
+            <Label text="Команда" />
+            <TextField fx:id="rightTeamNameField" maxWidth="1.7976931348623157E308" promptText="введите название команды" />
+            <Label text="Добавить героя">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin></Label>
+            <HBox alignment="TOP_CENTER" fillHeight="false" maxWidth="1.7976931348623157E308" prefHeight="100.0" VBox.vgrow="NEVER">
+               <children>
+                  <ComboBox fx:id="rightHeroClassBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="196.0" />
+                  <Button fx:id="rightAddHeroButton" minWidth="70.0" mnemonicParsing="false" onAction="#addRightHero" text="Добавить" />
+               </children>
+            </HBox>
+            <Label text="Список Героев" />
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+              <content>
+                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <ListView fx:id="rightHeroList" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets left="1.0" right="1.0" />
+         </padding>
+      </VBox>
+   </children>
+</GridPane>

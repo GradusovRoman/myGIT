@@ -15,8 +15,6 @@ import java.util.List;
 public class CategoryService {
     private CategoriesRepository categoriesRepository;
     private List<CategoryRep> categoryRepList;
-
-
     public List<CategoryRep> getCategoryRepList() {
         this.updateCategoryList();
         return categoryRepList;
@@ -37,9 +35,14 @@ public class CategoryService {
     private void updateCategoryList() {
         if (this.categoryRepList == null) this.categoryRepList = new ArrayList<>();
         this.categoryRepList.clear();
-        this.categoriesRepository.getAll().forEach(category -> {
-            this.categoryRepList.add(new CategoryRep(category.getId(), category.getName(), category.getDescription()));
-        });
+        if (this.categoriesRepository == null) {
+            this.categoryRepList.add(new CategoryRep(0, "нет","categoriesRepository == null"));
+        } else {
+            this.categoriesRepository.getAll().forEach(category -> {
+                this.categoryRepList.add(new CategoryRep(category.getId(), category.getName(), category.getDescription()));
+            });
+        }
+
     }
 
     @Inject

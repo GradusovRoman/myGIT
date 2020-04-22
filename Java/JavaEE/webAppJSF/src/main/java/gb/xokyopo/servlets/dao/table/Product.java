@@ -9,8 +9,8 @@ public class Product {
     private int id;
     private String name;
     private int price;
-    @ManyToOne
-    private Category category;
+//    @ManyToOne
+//    private Category category;
 
     public Product() {
     }
@@ -19,7 +19,7 @@ public class Product {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.category = category;
+//        this.category = category;
     }
 
     public int getId() {
@@ -45,12 +45,11 @@ public class Product {
     public void setPrice(int price) {
         this.price = price;
     }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+//    public Category getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(Category category) {
+//        this.category = category;
+//    }
 }

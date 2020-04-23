@@ -1,6 +1,7 @@
 package gb.xokyopo.servlets.ui;
 
-
+import gb.xokyopo.servlets.dao.table.Category;
+import gb.xokyopo.servlets.service.CategoryService;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 import gb.xokyopo.servlets.service.ProductsService;
 
@@ -13,11 +14,15 @@ import java.io.Serializable;
 @SessionScoped
 public class ProductManipulation implements Serializable {
     private ProductRep productRep;
-    private ProductsService productsService;
+    private int categoryId;
+    private final ProductsService productsService;
+    private final CategoryService categoryService;
+
 
     @Inject
-    public ProductManipulation(ProductsService productsService) {
+    public ProductManipulation(ProductsService productsService, CategoryService categoryService) {
         this.productsService = productsService;
+        this.categoryService = categoryService;
     }
 
     public String editingProduct(ProductRep productRep) {
@@ -36,12 +41,16 @@ public class ProductManipulation implements Serializable {
     }
 
     public String saveChanges() {
-        if (this.productRep.getId() > 0) {
-            this.productsService.updateProduct(productRep);
-        } else {
-            this.productsService.addProduct(productRep);
+        if (!this.productRep.getName().equals("") && this.productRep.getPrice() <=0) {
+            if (this.productRep.getId() > 0) {
+                this.productRep.setCategoryRep(this.categoryService.getById(this.categoryId));
+                this.productsService.updateProduct(productRep);
+            } else {
+                this.productsService.addProduct(productRep);
+            }
+            return "/catalog.xhtml?faces-redirect=true";
         }
-        return "/catalog.xhtml?faces-redirect=true";
+        return "/product.xhtml";
     }
 
     public ProductRep getProductRep() {
@@ -54,5 +63,13 @@ public class ProductManipulation implements Serializable {
 
     public String cancel() {
         return "/catalog.xhtml?faces-redirect=true";
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }

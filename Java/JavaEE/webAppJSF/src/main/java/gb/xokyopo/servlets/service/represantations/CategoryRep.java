@@ -8,12 +8,6 @@ public class CategoryRep {
     public CategoryRep() {
     }
 
-    public CategoryRep(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
     public int getId() {
         return id;
     }

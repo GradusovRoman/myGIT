@@ -1,8 +1,11 @@
 package gb.xokyopo.servlets.service;
 
+import gb.xokyopo.servlets.dao.ProductRepository;
+import gb.xokyopo.servlets.dao.table.Product;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,57 +17,49 @@ import java.util.Random;
 @ApplicationScoped
 public class ProductsService implements Serializable {
     private Random random = new Random();
-    private List<ProductRep> productRepList;
+    private final List<ProductRep> productRepList;
+    private ProductRepository productRepository;
+    private ServiceUtils serviceUtils;
 
     public ProductsService() {
-        this.productRepList = this.getProducts(10);
-    }
+        this.productRepList = new ArrayList<>();
 
-    private String getRandomName() {
-        String[] names = {"перчатки", "варежки", "штаны", "кросовки", "носки", "кепки", "шорты", "футболки", "туфли", "тапки"};
-        String[] colors = {"зеленые", "красные", "розовые", "синие", "черные", "коричнивые"};
-        return colors[random.nextInt(colors.length - 1)] + " " + names[this.random.nextInt(names.length - 1)];
-    }
-
-    public List<ProductRep> getProducts(int counts) {
-        List<ProductRep> productRepList = new ArrayList<>();
-        for (int i = 0; i < counts; i++) {
-            productRepList.add(new ProductRep(i + 1, this.getRandomName(), this.random.nextInt(counts * 100)));
-        }
-
-        return productRepList;
     }
 
     public List<ProductRep> getAll() {
+        if (this.productRepList.size() == 0) this.updateProductRepList();
         return this.productRepList;
     }
 
     public void addProduct(ProductRep productRep) {
-        int[] count = new int[]{0};
-        this.productRepList.forEach(eproduct->{
-            if (eproduct.getId() > count[0]) {
-                count[0] = eproduct.getId();
-            }
-        });
-        productRep.setId(count[0] + 1);
-        this.productRepList.add(productRep);
+        this.productRepository.create(this.serviceUtils.productRepToProduct(productRep));
+        this.updateProductRepList();
     }
 
     public void updateProduct(ProductRep productRep) {
-        this.productRepList.forEach(eproduct->{
-            if(eproduct.getId() == productRep.getId()) {
-                eproduct.setName(productRep.getName());
-                eproduct.setPrice(productRep.getPrice());
-            }
-        });
+        this.productRepository.update(this.serviceUtils.productRepToProduct(productRep));
+        this.updateProductRepList();
     }
 
     public void deleteProduct(ProductRep productRep) {
-        for(ProductRep eproduct : this.productRepList) {
-            if (eproduct.getId() == productRep.getId()) {
-                this.productRepList.remove(eproduct);
-                return;
-            }
-        }
+        this.productRepository.delete(productRep.getId());
+        this.updateProductRepList();
+    }
+
+    private void updateProductRepList() {
+        this.productRepList.clear();
+        this.productRepository.getAll().forEach(prod->{
+            this.productRepList.add(this.serviceUtils.productToProductRep(prod));
+        });
+    }
+
+    @Inject
+    public void setServiceUtils(ServiceUtils serviceUtils) {
+        this.serviceUtils = serviceUtils;
+    }
+
+    @Inject
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 }

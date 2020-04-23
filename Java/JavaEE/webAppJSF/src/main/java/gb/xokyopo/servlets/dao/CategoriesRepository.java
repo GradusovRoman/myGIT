@@ -1,58 +1,56 @@
 package gb.xokyopo.servlets.dao;
 
+
+import gb.xokyopo.servlets.dao.interfaces.Repository;
 import gb.xokyopo.servlets.dao.table.Category;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.*;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 
 import java.util.List;
 
 @Named
 @ApplicationScoped
-public class CategoriesRepository {
+public class CategoriesRepository implements Repository<Category> {
     @PersistenceContext(unitName = "postgres")
     protected EntityManager em;
 
-    @Inject
-    protected UserTransaction utx;
-
+    @Override
     @Transactional
-    public boolean createCategory(Category category){
-        System.out.println("======================================================");
-        System.out.println("создаю сущьность");
-        this.em.persist(category);
-        System.out.println("======================================================");
+    public boolean create(Category element){
+        this.em.persist(element);
         return true;
     }
 
+    @Override
     @Transactional
-    public boolean updateCategory(Category category) {
-        System.out.println("======================================================");
-        System.out.println("изменяю сущьность");
-        Category updatedCategory = em.find(Category.class, category.getId());
-        updatedCategory.setName(category.getName());
-        updatedCategory.setDescription(category.getDescription());
-        this.em.refresh(updatedCategory);
-        System.out.println("======================================================");
+    public boolean update(Category element) {
+        Category updatedCategory = this.findById(element.getId());
+        updatedCategory.update(element);
+        this.em.merge(updatedCategory);
         return true;
     }
 
+    @Override
     @Transactional
-    public boolean deleteCategory(Category category) {
-        this.em.remove(category);
+    public boolean delete(int id) {
+        this.em.remove(this.findById(id));
         return true;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     @Transactional
     public List<Category> getAll() {
         Query query = this.em.createQuery("SELECT c FROM Category c", Category.class);
         return (List<Category>) query.getResultList();
+    }
+
+    @Override
+    @Transactional
+    public Category findById(int id) {
+        return em.find(Category.class, id);
     }
 }

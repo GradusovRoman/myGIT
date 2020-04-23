@@ -4,14 +4,9 @@ public class ProductRep {
     private int id;
     private String name;
     private int price;
+    private CategoryRep categoryRep;
 
     public ProductRep() {
-    }
-
-    public ProductRep(int id, String name, int price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
     }
 
     public int getId() {
@@ -36,5 +31,13 @@ public class ProductRep {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public CategoryRep getCategoryRep() {
+        return categoryRep;
+    }
+
+    public void setCategoryRep(CategoryRep categoryRep) {
+        this.categoryRep = categoryRep;
     }
 }

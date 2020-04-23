@@ -10,9 +10,9 @@ public class Category {
     private int id;
     private String name;
     private String description;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private List<Product> productList;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "catecory")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Product> productList;
 
     public Category() {
     }
@@ -52,11 +52,17 @@ public class Category {
         this.description = description;
     }
 
-//    public List<Product> getProductList() {
-//        return productList;
-//    }
-//
-//    public void setProductList(List<Product> productList) {
-//        this.productList = productList;
-//    }
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public void update(Category category){
+        this.name = category.getName();
+        this.description = category.getDescription();
+        //TODO привязка к продуктам
+    }
 }

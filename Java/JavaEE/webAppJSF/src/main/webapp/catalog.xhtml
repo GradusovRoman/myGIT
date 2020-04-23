@@ -15,6 +15,7 @@
         <div align="center">
             <h:commandButton value="addProduct" action="#{productManipulation.addProduct()}" />
             <h:form>
+                <h:commandButton value="addProduct" action="#{productManipulation.addProduct()}" />
                 <h:dataTable value="#{catalogManipulation.all}" var="productRep">
                     <h:column>
                         <f:facet name="header">Id</f:facet>
@@ -23,6 +24,10 @@
                     <h:column>
                         <f:facet name="header">Name</f:facet>
                         #{productRep.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Category</f:facet>
+                        #{productRep.categoryRep.name}
                     </h:column>
                     <h:column>
                         <f:facet name="header">Price</f:facet>

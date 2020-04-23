@@ -36,12 +36,16 @@ public class CategoryManipulation implements Serializable {
     }
 
     public String saveChange() {
-        if (this.categoryRep.getId() <= 0) {
-            this.categoryService.addCategory(this.categoryRep);
-        } else {
-            this.categoryService.updateCategory(this.categoryRep);
+        if (!this.categoryRep.getName().equals("")) {
+            if (this.categoryRep.getId() <= 0) {
+                this.categoryService.addCategory(this.categoryRep);
+            } else {
+                this.categoryService.updateCategory(this.categoryRep);
+            }
+            return "/categories.xhtml?faces-redirect=true";
         }
-        return "/categories.xhtml?faces-redirect=true";
+        return "/category.xhtml";
+
     }
 
     public String cancel() {

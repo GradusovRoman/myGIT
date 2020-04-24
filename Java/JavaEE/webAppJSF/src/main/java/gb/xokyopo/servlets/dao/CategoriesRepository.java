@@ -1,6 +1,5 @@
 package gb.xokyopo.servlets.dao;
 
-
 import gb.xokyopo.servlets.dao.interfaces.Repository;
 import gb.xokyopo.servlets.dao.table.Category;
 

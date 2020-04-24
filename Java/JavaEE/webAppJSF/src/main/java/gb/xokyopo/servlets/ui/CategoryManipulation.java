@@ -45,7 +45,6 @@ public class CategoryManipulation implements Serializable {
             return "/categories.xhtml?faces-redirect=true";
         }
         return "/category.xhtml";
-
     }
 
     public String cancel() {

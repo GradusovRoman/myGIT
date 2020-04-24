@@ -23,7 +23,6 @@ public class ProductsService implements Serializable {
 
     public ProductsService() {
         this.productRepList = new ArrayList<>();
-
     }
 
     public List<ProductRep> getAll() {

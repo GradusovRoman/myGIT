@@ -1,5 +1,6 @@
 package gb.xokyopo.servlets.ui;
 
+
 import gb.xokyopo.servlets.dao.table.Category;
 import gb.xokyopo.servlets.service.CategoryService;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
@@ -17,7 +18,6 @@ public class ProductManipulation implements Serializable {
     private int categoryId;
     private final ProductsService productsService;
     private final CategoryService categoryService;
-
 
     @Inject
     public ProductManipulation(ProductsService productsService, CategoryService categoryService) {

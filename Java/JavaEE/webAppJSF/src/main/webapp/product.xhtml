@@ -25,8 +25,8 @@
 
                 <h:outputLabel value="Категория"/>
                 <h:panelGroup>
-                    <h:selectOneMenu value="#{productManipulation.categoryId}">
-                        <f:selectItems value="#{categoryManipulation.all}" var="category" itemValue="#{category.id}" itemLabel="#{category.name}"/>
+                    <h:selectOneMenu value="#{productManipulation.productRep.categoryRep.id}">
+                        <f:selectItems value="#{categoryManipulation.all}" var="categoryRep" itemValue="#{categoryRep.id}" itemLabel="#{categoryRep.name}"/>
                     </h:selectOneMenu>
                     <h:commandButton value="+" action="#{categoryManipulation.addCategory()}"/>
                 </h:panelGroup>

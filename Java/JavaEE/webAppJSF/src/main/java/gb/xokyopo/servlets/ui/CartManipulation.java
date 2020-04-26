@@ -12,23 +12,30 @@ import java.util.Set;
 @Named
 @SessionScoped
 public class CartManipulation implements Serializable {
-    private Map<ProductRep, Integer> productList;
+    private Map<ProductRep, Integer> productMap;
 
     public CartManipulation() {
-        this.productList = new HashMap<>();
+        this.productMap = new HashMap<>();
     }
 
     public Set<Map.Entry<ProductRep, Integer>> getAll() {
-        return this.productList.entrySet();
+        return this.productMap.entrySet();
     }
 
     public void addProduct(ProductRep productRep) {
-        this.productList.put(productRep, this.productList.getOrDefault(productRep, 0) + 1);
+        this.productMap.put(productRep, this.productMap.getOrDefault(productRep, 0) + 1);
     }
 
     public String deleteProduct(ProductRep productRep) {
-        this.productList.remove(productRep);
+        this.productMap.remove(productRep);
         return "/cart.xhtml";
     }
 
+    public int getSum() {
+        int[] count = {0};
+        this.productMap.forEach((productRep, integer) -> {
+            count[0] += productRep.getPrice() * integer;
+        });
+        return count[0];
+    }
 }

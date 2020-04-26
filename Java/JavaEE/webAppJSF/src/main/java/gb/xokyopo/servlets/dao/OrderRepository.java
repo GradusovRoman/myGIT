@@ -1,7 +1,7 @@
 package gb.xokyopo.servlets.dao;
 
 import gb.xokyopo.servlets.dao.interfaces.Repository;
-import gb.xokyopo.servlets.dao.table.Product;
+import gb.xokyopo.servlets.dao.table.Orders;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
@@ -13,20 +13,20 @@ import java.util.List;
 
 @Named
 @ApplicationScoped
-public class ProductRepository implements Repository<Product> {
+public class OrderRepository implements Repository<Orders> {
     @PersistenceContext(unitName = "postgres")
-    protected EntityManager em;
+    private EntityManager em;
 
     @Override
     @Transactional
-    public boolean create(Product element) {
+    public boolean create(Orders element) {
         em.persist(element);
-        return false;
+        return true;
     }
 
     @Override
     @Transactional
-    public boolean update(Product element) {
+    public boolean update(Orders element) {
         em.merge(element);
         return false;
     }
@@ -41,14 +41,14 @@ public class ProductRepository implements Repository<Product> {
     @Override
     @SuppressWarnings("unchecked")
     @Transactional
-    public List<Product> getAll() {
-        Query query = em.createQuery("SELECT c FROM Product c ", Product.class);
-        return (List<Product>) query.getResultList();
+    public List<Orders> getAll() {
+        Query query = em.createQuery("SELECT c FROM Orders c", Orders.class);
+        return (List<Orders>) query.getResultList();
     }
 
     @Override
     @Transactional
-    public Product findById(int id) {
-        return em.find(Product.class, id);
+    public Orders findById(int id) {
+        return em.find(Orders.class, id);
     }
 }

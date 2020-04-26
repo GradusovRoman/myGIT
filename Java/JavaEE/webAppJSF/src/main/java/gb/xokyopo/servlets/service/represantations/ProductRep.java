@@ -40,4 +40,17 @@ public class ProductRep {
     public void setCategoryRep(CategoryRep categoryRep) {
         this.categoryRep = categoryRep;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ProductRep) {
+            return this.id == ((ProductRep) obj).getId();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return ("" + id).hashCode();
+    }
 }

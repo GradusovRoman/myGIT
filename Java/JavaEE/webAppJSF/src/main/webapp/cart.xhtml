@@ -27,9 +27,17 @@
                         #{elementOfProduct.value}
                     </h:column>
                     <h:column>
+                        <f:facet name="header">Summary</f:facet>
+                        #{elementOfProduct.key.price * elementOfProduct.value}
+                    </h:column>
+                    <h:column>
                         <h:commandButton value="delete" action="#{cartManipulation.deleteProduct(elementOfProduct.key)}"/>
                     </h:column>
                 </h:dataTable>
+                <h:panelGrid columns="2">
+                        <h:outputLabel value="FullPrice"/>
+                        <h:outputLabel value="#{cartManipulation.sum}"/>
+                </h:panelGrid>
             </h:form>
         </div>
     </h:body>

@@ -15,13 +15,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, int price, Category category) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.category = category;
-    }
-
     public Product(int id, String name, int price) {
         this.id = id;
         this.name = name;
@@ -58,11 +51,5 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public void update(Product product) {
-        this.name = product.getName();
-        this.price = product.getPrice();
-        //TODO привязку к категории
     }
 }

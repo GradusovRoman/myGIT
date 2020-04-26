@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.*;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 @Named
@@ -26,16 +25,14 @@ public class CategoriesRepository implements Repository<Category> {
     @Override
     @Transactional
     public boolean update(Category element) {
-        Category updatedCategory = this.findById(element.getId());
-        updatedCategory.update(element);
-        this.em.merge(updatedCategory);
+        this.em.merge(element);
         return true;
     }
 
     @Override
     @Transactional
-    public boolean delete(int id) {
-        this.em.remove(this.findById(id));
+    public boolean delete(int elementID) {
+        this.em.remove(this.findById(elementID));
         return true;
     }
 

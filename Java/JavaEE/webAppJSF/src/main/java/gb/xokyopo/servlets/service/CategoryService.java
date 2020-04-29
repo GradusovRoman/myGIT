@@ -1,6 +1,7 @@
 package gb.xokyopo.servlets.service;
 
 import gb.xokyopo.servlets.dao.table.Category;
+import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,38 +12,41 @@ import java.util.stream.Collectors;
 
 @Named
 @ApplicationScoped
-public class CategoryService {
+public class CategoryService implements ServiceImpl<CategoryRep> {
     private ServiceUtils serviceUtils;
-
-
-    public List<CategoryRep> getCategoryRepList() {
-        return this.serviceUtils.getCategoriesRepository().getAll()
-                .stream()
-                .map(this.serviceUtils::categoryToCategoryRep)
-                .collect(Collectors.toList());
-    }
-
-    public void addCategory(CategoryRep categoryRep) {
-        this.serviceUtils.getCategoriesRepository().create(
-                this.serviceUtils.categoryRepToCategory(categoryRep, new Category()));
-    }
-
-    public void deleteCategory(CategoryRep categoryRep) {
-        this.serviceUtils.getCategoriesRepository().delete(categoryRep.getId());
-    }
-
-    public void updateCategory(CategoryRep categoryRep) {
-        this.serviceUtils.getCategoriesRepository().update(
-                this.serviceUtils.categoryRepToCategory(categoryRep, this.getCategoryById(categoryRep.getId())));
-    }
 
     @Inject
     public void setServiceUtils(ServiceUtils serviceUtils) {
         this.serviceUtils = serviceUtils;
     }
 
-    public Category getCategoryById(int categoryId) {
-        return this.serviceUtils.getCategoriesRepository().findById(categoryId);
+    @Override
+    public List<CategoryRep> getAll() {
+        return this.serviceUtils.getCategoriesRepository().getAll()
+                .stream()
+                .map(this.serviceUtils::categoryToCategoryRep)
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public void add(CategoryRep element) {
+        this.serviceUtils.getCategoriesRepository().create(
+                this.serviceUtils.categoryRepToCategory(element, new Category()));
+    }
+
+    @Override
+    public void update(CategoryRep element) {
+        this.serviceUtils.getCategoriesRepository().update(
+                this.serviceUtils.categoryRepToCategory(element, this.serviceUtils.getCategoriesRepository().findById(element.getId())));
+    }
+
+    @Override
+    public void delete(CategoryRep element) {
+        this.serviceUtils.getCategoriesRepository().delete(element.getId());
+    }
+
+    @Override
+    public CategoryRep getById(int elementId) {
+        return this.serviceUtils.categoryToCategoryRep(this.serviceUtils.getCategoriesRepository().findById(elementId));
+    }
 }

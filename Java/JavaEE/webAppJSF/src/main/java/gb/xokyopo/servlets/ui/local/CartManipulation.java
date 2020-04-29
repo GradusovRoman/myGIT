@@ -1,4 +1,4 @@
-package gb.xokyopo.servlets.ui;
+package gb.xokyopo.servlets.ui.local;
 
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 

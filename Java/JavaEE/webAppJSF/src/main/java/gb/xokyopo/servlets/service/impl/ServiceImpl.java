@@ -6,6 +6,6 @@ public interface ServiceImpl<T> {
     List<T> getAll();
     void add(T element);
     void update(T element);
-    void delete(int elementId);
+    void delete(T element);
     T getById(int elementId);
 }

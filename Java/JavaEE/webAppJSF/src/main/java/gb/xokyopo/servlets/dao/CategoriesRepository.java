@@ -1,6 +1,6 @@
 package gb.xokyopo.servlets.dao;
 
-import gb.xokyopo.servlets.dao.interfaces.Repository;
+import gb.xokyopo.servlets.dao.impl.Repository;
 import gb.xokyopo.servlets.dao.table.Category;
 
 import javax.enterprise.context.ApplicationScoped;

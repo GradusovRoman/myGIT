@@ -1,0 +1,26 @@
+http://localhost:8080/webAppJSF/RESTFull/v1/shop/
+
+###
+
+GET http://localhost:8080/webAppJSF/RESTFull/v1/shop/getAllProduct
+
+###
+
+POST http://localhost:8080/webAppJSF/RESTFull/v1/shop/getProductById/7/id
+
+###
+
+PUT http://localhost:8080/webAppJSF/RESTFull/v1/shop//insertProduct
+Content-Type: application/json
+
+{
+  "categoryRep": {
+    "description": "носим зимой",
+    "id": 4,
+    "name": "Одежда зимняя"
+  },
+  "name": "Штаны Толстые",
+  "price": 5000
+}
+
+###

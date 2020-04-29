@@ -1,4 +1,4 @@
-package gb.xokyopo.servlets.ui;
+package gb.xokyopo.servlets.ui.local;
 
 import gb.xokyopo.servlets.service.CategoryService;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
@@ -31,16 +31,16 @@ public class CategoryManipulation implements Serializable {
     }
 
     public String deletingCategory(CategoryRep categoryRep) {
-        this.categoryService.deleteCategory(categoryRep);
+        this.categoryService.delete(categoryRep);
         return "/categories.xhtml?faces-redirect=true";
     }
 
     public String saveChange() {
         if (!this.categoryRep.getName().equals("")) {
-            if (this.categoryRep.getId() <= 0) {
-                this.categoryService.addCategory(this.categoryRep);
+            if (this.categoryRep.getId() > 0) {
+                this.categoryService.update(this.categoryRep);
             } else {
-                this.categoryService.updateCategory(this.categoryRep);
+                this.categoryService.add(this.categoryRep);
             }
             return "/categories.xhtml?faces-redirect=true";
         }
@@ -60,6 +60,6 @@ public class CategoryManipulation implements Serializable {
     }
 
     public List<CategoryRep> getAll() {
-        return this.categoryService.getCategoryRepList();
+        return this.categoryService.getAll();
     }
 }

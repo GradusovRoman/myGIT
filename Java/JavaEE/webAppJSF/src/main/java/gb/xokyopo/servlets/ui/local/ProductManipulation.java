@@ -1,4 +1,4 @@
-package gb.xokyopo.servlets.ui;
+package gb.xokyopo.servlets.ui.local;
 
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
@@ -32,16 +32,16 @@ public class ProductManipulation implements Serializable {
     }
 
     public String deleteProduct(ProductRep productRep) {
-        this.productsService.deleteProduct(productRep);
+        this.productsService.delete(productRep);
         return "/catalog.xhtml";
     }
 
     public String saveChanges() {
         if (!this.productRep.getName().equals("") && this.productRep.getPrice() >= 0) {
             if (this.productRep.getId() > 0) {
-                this.productsService.updateProduct(productRep);
+                this.productsService.update(productRep);
             } else {
-                this.productsService.addProduct(productRep);
+                this.productsService.add(productRep);
             }
             return "/catalog.xhtml?faces-redirect=true";
         }

@@ -1,6 +1,5 @@
-package gb.xokyopo.servlets.dao.interfaces;
+package gb.xokyopo.servlets.dao.impl;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface Repository<T>{

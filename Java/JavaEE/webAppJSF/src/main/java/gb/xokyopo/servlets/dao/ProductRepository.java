@@ -1,6 +1,7 @@
 package gb.xokyopo.servlets.dao;
 
-import gb.xokyopo.servlets.dao.interfaces.Repository;
+import gb.xokyopo.servlets.dao.impl.Repository;
+import gb.xokyopo.servlets.dao.table.Category;
 import gb.xokyopo.servlets.dao.table.Product;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -50,5 +51,17 @@ public class ProductRepository implements Repository<Product> {
     @Transactional
     public Product findById(int id) {
         return em.find(Product.class, id);
+    }
+
+    @Transactional
+    public List<Product> getByCategoryID(int id) {
+        Category cat = em.find(Category.class, id);
+        return cat.getProductList();
+    }
+
+    @Transactional
+    public Product getByName(String name) {
+        //TODO поиск по имени.
+        return new Product();
     }
 }

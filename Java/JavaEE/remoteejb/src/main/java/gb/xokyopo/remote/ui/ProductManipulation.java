@@ -1,14 +1,11 @@
-package gb.xokyopo.servlets.ui.local;
+package gb.xokyopo.remote.ui;
 
-import gb.xokyopo.servlets.service.impl.ProductServiceImpl;
-import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
-import gb.xokyopo.servlets.service.ProductsService;
+import gb.xokyopo.servlets.ui.remote.impl.EjbRemoteImpl;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 
@@ -16,8 +13,8 @@ import java.io.Serializable;
 @SessionScoped
 public class ProductManipulation implements Serializable {
     private ProductRep productRep;
-    @EJB(beanName = "ProductsService")
-    private ProductServiceImpl productsService;
+    @EJB(beanName = "RemoteService")
+    private EjbRemoteImpl ejbRemote;
 
     public String editingProduct(ProductRep productRep) {
         this.productRep = productRep;
@@ -31,16 +28,17 @@ public class ProductManipulation implements Serializable {
     }
 
     public String deleteProduct(ProductRep productRep) {
-        this.productsService.delete(productRep);
+        this.ejbRemote.removeProduct(productRep);
         return "/catalog.xhtml";
     }
 
     public String saveChanges() {
         if (!this.productRep.getName().equals("") && this.productRep.getPrice() >= 0) {
             if (this.productRep.getId() > 0) {
-                this.productsService.update(productRep);
+                //TODO update
+//                this.ejbRemote.update(productRep);
             } else {
-                this.productsService.add(productRep);
+                this.ejbRemote.insertProduct(productRep);
             }
             return "/catalog.xhtml?faces-redirect=true";
         }

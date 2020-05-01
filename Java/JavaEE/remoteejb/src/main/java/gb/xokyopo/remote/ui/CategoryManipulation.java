@@ -1,7 +1,7 @@
-package gb.xokyopo.servlets.ui.local;
+package gb.xokyopo.remote.ui;
 
-import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
+import gb.xokyopo.servlets.ui.remote.impl.EjbRemoteImpl;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -13,8 +13,8 @@ import java.util.List;
 @SessionScoped
 public class CategoryManipulation implements Serializable {
     private CategoryRep categoryRep;
-    @EJB(beanName = "CategoryService")
-    private ServiceImpl<CategoryRep> categoryService;
+    @EJB(beanName = "RemoteService")
+    private EjbRemoteImpl ejbRemote;
 
     public String addCategory() {
         this.categoryRep = new CategoryRep();
@@ -27,16 +27,17 @@ public class CategoryManipulation implements Serializable {
     }
 
     public String deletingCategory(CategoryRep categoryRep) {
-        this.categoryService.delete(categoryRep);
+        this.ejbRemote.removeCategory(categoryRep);
         return "/categories.xhtml?faces-redirect=true";
     }
 
     public String saveChange() {
         if (!this.categoryRep.getName().equals("")) {
             if (this.categoryRep.getId() > 0) {
-                this.categoryService.update(this.categoryRep);
+                //TODO Update
+//                this.ejbRemote.(this.categoryRep);
             } else {
-                this.categoryService.add(this.categoryRep);
+                this.ejbRemote.insertCategory(this.categoryRep);
             }
             return "/categories.xhtml?faces-redirect=true";
         }
@@ -56,6 +57,6 @@ public class CategoryManipulation implements Serializable {
     }
 
     public List<CategoryRep> getAll() {
-        return this.categoryService.getAll();
+        return this.ejbRemote.getAllCategory();
     }
 }

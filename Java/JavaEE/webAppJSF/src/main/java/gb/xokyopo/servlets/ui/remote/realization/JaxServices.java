@@ -1,27 +1,19 @@
 package gb.xokyopo.servlets.ui.remote.realization;
 
-import gb.xokyopo.servlets.service.CategoryService;
-import gb.xokyopo.servlets.service.ProductsService;
+import gb.xokyopo.servlets.service.impl.ProductServiceImpl;
+import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 import gb.xokyopo.servlets.ui.remote.impl.JaxServiceImpl;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import java.util.List;
 
 public class JaxServices implements JaxServiceImpl {
-    private ProductsService productsService;
-    private CategoryService categoryService;
-
-    @Inject
-    public void setProductsService(ProductsService productsService) {
-        this.productsService = productsService;
-    }
-
-    @Inject
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    @EJB(beanName = "ProductsService")
+    private ProductServiceImpl productsService;
+    @EJB(beanName = "CategoryService")
+    private ServiceImpl<CategoryRep> categoryService;
 
     @Override
     public void insertProduct(ProductRep productRep) {

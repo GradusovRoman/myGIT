@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Product</title>
+</h:head>
+<h:body>
+    <ui:include src="WEB-INF/navigation_bar.xhtml"/>
+    <h1 align="center">Это страница редактирования/добавления Категории</h1>
+    <div align="center">
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Name"/>
+                <h:inputText value="#{categoryManipulation.categoryRep.name}"/>
+
+                <h:outputLabel value="Description"/>
+                <h:inputText value="#{categoryManipulation.categoryRep.description}"/>
+            </h:panelGrid>
+                <h:commandButton value="Save" action="#{categoryManipulation.saveChange()}"/>
+                <h:commandButton value="Cancel" action="#{categoryManipulation.cancel()}"/>
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -3,21 +3,29 @@ package gb.xokyopo.servlets.service;
 import gb.xokyopo.servlets.dao.CategoriesRepository;
 import gb.xokyopo.servlets.dao.OrderRepository;
 import gb.xokyopo.servlets.dao.ProductRepository;
+import gb.xokyopo.servlets.dao.impl.Repository;
 import gb.xokyopo.servlets.dao.table.Category;
+import gb.xokyopo.servlets.dao.table.Orders;
 import gb.xokyopo.servlets.dao.table.Product;
+import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.Serializable;
 
-@Named
-@ApplicationScoped
+@Stateless(name = "ServiceUtils")
 public class ServiceUtils {
-    private CategoriesRepository categoriesRepository;
-    private ProductRepository productRepository;
-    private OrderRepository orderRepository;
+    @EJB(beanName = "CategoriesRepository")
+    private Repository<Category> categoriesRepository;
+    @EJB(beanName = "ProductRepository")
+    private Repository<Product> productRepository;
+    @EJB(beanName = "OrderRepository")
+    private Repository<Orders> orderRepository;
 
     public Product productRepToProduct(ProductRep productRep, Product product) {
         product.setId(productRep.getId());
@@ -51,30 +59,15 @@ public class ServiceUtils {
         return outer;
     }
 
-    public CategoriesRepository getCategoriesRepository() {
+    public Repository<Category> getCategoriesRepository() {
         return categoriesRepository;
     }
 
-    public ProductRepository getProductRepository() {
+    public Repository<Product> getProductRepository() {
         return productRepository;
     }
 
-    public OrderRepository getOrderRepository() {
+    public Repository<Orders> getOrderRepository() {
         return orderRepository;
-    }
-
-    @Inject
-    public void setCategoriesRepository(CategoriesRepository categoriesRepository) {
-        this.categoriesRepository = categoriesRepository;
-    }
-
-    @Inject
-    public void setProductRepository(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
-    @Inject
-    public void setOrderRepository(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
     }
 }

@@ -1,21 +1,19 @@
 package gb.xokyopo.servlets.service;
 
 import gb.xokyopo.servlets.dao.table.Product;
-import gb.xokyopo.servlets.service.impl.ServiceImpl;
-import gb.xokyopo.servlets.service.represantations.CategoryRep;
+import gb.xokyopo.servlets.service.impl.ProductServiceImpl;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Named
-@ApplicationScoped
-public class ProductsService implements ServiceImpl<ProductRep> {
-    private ServiceUtils serviceUtils;
+@Stateless(name = "ProductsService")
+public class ProductsService implements ProductServiceImpl {
+    @EJB(beanName = "ServiceUtils")
+    public ServiceUtils serviceUtils;
 
     @Override
     public List<ProductRep> getAll() {
@@ -48,19 +46,17 @@ public class ProductsService implements ServiceImpl<ProductRep> {
         return this.serviceUtils.productToProductRep(this.serviceUtils.getProductRepository().findById(elementId));
     }
 
-    @Inject
-    public void setServiceUtils(ServiceUtils serviceUtils) {
-        this.serviceUtils = serviceUtils;
-    }
-
+    @Override
     public List<ProductRep> getByCategoryId(int categoryId) {
-        return this.serviceUtils.getProductRepository().getByCategoryID(categoryId).stream()
+        return this.serviceUtils.getCategoriesRepository().findById(categoryId).getProductList().stream()
                 .map(this.serviceUtils::productToProductRep)
                 .collect(Collectors.toList());
     }
 
+    @Override
     public ProductRep getByName(String name) {
-        return this.serviceUtils.productToProductRep(this.serviceUtils.getProductRepository().getByName(name));
+//        return this.serviceUtils.productToProductRep(this.serviceUtils.getProductRepository().getByName(name));
+        return null;
     }
 
 }

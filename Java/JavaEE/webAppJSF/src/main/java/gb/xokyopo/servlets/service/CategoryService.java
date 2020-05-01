@@ -4,21 +4,15 @@ import gb.xokyopo.servlets.dao.table.Category;
 import gb.xokyopo.servlets.service.impl.ServiceImpl;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Named
-@ApplicationScoped
+@Stateless(name = "CategoryService")
 public class CategoryService implements ServiceImpl<CategoryRep> {
-    private ServiceUtils serviceUtils;
-
-    @Inject
-    public void setServiceUtils(ServiceUtils serviceUtils) {
-        this.serviceUtils = serviceUtils;
-    }
+    @EJB(beanName = "ServiceUtils")
+    public ServiceUtils serviceUtils;
 
     @Override
     public List<CategoryRep> getAll() {

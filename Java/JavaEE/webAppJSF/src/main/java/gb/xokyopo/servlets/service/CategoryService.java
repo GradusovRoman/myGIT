@@ -24,8 +24,7 @@ public class CategoryService implements ServiceImpl<CategoryRep> {
 
     @Override
     public void add(CategoryRep element) {
-        this.serviceUtils.getCategoriesRepository().create(
-                this.serviceUtils.categoryRepToCategory(element, new Category()));
+        this.serviceUtils.getCategoriesRepository().create(this.serviceUtils.categoryRepToCategory(element, new Category()));
     }
 
     @Override

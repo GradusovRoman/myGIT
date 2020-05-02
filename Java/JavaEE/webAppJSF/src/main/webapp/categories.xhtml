@@ -4,36 +4,43 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
+    <ui:include src="/WEB-INF/head.xhtml"/>
     <title>Product</title>
 </h:head>
 <h:body>
-    <ui:include src="WEB-INF/navigation_bar.xhtml"/>
+    <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
+
     <h1 align="center">Это страница Категории</h1>
-    <div align="center">
+
+    <div align="center" class="container">
         <h:form>
-            <h:commandButton value="Добавить" action="#{categoryManipulation.addCategory()}"/>
-            <h:dataTable value="#{categoryManipulation.all}" var="categoryRep">
+            <br/>
+            <h:commandButton value="Добавить" action="#{categoryManipulation.add()}" styleClass="btn btn-primary"/>
+            <h:dataTable value="#{categoryManipulation.all}" var="categoryRep" styleClass="table" headerClass="table-row-cell" footerClass="table-cell">
                 <h:column>
-                    <f:facet name="header">ID</f:facet>
-                    #{categoryRep.id}
+                    <f:facet name="header">id</f:facet>
+                    <h:outputLabel value="#{categoryRep.id}"/>
                 </h:column>
                 <h:column>
                     <f:facet name="header">Name</f:facet>
-                    #{categoryRep.name}
+                    <h:outputLabel value="#{categoryRep.name}"/>
                 </h:column>
                 <h:column>
                     <f:facet name="header">Decription</f:facet>
-                    #{categoryRep.description}
+                    <h:outputLabel value="#{categoryRep.description}"/>
                 </h:column>
                 <h:column>
                     <f:facet name="header">Action</f:facet>
-                    <h:commandButton value="Edit" action="#{categoryManipulation.editingCategory(categoryRep)}"/>
-                    <h:commandButton value="Delete" action="#{categoryManipulation.deletingCategory(categoryRep)}"/>
+                    <h:commandButton value="Edit" action="#{categoryManipulation.update(categoryRep)}" style="margin-right:10px;" styleClass="btn btn-warning"/>
+                    <h:commandButton value="Delete" action="#{categoryManipulation.delete(categoryRep)}" styleClass="btn btn-danger"/>
                 </h:column>
             </h:dataTable>
         </h:form>
     </div>
+
+    <ui:include src="/WEB-INF/footer.xhtml"/>
 </h:body>
 </html>

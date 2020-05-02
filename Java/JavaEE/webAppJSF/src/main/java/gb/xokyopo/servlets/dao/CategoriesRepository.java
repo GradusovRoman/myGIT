@@ -3,13 +3,9 @@ package gb.xokyopo.servlets.dao;
 import gb.xokyopo.servlets.dao.impl.Repository;
 import gb.xokyopo.servlets.dao.table.Category;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Stateless(name = "CategoriesRepository")
@@ -39,11 +35,9 @@ public class CategoriesRepository implements Repository<Category> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     @TransactionAttribute
     public List<Category> getAll() {
-        Query query = this.em.createQuery("SELECT c FROM Category c", Category.class);
-        return (List<Category>) query.getResultList();
+        return this.em.createQuery("SELECT c FROM Category c", Category.class).getResultList();
     }
 
     @Override

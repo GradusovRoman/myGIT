@@ -8,40 +8,41 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <ui:include src="/WEB-INF/head.xhtml"/>
-        <title>Catalog</title>
+        <title>Пользователи</title>
     </h:head>
     <h:body>
         <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
 
-        <h1 align="center">Это каталог товаров</h1>
+        <h1 align="center">Это список пользователей</h1>
 
         <div align="center" class="container">
             <h:form>
                 <br/>
-                <h:commandButton value="addProduct" action="#{productManipulation.add()}" styleClass="btn btn-primary"/>
+                <h:commandButton value="addUser" action="#{usersManipulation.add()}" styleClass="btn btn-primary"/>
                 <br/>
-                <h:dataTable value="#{productManipulation.all}" var="productRep" styleClass="table" headerClass="table-row-cell" footerClass="table-cell">
+                <h:dataTable value="#{usersManipulation.all}" var="userRep" styleClass="table" headerClass="table-row-cell" footerClass="table-cell">
                     <h:column>
                         <f:facet name="header">Id</f:facet>
-                        <h:outputLabel value="#{productRep.id}"/>
+                        <h:outputLabel value="#{userRep.id}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Name</f:facet>
-                        <h:outputLabel value="#{productRep.name}"/>
+                        <h:outputLabel value="#{userRep.name}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Category</f:facet>
-                        <h:outputLabel value="#{productRep.categoryRep.name}"/>
+                        <f:facet name="header">Password</f:facet>
+                        <h:outputLabel value="#{userRep.pass}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Price</f:facet>
-                        <h:outputLabel value="#{productRep.price}"/>
+                        <f:facet name="header">Groups</f:facet>
+                        <ui:repeat value="#{userRep.groupRepList}" var="groupRep">
+                            <h:outputLabel value="#{groupRep.name}" style="margin-right:10px;"/>
+                        </ui:repeat>
                     </h:column>
                     <h:column>
                         <f:facet name="header">Actions</f:facet>
-                        <h:commandButton value="edit" action="#{productManipulation.update(productRep)}" style="margin-right:10px;" styleClass="btn btn-warning"/>
-                        <h:commandButton value="delete" action="#{productManipulation.delete(productRep)}" style="margin-right:10px;" styleClass="btn btn-danger"/>
-                        <h:commandButton value="addToCart" action="#{cartManipulation.addProduct(productRep)}" styleClass="btn btn-success"/>
+                        <h:commandButton value="edit" action="#{usersManipulation.update(userRep)}" style="margin-right:10px;" styleClass="btn btn-warning"/>
+                        <h:commandButton value="delete" action="#{usersManipulation.delete(userRep)}" styleClass="btn btn-danger"/>
                     </h:column>
                 </h:dataTable>
             </h:form>

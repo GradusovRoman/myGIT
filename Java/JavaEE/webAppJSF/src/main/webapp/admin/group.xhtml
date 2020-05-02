@@ -8,26 +8,26 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
     <ui:include src="/WEB-INF/head.xhtml"/>
-    <title>Product</title>
+    <title>Гуппа</title>
 </h:head>
 <h:body>
     <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
 
-    <h1 align="center">Это страница редактирования/добавления Категории</h1>
+    <h1 align="center">Это страница добавления/редактирования групп</h1>
 
     <div align="center" class="container">
         <br/>
-        <h:form>
+        <h:form >
             <h:panelGrid columns="2" styleClass="form-group">
-                <h:outputLabel value="Name"/>
-                <h:inputText value="#{categoryManipulation.element.name}"/>
+                <f:facet name="Field"/>
+                <f:facet name="Value"/>
 
-                <h:outputLabel value="Description"/>
-                <h:inputText value="#{categoryManipulation.element.description}"/>
+                <h:outputLabel value="Имя группы"/>
+                <h:inputText value="#{groupsManipulation.element.name}"/>
             </h:panelGrid>
             <br/>
-                <h:commandButton value="Save" action="#{categoryManipulation.save()}" style="margin-right:10px;" styleClass="btn btn-success"/>
-                <h:commandButton value="Cancel" action="#{categoryManipulation.cancel()}" styleClass="btn btn-info"/>
+            <h:commandButton value="Сохранить" action="#{groupsManipulation.save()}" style="margin-right:10px;" styleClass="btn btn-success"/>
+            <h:commandButton value="Отмена" action="#{groupsManipulation.cancel()}" styleClass="btn btn-info"/>
         </h:form>
     </div>
 

@@ -24,9 +24,7 @@ public class ProductsService implements ProductServiceImpl {
 
     @Override
     public void add(ProductRep element) {
-        this.serviceUtils.getProductRepository().create(
-                this.serviceUtils.productRepToProduct(element, new Product())
-        );
+        this.serviceUtils.getProductRepository().create(this.serviceUtils.productRepToProduct(element, new Product()));
     }
 
     @Override

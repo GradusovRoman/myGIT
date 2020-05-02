@@ -4,14 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <h:head>
+        <ui:include src="/WEB-INF/head.xhtml"/>
         <title>Company Info</title>
     </h:head>
     <h:body>
-        <ui:include src="WEB-INF/navigation_bar.xhtml"/>
+        <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
+
         <h1 align="center">Это главная страница нашего приложения</h1>
 
+        <ui:include src="/WEB-INF/footer.xhtml"/>
     </h:body>
 </html>

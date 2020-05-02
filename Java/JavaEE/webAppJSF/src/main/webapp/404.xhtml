@@ -4,12 +4,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <head>
+        <ui:include src="/WEB-INF/head.xhtml"/>
         <title>403</title>
     </head>
     <body>
-        <ui:include src="WEB-INF/navigation_bar.xhtml"/>
+        <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
+
         <h1 align="center">404 Error</h1>
+
+        <ui:include src="/WEB-INF/footer.xhtml"/>
     </body>
 </html>

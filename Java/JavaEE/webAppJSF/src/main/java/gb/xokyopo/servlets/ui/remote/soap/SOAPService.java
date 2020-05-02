@@ -1,7 +1,5 @@
 package gb.xokyopo.servlets.ui.remote.soap;
 
-import gb.xokyopo.servlets.service.CategoryService;
-import gb.xokyopo.servlets.service.ProductsService;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
 import gb.xokyopo.servlets.ui.remote.realization.JaxServices;

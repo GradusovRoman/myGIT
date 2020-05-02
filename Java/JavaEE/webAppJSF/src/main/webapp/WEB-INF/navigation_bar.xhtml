@@ -4,15 +4,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <div>
         <table width="40%" align="center">
             <tr>
-                <td width="20%"><h:link value="Main" outcome="index.xhtml"/></td>
-                <td width="20%"><h:link value="Categor" outcome="categories.xhtml"/></td>
-                <td width="20%"><h:link value="Catalog" outcome="catalog.xhtml"/></td>
-                <td width="20%"><h:link value="Cart" outcome="cart.xhtml"/></td>
-                <td width="20%"><h:link value="Order" outcome="order.xhtml"/></td>
+                <td><h:link value="Main" outcome="/index.xhtml"/></td>
+                <td><h:link value="Categorys" outcome="/categories.xhtml"/></td>
+                <td><h:link value="Catalog" outcome="/catalog.xhtml"/></td>
+                <td><h:link value="Cart" outcome="/cart.xhtml"/></td>
+                <td><h:link value="Order" outcome="/order.xhtml"/></td>
+                <td><h:link value="Users" outcome="/admin/userlist.xhtml"/></td>
+                <td><h:link value="Groups" outcome="/admin/grouplist.xhtml"/></td>
+                <td><h:link value="Logout" outcome="/logout"/></td>
             </tr>
         </table>
     </div>

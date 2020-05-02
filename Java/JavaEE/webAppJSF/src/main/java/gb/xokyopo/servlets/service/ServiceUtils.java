@@ -1,22 +1,15 @@
 package gb.xokyopo.servlets.service;
 
-import gb.xokyopo.servlets.dao.CategoriesRepository;
-import gb.xokyopo.servlets.dao.OrderRepository;
-import gb.xokyopo.servlets.dao.ProductRepository;
 import gb.xokyopo.servlets.dao.impl.Repository;
-import gb.xokyopo.servlets.dao.table.Category;
-import gb.xokyopo.servlets.dao.table.Orders;
-import gb.xokyopo.servlets.dao.table.Product;
-import gb.xokyopo.servlets.service.impl.ServiceImpl;
+import gb.xokyopo.servlets.dao.table.*;
 import gb.xokyopo.servlets.service.represantations.CategoryRep;
+import gb.xokyopo.servlets.service.represantations.GroupRep;
 import gb.xokyopo.servlets.service.represantations.ProductRep;
+import gb.xokyopo.servlets.service.represantations.UserRep;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.Serializable;
+import java.util.stream.Collectors;
 
 @Stateless(name = "ServiceUtils")
 public class ServiceUtils {
@@ -26,8 +19,13 @@ public class ServiceUtils {
     private Repository<Product> productRepository;
     @EJB(beanName = "OrderRepository")
     private Repository<Orders> orderRepository;
+    @EJB(beanName = "UserRepository")
+    private Repository<User> userRepository;
+    @EJB(beanName = "GroupRepository")
+    private Repository<Group> groupRepository;
 
     public Product productRepToProduct(ProductRep productRep, Product product) {
+        //TODO id тут не тужен
         product.setId(productRep.getId());
         product.setName(productRep.getName());
         product.setPrice(productRep.getPrice());
@@ -45,6 +43,7 @@ public class ServiceUtils {
     }
 
     public Category categoryRepToCategory(CategoryRep categoryRep, Category category) {
+        //TODO id тут не тужен
         category.setId(categoryRep.getId());
         category.setName(categoryRep.getName());
         category.setDescription(categoryRep.getDescription());
@@ -59,6 +58,42 @@ public class ServiceUtils {
         return outer;
     }
 
+    public GroupRep groupToGroupRep(Group group) {
+        GroupRep outer = new GroupRep();
+        outer.setId(group.getId());
+        outer.setName(group.getName());
+        return outer;
+    }
+
+    public Group groupRepToGroup(GroupRep groupRep, Group group) {
+        //TODO id тут не тужен
+        group.setId(groupRep.getId());
+        group.setName(groupRep.getName());
+        return group;
+    }
+
+    public UserRep userToUserRep(User user) {
+        UserRep outer = new UserRep();
+        outer.setId(user.getId());
+        outer.setName(user.getName());
+        outer.setPass(user.getPass());
+        outer.setGroupRepList(
+                user.getGroupList().stream().map(this::groupToGroupRep).collect(Collectors.toList())
+        );
+        return outer;
+    }
+
+    public User userRepToUser(UserRep userRep, User user) {
+        //TODO id тут не тужен
+        user.setId(userRep.getId());
+        user.setName(userRep.getName());
+        user.setPass(userRep.getPass());
+        user.setGroupList(
+                userRep.getGroupRepList().stream().map(groupRep -> this.groupRepository.findById(groupRep.getId())).collect(Collectors.toList())
+        );
+        return user;
+    }
+
     public Repository<Category> getCategoriesRepository() {
         return categoriesRepository;
     }
@@ -69,5 +104,13 @@ public class ServiceUtils {
 
     public Repository<Orders> getOrderRepository() {
         return orderRepository;
+    }
+
+    public Repository<User> getUserRepository() {
+        return userRepository;
+    }
+
+    public Repository<Group> getGroupRepository() {
+        return groupRepository;
     }
 }

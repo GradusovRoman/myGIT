@@ -1,15 +1,18 @@
 package gb.xokyopo.servlets.dao.table;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    private List<OrderRow> orderRowList;
+
+    @ElementCollection(targetClass = Integer.class)
+    @MapKeyClass(value = Product.class)
+    @MapKeyJoinColumn
+    private Map<Product, Integer> productIntegerMap;
 
     public Orders() {
     }
@@ -22,11 +25,11 @@ public class Orders {
         this.id = id;
     }
 
-    public List<OrderRow> getOrderRowList() {
-        return orderRowList;
+    public Map<Product, Integer> getProductIntegerMap() {
+        return productIntegerMap;
     }
 
-    public void setOrderRowList(List<OrderRow> orderRowList) {
-        this.orderRowList = orderRowList;
+    public void setProductIntegerMap(Map<Product, Integer> productIntegerMap) {
+        this.productIntegerMap = productIntegerMap;
     }
 }

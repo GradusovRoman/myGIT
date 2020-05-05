@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UsersManipulation implements Serializable, ManipulationImpl<UserRep> {
     @EJB(beanName = "UserService")
     private ServiceImpl<UserRep> userService;
-    @EJB(beanName = "GroupService")
+    @EJB(beanName = "GroupsService")
     private ServiceImpl<GroupRep> groupService;
     private UserRep userRep;
 
@@ -28,20 +28,20 @@ public class UsersManipulation implements Serializable, ManipulationImpl<UserRep
         this.userRep.getGroupRepList().forEach(groupRep -> {
             System.out.println("group = " + groupRep.getName());
         });
-        return "/admin/user.xhtml";
+        return "/admin/user.xhtml?faces-redirect=true";
     }
 
     @Override
     public String add() {
         this.userRep = new UserRep();
         this.userRep.setGroupRepList(new ArrayList<>());
-        return "/admin/user.xhtml";
+        return "/admin/user.xhtml?faces-redirect=true";
     }
 
     @Override
     public String delete(UserRep element) {
         this.userService.delete(element);
-        return "/admin/userlist.xhtml";
+        return "/admin/userlist.xhtml?faces-redirect=true";
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UsersManipulation implements Serializable, ManipulationImpl<UserRep
             }
             return "/admin/userlist.xhtml?faces-redirect=true";
         }
-        return "/admin/user.xhtml";
+        return "/admin/user.xhtml?faces-redirect=true";
     }
 
     @Override

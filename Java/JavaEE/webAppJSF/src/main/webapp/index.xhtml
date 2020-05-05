@@ -16,6 +16,20 @@
 
         <h1 align="center">Это главная страница нашего приложения</h1>
 
+        <div class="container">
+            <div align="center">
+                <h:outputLabel value="UserName:" for="name"/>
+                <br/>
+                <h:outputLabel id="name" value="#{mainManipulation.getUserName()}"/>
+                <br/><br/>
+                <h:outputLabel value="UserRoles:" for="role"/>
+                <div id="role">
+                    <ui:repeat value="#{mainManipulation.userRole}" var="group">
+                        <h:outputLabel value="#{group.name}"/>
+                    </ui:repeat>
+                </div>
+            </div>
+        </div>
         <ui:include src="/WEB-INF/footer.xhtml"/>
     </h:body>
 </html>

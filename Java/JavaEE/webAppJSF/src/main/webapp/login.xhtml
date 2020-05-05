@@ -16,9 +16,16 @@
     <h1 align="center">Это страница авторизации</h1>
 
     <div align="center" class="container">
-        <form action="j_security_check" method="post">
-            <input type="text" name="j_username"/>
-            <input type="password" name="j_password"/>
+        <form action="#{request.contextPath}/j_security_check" method="post">
+            <h:panelGrid columns="2">
+                    <h:outputLabel value="User name"/>
+                    <h:inputText styleClass="form-control" id="j_username" placeholder="Enter username"
+                                 required="true" requiredMessage="Login is required" />
+
+                    <h:outputLabel value="Password"/>
+                    <h:inputSecret styleClass="form-control" id="j_password" placeholder="Password" />
+            </h:panelGrid>
+            <h:commandButton value="Login" styleClass="btn btn-primary"/>
         </form>
     </div>
 

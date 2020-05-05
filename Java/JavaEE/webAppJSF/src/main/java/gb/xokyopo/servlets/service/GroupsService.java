@@ -9,8 +9,8 @@ import javax.ejb.Stateless;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Stateless(name = "GroupService")
-public class GroupService implements ServiceImpl<GroupRep> {
+@Stateless(name = "GroupsService")
+public class GroupsService implements ServiceImpl<GroupRep> {
     @EJB(beanName = "ServiceUtils")
     private ServiceUtils serviceUtils;
 

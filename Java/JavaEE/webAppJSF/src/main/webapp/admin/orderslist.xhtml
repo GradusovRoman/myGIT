@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <ui:include src="/WEB-INF/head.xhtml"/>
+        <title>Order</title>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/navigation_bar.xhtml"/>
+
+        <h1 align="center">Это страница просмотра/удаления заказов</h1>
+        <br/>
+        <div class="container">
+            <h:form>
+                <h:dataTable value="#{ordersManipulation.all}" var="OrderRep" styleClass="table" headerClass="table-row-cell" footerClass="table-cell">
+                    <h:column>
+                        <f:facet name="header">id</f:facet>
+                        <h:outputLabel value="#{OrderRep.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">row count</f:facet>
+                        <h:outputLabel value="#{OrderRep.rowCount()}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">full price</f:facet>
+                        <h:outputLabel value="#{OrderRep.fullPrice}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">action</f:facet>
+                        <h:commandButton value="delete" action="#{ordersManipulation.delete(OrderRep)}" styleClass="btn btn-danger"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+        <ui:include src="/WEB-INF/footer.xhtml"/>
+    </h:body>
+</html>

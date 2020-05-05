@@ -13,10 +13,13 @@
                 <td><h:link value="Categorys" outcome="/categories.xhtml"/></td>
                 <td><h:link value="Catalog" outcome="/catalog.xhtml"/></td>
                 <td><h:link value="Cart" outcome="/cart.xhtml"/></td>
-                <td><h:link value="Order" outcome="/order.xhtml"/></td>
-                <td><h:link value="Users" outcome="/admin/userlist.xhtml"/></td>
-                <td><h:link value="Groups" outcome="/admin/grouplist.xhtml"/></td>
-                <td><h:link value="Logout" outcome="/logout"/></td>
+                <h:panelGroup rendered="#{mainManipulation.isUserInRole('ADMIN')}">
+                    <td><h:link value="Orders" outcome="/admin/orderslist.xhtml"/></td>
+                    <td><h:link value="Users" outcome="/admin/userlist.xhtml"/></td>
+                    <td><h:link value="Groups" outcome="/admin/grouplist.xhtml"/></td>
+                </h:panelGroup>
+                <td><h:link value="Login" outcome="/login.xhtml" rendered="#{!mainManipulation.isUserLogin()}"/></td>
+                <td><h:link value="Logout" outcome="#{mainManipulation.logouting()}" rendered="#{mainManipulation.isUserLogin()}"/></td>
             </tr>
         </table>
     </div>

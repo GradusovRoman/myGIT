@@ -26,20 +26,20 @@ public class ProductManipulation implements Serializable, ManipulationImpl<Produ
     @Override
     public String update(ProductRep element) {
         this.productRep = element;
-        return "/product.xhtml";
+        return "/product.xhtml?faces-redirect=true";
     }
 
     @Override
     public String add() {
         this.productRep = new ProductRep();
         this.productRep.setCategoryRep(new CategoryRep());
-        return "/product.xhtml";
+        return "/product.xhtml?faces-redirect=true";
     }
 
     @Override
     public String delete(ProductRep element) {
         this.productsService.delete(element);
-        return "/catalog.xhtml";
+        return "/catalog.xhtml?faces-redirect=true";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ProductManipulation implements Serializable, ManipulationImpl<Produ
             }
             return "/catalog.xhtml?faces-redirect=true";
         }
-        return "/product.xhtml";
+        return "/product.xhtml?faces-redirect=true";
     }
 
     @Override

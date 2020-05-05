@@ -17,17 +17,17 @@
   </servlet-mapping>
   
   <welcome-file-list>
-    <welcome-file>index.xhtml</welcome-file>
+    <welcome-file>/index.xhtml</welcome-file>
   </welcome-file-list>
 
   <error-page>
     <error-code>404</error-code>
-    <location>/404.xhtml</location>
+    <location>/WEB-INF/404.xhtml</location>
   </error-page>
 
   <error-page>
     <error-code>403</error-code>
-    <location>/403.xhtml</location>
+    <location>/WEB-INF/403.xhtml</location>
   </error-page>
 
   <login-config>

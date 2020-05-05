@@ -2,13 +2,12 @@ package gb.xokyopo.servlets.service;
 
 import gb.xokyopo.servlets.dao.impl.Repository;
 import gb.xokyopo.servlets.dao.table.*;
-import gb.xokyopo.servlets.service.represantations.CategoryRep;
-import gb.xokyopo.servlets.service.represantations.GroupRep;
-import gb.xokyopo.servlets.service.represantations.ProductRep;
-import gb.xokyopo.servlets.service.represantations.UserRep;
+import gb.xokyopo.servlets.service.represantations.*;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Stateless(name = "ServiceUtils")
@@ -26,7 +25,7 @@ public class ServiceUtils {
 
     public Product productRepToProduct(ProductRep productRep, Product product) {
         //TODO id тут не тужен
-        product.setId(productRep.getId());
+//        product.setId(productRep.getId());
         product.setName(productRep.getName());
         product.setPrice(productRep.getPrice());
         product.setCategory(this.categoriesRepository.findById(productRep.getCategoryRep().getId()));
@@ -44,7 +43,7 @@ public class ServiceUtils {
 
     public Category categoryRepToCategory(CategoryRep categoryRep, Category category) {
         //TODO id тут не тужен
-        category.setId(categoryRep.getId());
+//        category.setId(categoryRep.getId());
         category.setName(categoryRep.getName());
         category.setDescription(categoryRep.getDescription());
         return category;
@@ -67,7 +66,7 @@ public class ServiceUtils {
 
     public Group groupRepToGroup(GroupRep groupRep, Group group) {
         //TODO id тут не тужен
-        group.setId(groupRep.getId());
+//        group.setId(groupRep.getId());
         group.setName(groupRep.getName());
         return group;
     }
@@ -85,13 +84,34 @@ public class ServiceUtils {
 
     public User userRepToUser(UserRep userRep, User user) {
         //TODO id тут не тужен
-        user.setId(userRep.getId());
+//        user.setId(userRep.getId());
         user.setName(userRep.getName());
         user.setPass(userRep.getPass());
         user.setGroupList(
                 userRep.getGroupRepList().stream().map(groupRep -> this.groupRepository.findById(groupRep.getId())).collect(Collectors.toList())
         );
         return user;
+    }
+
+    public OrderRep ordersToOrderRep(Orders orders) {
+        OrderRep outer = new OrderRep();
+        outer.setId(orders.getId());
+        Map<ProductRep, Integer> productRepIntegerMap = new HashMap<>();
+        orders.getProductIntegerMap().forEach(
+                (product, integer) ->productRepIntegerMap.put(this.productToProductRep(product), integer)
+        );
+        outer.setProductRepIntegerMap(productRepIntegerMap);
+        return outer;
+    }
+
+    public Orders orderRepToOrders(OrderRep orderRep, Orders orders) {
+        //TODO ID не нужен
+        Map<Product, Integer> productIntegerMap = new HashMap<>();
+        orderRep.getProductRepIntegerMap().forEach(
+                (productRep, integer) -> productIntegerMap.put(this.productRepository.findById(productRep.getId()), integer)
+        );
+        orders.setProductIntegerMap(productIntegerMap);
+        return orders;
     }
 
     public Repository<Category> getCategoriesRepository() {

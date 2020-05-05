@@ -13,26 +13,26 @@ import java.util.List;
 @Named
 @SessionScoped
 public class GroupsManipulation implements Serializable, ManipulationImpl<GroupRep> {
-    @EJB(beanName = "GroupService")
+    @EJB(beanName = "GroupsService")
     private ServiceImpl<GroupRep> groupService;
     private GroupRep groupRep;
 
     @Override
     public String update(GroupRep element) {
         this.groupRep = element;
-        return "/admin/group.xhtml";
+        return "/admin/group.xhtml?faces-redirect=true";
     }
 
     @Override
     public String add() {
         this.groupRep = new GroupRep();
-        return "/admin/group.xhtml";
+        return "/admin/group.xhtml?faces-redirect=true";
     }
 
     @Override
     public String delete(GroupRep element) {
         this.groupService.delete(element);
-        return "/admin/grouplist.xhtml";
+        return "/admin/grouplist.xhtml?faces-redirect=true";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class GroupsManipulation implements Serializable, ManipulationImpl<GroupR
             }
             return "/admin/grouplist.xhtml?faces-redirect=true";
         }
-        return "/admin/group.xhtml";
+        return "/admin/group.xhtml?faces-redirect=true";
     }
 
     @Override

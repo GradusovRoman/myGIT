@@ -30,13 +30,13 @@ public class CategoryManipulation implements Serializable, ManipulationImpl<Cate
     @Override
     public String update(CategoryRep element) {
         this.categoryRep = element;
-        return "/category.xhtml";
+        return "/category.xhtml?faces-redirect=true";
     }
 
     @Override
     public String add() {
         this.categoryRep = new CategoryRep();
-        return "/category.xhtml";
+        return "/category.xhtml?faces-redirect=true";
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CategoryManipulation implements Serializable, ManipulationImpl<Cate
             }
             return "/categories.xhtml?faces-redirect=true";
         }
-        return "/category.xhtml";
+        return "/category.xhtml?faces-redirect=true";
     }
 
     @Override

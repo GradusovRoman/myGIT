@@ -37,12 +37,12 @@ public class FileListMessageExecutor implements MessageExecutor {
     public void execute(Message message, Channel channel) {
         FileListMessage msg = (FileListMessage) message;
 
-        if (msg.getType().equals(Message.type.REQUEST)) {
+        if (msg.getType().equals(Message.Type.REQUEST)) {
             File path = Paths.get(channelRootDir.getRootDir(channel), msg.getPath()).toFile();
             File[] FileArr = path.listFiles();
             if (FileArr != null) {
                 channel.writeAndFlush(new FileListMessage(
-                        Message.type.RESPONSE,
+                        Message.Type.RESPONSE,
                         Arrays.stream(FileArr).map(FileRep::new).collect(Collectors.toList()),
                         null)
                 );
@@ -53,6 +53,6 @@ public class FileListMessageExecutor implements MessageExecutor {
     }
 
     public void getFileList(String path, Channel channel) {
-        channel.writeAndFlush(new FileListMessage(Message.type.REQUEST, null, path));
+        channel.writeAndFlush(new FileListMessage(Message.Type.REQUEST, null, path));
     }
 }

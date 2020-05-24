@@ -23,6 +23,6 @@ public class StringExecutor implements MessageExecutor {
     }
 
     public void send(String msg, Channel channel) {
-        channel.writeAndFlush(new StringMessage(Message.type.REQUEST, msg));
+        channel.writeAndFlush(new StringMessage(Message.Type.REQUEST, msg));
     }
 }

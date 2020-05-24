@@ -35,7 +35,7 @@ public class FileOperationExecutor implements MessageExecutor {
     @Override
     public void execute(Message message, Channel channel) {
         FileOperationMessage msg = (FileOperationMessage) message;
-        if (message.getType().equals(Message.type.REQUEST)) {
+        if (message.getType().equals(Message.Type.REQUEST)) {
             String workingDir =  this.channelRootDir.getRootDir(channel);
             Path targetFile =  Paths.get(workingDir, msg.getFileName());
             Path newFile = Paths.get(workingDir, msg.getNewFileName());
@@ -47,22 +47,22 @@ public class FileOperationExecutor implements MessageExecutor {
                 } else if (msg.getOType().equals(OType.RENAME) || msg.getOType().equals(OType.MOVE)) {
                     Files.move(targetFile, newFile);
                 }
-                channel.writeAndFlush(new FileOperationMessage(Message.type.RESPONSE, msg.getOType(), msg.getFileName(), msg.getNewFileName()));
+                channel.writeAndFlush(new FileOperationMessage(Message.Type.RESPONSE, msg.getOType(), msg.getFileName(), msg.getNewFileName()));
             } catch (IOException e) {
-                channel.writeAndFlush(new FileOperationMessage(Message.type.EXCEPTION, msg.getOType(), msg.getFileName(), msg.getNewFileName()));
+                channel.writeAndFlush(new FileOperationMessage(Message.Type.EXCEPTION, msg.getOType(), msg.getFileName(), msg.getNewFileName()));
                 System.out.println("FileOperationExecutor.execute");
                 e.printStackTrace();
             }
         } else {
             if (this.stringCallback != null) stringCallback.callback(
                     "Операция:" + ((FileOperationMessage) message).getOType().toString() +
-                            ((message.getType().equals(Message.type.RESPONSE))? " - Выполнилась" : " - Не выполнилась")
+                            ((message.getType().equals(Message.Type.RESPONSE))? " - Выполнилась" : " - Не выполнилась")
             );
             //todo обработка. ошибки и исполнения действия.
         }
     }
 
     public void applyFileOperation(OType oType, String fileName, String newFileName, Channel channel) {
-        channel.writeAndFlush(new FileOperationMessage(Message.type.REQUEST, oType, fileName, newFileName));
+        channel.writeAndFlush(new FileOperationMessage(Message.Type.REQUEST, oType, fileName, newFileName));
     }
 }

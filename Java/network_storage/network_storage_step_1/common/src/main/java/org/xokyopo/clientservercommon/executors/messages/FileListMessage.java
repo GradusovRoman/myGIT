@@ -9,7 +9,7 @@ public class FileListMessage extends Message {
     private final List<FileRep> fileList;
     private final String path;
 
-    public FileListMessage(Message.type type, List<FileRep> fileList, String path) {
+    public FileListMessage(Message.Type type, List<FileRep> fileList, String path) {
         super(type);
         this.fileList = fileList;
         this.path = path;

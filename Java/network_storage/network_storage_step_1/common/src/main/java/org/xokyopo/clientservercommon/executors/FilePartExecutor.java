@@ -41,7 +41,7 @@ public class FilePartExecutor implements MessageExecutor {
         String workingDir = this.channelRootDir.getRootDir(channel);
         //todo если директория???
         try {
-            if (msg.getType().equals(Message.type.RESPONSE)) {
+            if (msg.getType().equals(Message.Type.RESPONSE)) {
                     this.writeFile(workingDir, msg);
                     System.out.println("получено " + msg.getCurrentPart() + " из " + msg.getNumberOfPart() + " частей файл: \t" + msg.getFileName());
                     if (msg.getCurrentPart() < msg.getNumberOfPart()) {
@@ -53,7 +53,7 @@ public class FilePartExecutor implements MessageExecutor {
                         System.out.println("получен файл: \t" + msg.getFileName() + " размером ~ " + fileLength + "Mb за " + (stop - this.start) + "ms");
                         //TODO CallBack если все получено
                     }
-            } else if (msg.getType().equals(Message.type.REQUEST)) {
+            } else if (msg.getType().equals(Message.Type.REQUEST)) {
                 this.sendFile(workingDir, msg, channel);
             }
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class FilePartExecutor implements MessageExecutor {
     private void requestingNextPart(String fileName, String filePath, int part, Channel channel) {
         channel.writeAndFlush(
                 new FilePartMessage(
-                        Message.type.REQUEST,
+                        Message.Type.REQUEST,
                         fileName,
                         filePath,
                         part,
@@ -103,7 +103,7 @@ public class FilePartExecutor implements MessageExecutor {
         if (file.exists() && file.isFile()) {
                 channel.writeAndFlush(
                         new FilePartMessage(
-                                Message.type.RESPONSE,
+                                Message.Type.RESPONSE,
                                 file.getName(),
                                 file.getCanonicalPath(),
                                 filePart,

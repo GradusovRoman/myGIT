@@ -20,6 +20,6 @@ public class StringExecutor implements MessageExecutor {
     public void execute(Message message, Channel channel) {
         StringMessage stringMessage = (StringMessage) message;
         System.out.println("получил: " + stringMessage.getText());
-        channel.writeAndFlush(new StringMessage(Message.type.REQUEST, stringMessage.getText()));
+        channel.writeAndFlush(new StringMessage(Message.Type.REQUEST, stringMessage.getText()));
     }
 }

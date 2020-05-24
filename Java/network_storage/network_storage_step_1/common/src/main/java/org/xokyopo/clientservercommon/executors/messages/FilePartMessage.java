@@ -8,8 +8,8 @@ public class FilePartMessage extends Message {
     private final Integer currentPart;
     private final Integer numberOfPart;
     private final Byte[] filePart;
-
-    public FilePartMessage(Message.type type, String fileName, String filePath, Integer currentPart, Integer numberOfPart, Byte[] filePart) {
+  
+    public FilePartMessage(Message.Type type, String fileName, String filePath, Integer currentPart, Integer numberOfPart, Byte[] filePart) {
         super(type);
         this.fileName = fileName;
         this.filePath = filePath;

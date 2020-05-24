@@ -71,7 +71,7 @@ public class Client {
 
     private void send(String msg) {
         if (channel != null) {
-            this.channel.writeAndFlush(new StringMessage(Message.type.REQUEST, msg));
+            this.channel.writeAndFlush(new StringMessage(Message.Type.REQUEST, msg));
             System.out.println("сообщение отправлено->>");
         }
     }
@@ -86,21 +86,22 @@ public class Client {
                 break;
             } else if (msg.contains("\\dir")) {
                 String[] arg = msg.split("\\s");
-                this.channel.writeAndFlush(new FileListMessage(Message.type.REQUEST, null, (arg.length > 1) ? arg[1] : ""));
+                this.channel.writeAndFlush(new FileListMessage(Message.Type.REQUEST, null, (arg.length > 1) ? arg[1] : ""));
             } else if (msg.contains("\\cp")) {
                 String[] arg = msg.split("\\s");
                 if (arg.length == 3) {
-                    this.channel.writeAndFlush(new FileOperationMessage(Message.type.REQUEST, FileOperationMessage.OType.COPY, arg[1], arg[2]));
+                    this.channel.writeAndFlush(new FileOperationMessage(Message.Type.REQUEST, FileOperationMessage.OType.COPY, arg[1], arg[2]));
                 }
             } else if(msg.contains("\\mv")) {
                 String[] arg = msg.split("\\s");
                 if (arg.length == 3) {
-                    this.channel.writeAndFlush(new FileOperationMessage(Message.type.REQUEST, FileOperationMessage.OType.MOVE, arg[1], arg[2]));
+
+                    this.channel.writeAndFlush(new FileOperationMessage(Message.Type.REQUEST, FileOperationMessage.OType.MOVE, arg[1], arg[2]));
                 }
             } else if (msg.contains("\\del")) {
                 String[] arg = msg.split("\\s");
                 if (arg.length == 2) {
-                    this.channel.writeAndFlush(new FileOperationMessage(Message.type.REQUEST, FileOperationMessage.OType.DELETE, arg[1], ""));
+                    this.channel.writeAndFlush(new FileOperationMessage(Message.Type.REQUEST, FileOperationMessage.OType.DELETE, arg[1], ""));
                 }
             } else if(msg.contains("\\upl")) {
                 String[] arg = msg.split("\\s");

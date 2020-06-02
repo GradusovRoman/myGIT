@@ -1,4 +1,4 @@
-package org.xokyopo.clientservercommon.executors.messages.representor;
+package org.xokyopo.clientservercommon.executors.messages.entitys;
 
 import java.io.File;
 import java.io.Serializable;

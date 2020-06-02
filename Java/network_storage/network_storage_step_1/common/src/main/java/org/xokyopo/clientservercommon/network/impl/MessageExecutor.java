@@ -1,10 +1,10 @@
 package org.xokyopo.clientservercommon.network.impl;
 
 import io.netty.channel.Channel;
-import org.xokyopo.clientservercommon.simples.entitys.Message;
+import org.xokyopo.clientservercommon.simples.entitys.AbstractMessage;
 
 public interface MessageExecutor {
-    Class<? extends Message> getInputMessageClass();
+    Class<? extends AbstractMessage> getInputMessageClass();
     boolean isLongTimeOperation();
-    void execute(Message message, Channel channel);
+    void execute(AbstractMessage abstractMessage, Channel channel);
 }

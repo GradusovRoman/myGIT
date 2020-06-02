@@ -1,158 +1,172 @@
 package org.xokyopo.clientservercommon.executors;
 
 import io.netty.channel.Channel;
+import org.xokyopo.clientservercommon.executors.impl.FilePartStatisticMethod;
 import org.xokyopo.clientservercommon.executors.impl.IChannelRootDir;
 import org.xokyopo.clientservercommon.executors.messages.FilePartMessage;
-import org.xokyopo.clientservercommon.network.impl.MessageExecutor;
-import org.xokyopo.clientservercommon.simples.entitys.Message;
+import org.xokyopo.clientservercommon.executors.messages.entitys.FilePart;
+import org.xokyopo.clientservercommon.executors.utils.FilePartUtil;
+import org.xokyopo.clientservercommon.network.impl.Callback;
+import org.xokyopo.clientservercommon.simples.AbstractMessageExecutor;
+import org.xokyopo.clientservercommon.simples.entitys.AbstractMessage;
 
-import java.io.File;
-import java.io.RandomAccessFile;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
-
-public class FilePartExecutor implements MessageExecutor {
+public class FilePartExecutor extends AbstractMessageExecutor<FilePartMessage> {
     private final IChannelRootDir channelRootDir;
-    private final int partSize = 800000;
-    private long start;
+    private final FilePartUtil filePartUtil;
+    private final FilePartStatisticMethod inputStats;
+    private final FilePartStatisticMethod outputStats;
+    private final Callback<Channel> uploadComplete;
+    private final static String LOADING_FILE_POSTFIX = ".loading";
 
-    public FilePartExecutor(IChannelRootDir channelRootDir) {
+    public FilePartExecutor(IChannelRootDir channelRootDir, Callback<Channel> uploadComplete) {
+        this(channelRootDir, uploadComplete, null, null);
+    }
+
+    public FilePartExecutor(IChannelRootDir channelRootDir, Callback<Channel> uploadComplete, FilePartStatisticMethod inputStats, FilePartStatisticMethod outputStats) {
+        this.inputStats = inputStats;
+        this.outputStats = outputStats;
         this.channelRootDir = (channelRootDir == null)? (Ch)->"." : channelRootDir;
+        this.uploadComplete = uploadComplete;
+        this.filePartUtil = new FilePartUtil(1024 * 1024); // partSize (byte)
     }
 
     @Override
-    public Class<? extends Message> getInputMessageClass() {
+    public final Class<? extends AbstractMessage> getInputMessageClass() {
         return FilePartMessage.class;
     }
 
     @Override
-    public boolean isLongTimeOperation() {
+    public final boolean isLongTimeOperation() {
         return true;
     }
 
     @Override
-    public void execute(Message message, Channel channel) {
-        //TODO обработка входных данных
-        FilePartMessage msg = (FilePartMessage) message;
-        String workingDir = this.channelRootDir.getRootDir(channel);
-        //todo если директория???
+    protected final void executeResponse(FilePartMessage message, Channel channel) {
         try {
-            if (msg.getType().equals(Message.Type.RESPONSE)) {
-                    this.writeFile(workingDir, msg);
-                    System.out.println("получено " + msg.getCurrentPart() + " из " + msg.getNumberOfPart() + " частей файл: \t" + msg.getFileName());
-                    if (msg.getCurrentPart() < msg.getNumberOfPart()) {
-                        if (msg.getCurrentPart() == 0) this.start = System.currentTimeMillis();
-                        this.requestingNextPart(msg.getFileName(), msg.getFilePath(), msg.getCurrentPart() + 1, channel);
-                    } else {
-                        long stop = System.currentTimeMillis();
-                        float fileLength = (long) msg.getNumberOfPart() * (long) this.partSize / 1048576.0f;
-                        System.out.println("получен файл: \t" + msg.getFileName() + " размером ~ " + fileLength + "Mb за " + (stop - this.start) + "ms");
-                        //TODO CallBack если все получено
-                    }
-            } else if (msg.getType().equals(Message.Type.REQUEST)) {
-                this.sendFile(workingDir, msg, channel);
+            Path path = Paths.get(this.channelRootDir.getRootDir(channel), message.getDestPath(), message.getFileName());
+            Path tmpPath = Paths.get(path.toString() + LOADING_FILE_POSTFIX);
+
+            if (message.isDir()) {
+                Files.createDirectories(path);
+            } else {
+                long currentFileLength = this.filePartUtil.saveFilePart(
+                        tmpPath,
+                        message.getFilePart().getPartSeed(),
+                        message.getFilePart().getByteArrPart()
+                );
+                this.getInputStats().take(message.getFileName(), message.getFilePart().getFileLength(), currentFileLength);
+                if (currentFileLength < message.getFilePart().getFileLength()) {
+                    this.requestingNextPart(message.getFileName(), message.getTargetPath(), message.getDestPath(), currentFileLength, channel);
+                    return;
+                } else {
+                    Files.deleteIfExists(path);
+                    Files.move(tmpPath, path);
+                }
             }
-        } catch (Exception e) {
-            System.out.println("FilePartExecutor.execute.writeFile");
+
+            Files.setLastModifiedTime(path, FileTime.fromMillis(message.getLastModified()));
+            this.getUploadComplete().callback(channel);
+        } catch (IOException e) {
+            System.out.println("FilePartExecutor.filePartUtil.saveFilePart");
             e.printStackTrace();
         }
     }
 
-    private void writeFile(String workingDir, FilePartMessage msg) throws Exception {
-        Path path = Paths.get(workingDir, msg.getFileName());
-        if (!path.getParent().toFile().exists()) Files.createDirectories(path.getParent());
-        this.saveFilePart(path, msg.getCurrentPart(), this.convertToPrimitive(msg.getFilePart()));
-    }
 
-    public void loadFile(String fileName, Channel channel) {
-        this.requestingNextPart(fileName, "", 0, channel);
-    }
 
-    public void uploadFile(String fileName, Channel channel) {
+    @Override
+    protected final void executeRequest(FilePartMessage message, Channel channel) {
         try {
-            this.sendFilePart(Paths.get(fileName), 0 , channel);
-        } catch (Exception e) {
+            Path workDir = Paths.get(this.channelRootDir.getRootDir(channel), message.getTargetPath());
+            Path path = Paths.get(workDir.toString(), message.getFileName());
+
+            if (path.toFile().exists()) {
+                List<Path> pathList = Files.walk(path).map(e->e.subpath(workDir.getNameCount(), e.getNameCount())).collect(Collectors.toList());
+                for (Path pathToFile: pathList) {
+                    this.sendFilePart(pathToFile.toString(), message.getTargetPath(), message.getDestPath(), message.getFilePart().getPartSeed(), channel);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("FilePartExecutor.filePartUtil.getFilePart");
             e.printStackTrace();
         }
     }
 
-    private void requestingNextPart(String fileName, String filePath, int part, Channel channel) {
+    @Override
+    protected final void executeException(FilePartMessage message, Channel channel) {
+
+    }
+
+    private void requestingNextPart(String fileName, String targetPath, String destPath, long seed, Channel channel) {
         channel.writeAndFlush(
                 new FilePartMessage(
-                        Message.Type.REQUEST,
+                        AbstractMessage.Type.REQUEST,
                         fileName,
-                        filePath,
-                        part,
-                        0,
-                        null
+                        targetPath,
+                        destPath,
+                        false,
+                        0L,
+                        new FilePart(0L, seed,null)
                 )
         );
     }
 
-    private void sendFile(String workingDir, FilePartMessage msg, Channel channel) throws Exception {
-        Path path = (msg.getFilePath().equals("")) ? Paths.get(workingDir, msg.getFileName()): Paths.get(msg.getFilePath());
-        this.sendFilePart(path, msg.getCurrentPart(), channel);
+    private void sendFilePart(String fileName, String targetPath, String destPath, long seed, Channel channel) throws IOException {
+        Path path = Paths.get(this.channelRootDir.getRootDir(channel), targetPath, fileName);
+        boolean isDir = path.toFile().isDirectory();
+        FilePartMessage fpm = new FilePartMessage(
+                AbstractMessage.Type.RESPONSE,
+                fileName,
+                targetPath,
+                destPath,
+                isDir,
+                path.toFile().lastModified(),
+                (!isDir) ? new FilePart(path.toFile().length(), seed, this.filePartUtil.getFilePart(path, seed)) : null
+        );
+        channel.writeAndFlush(fpm);
+        this.createOutputStatistic(fpm);
     }
 
-    private void sendFilePart(Path pathToFile, int filePart, Channel channel) throws Exception {
-        File file = pathToFile.toFile();
-        if (file.exists() && file.isFile()) {
-                channel.writeAndFlush(
-                        new FilePartMessage(
-                                Message.Type.RESPONSE,
-                                file.getName(),
-                                file.getCanonicalPath(),
-                                filePart,
-                                (int)(file.length()/this.partSize),
-                                this.getFilePart(file, this.partSize, filePart)
-                        )
-                );
-            System.out.println("отправил-> " + filePart + " из " + (int)(file.length()/this.partSize));
+    private void createOutputStatistic(FilePartMessage filePartMessage) {
+        if (!filePartMessage.isDir() && filePartMessage.getFilePart().getFileLength() > 0) {
+            this.getOutputStats().take(
+                    filePartMessage.getFileName(),
+                    filePartMessage.getFilePart().getFileLength(),
+                    (filePartMessage.getFilePart().getPartSeed() + filePartMessage.getFilePart().getByteArrPart().length));
         }
-        //todo а если нет такого файла?
     }
 
-    private Byte[] getFilePart(File file, int byteLength, int part) throws Exception {
-        //TODO проверка на соответсвие запроса части и длинне файла.
-        byte[] bytes = new byte[byteLength];
-        RandomAccessFile rFile = new RandomAccessFile(file, "r");
-        rFile.seek((long)byteLength * (long)part);
-        int len = rFile.read(bytes);
-        //TODO конвертер byte[] to Byte[].
-        return this.convertToObject(bytes, len);
+    private FilePartStatisticMethod getOutputStats() {
+        return (this.outputStats == null) ? (s,fl,cl)->{} : this.outputStats;
     }
 
-    private void saveFilePart(Path path, int part , byte[] arr) throws Exception {
+    private FilePartStatisticMethod getInputStats() {
+        return (this.inputStats == null) ? (s,fl,cl)->{} : this.inputStats;
+    }
+
+    private Callback<Channel> getUploadComplete() {
+        return (this.uploadComplete == null) ? (ch)->{} : this.uploadComplete;
+    }
+
+    public void loadFile(String fileName, String targetPath, String destPath, Channel channel) {
+        this.requestingNextPart(fileName, targetPath, destPath,  0, channel);
+    }
+
+    public void uploadFile(String fileName, String targetPath, String destPath, Channel channel) throws IOException {
+        Path path = Paths.get(this.channelRootDir.getRootDir(channel), targetPath, fileName);
         if (path.toFile().exists()) {
-            long awaitingLength = ((long) part * (long) this.partSize);
-            if (path.toFile().length() == awaitingLength) {
-                Files.write(path, arr, APPEND);
+            List<Path> pathList = Files.walk(path).map(e->e.subpath(path.getNameCount()-1, e.getNameCount())).collect(Collectors.toList());
+            for (Path pathToFiles: pathList) {
+                this.sendFilePart(pathToFiles.toString(), targetPath, destPath, 0, channel);
             }
-        } else if (part == 0) {
-            Files.write(path, arr, CREATE);
-        } else {
-            System.out.println("до сюда не должно было дойти writeFile");
-            throw new RuntimeException("до сюда не должно было дойти writeFile");
         }
-    }
-
-    private Byte[] convertToObject(byte[] arr, int length) {
-        Byte[] bytes = new Byte[length];
-        for (int i = 0; i < length; i++) {
-            bytes[i] = arr[i];
-        }
-        return bytes;
-    }
-
-    private byte[] convertToPrimitive(Byte[] arr) {
-        byte[] bytes = new byte[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            bytes[i] = arr[i];
-        }
-        return bytes;
     }
 }

@@ -1,20 +1,27 @@
 package org.xokyopo.clientservercommon.executors.messages;
 
-import org.xokyopo.clientservercommon.simples.entitys.Message;
+import org.xokyopo.clientservercommon.executors.messages.entitys.FilePart;
+import org.xokyopo.clientservercommon.simples.entitys.AbstractMessage;
 
-public class FilePartMessage extends Message {
+public class FilePartMessage extends AbstractMessage {
     private final String fileName;
-    private final String filePath;
-    private final Integer currentPart;
-    private final Integer numberOfPart;
-    private final Byte[] filePart;
-  
-    public FilePartMessage(Message.Type type, String fileName, String filePath, Integer currentPart, Integer numberOfPart, Byte[] filePart) {
+    private final String targetPath;
+    private final String destPath;
+    private final Boolean isDir;
+    private final Long lastModified;
+    private final FilePart filePart;
+
+    public FilePartMessage(Type type, String fileName, String targetPath, String destPath, Boolean isDir, Long lastModified) {
+        this(type, fileName, targetPath, destPath, isDir, lastModified, null);
+    }
+
+    public FilePartMessage(Type type, String fileName, String targetPath, String destPath, Boolean isDir, Long lastModified, FilePart filePart) {
         super(type);
         this.fileName = fileName;
-        this.filePath = filePath;
-        this.currentPart = currentPart;
-        this.numberOfPart = numberOfPart;
+        this.targetPath = targetPath;
+        this.destPath = destPath;
+        this.isDir = isDir;
+        this.lastModified = lastModified;
         this.filePart = filePart;
     }
 
@@ -22,19 +29,23 @@ public class FilePartMessage extends Message {
         return fileName;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getTargetPath() {
+        return targetPath;
     }
 
-    public Integer getCurrentPart() {
-        return currentPart;
+    public String getDestPath() {
+        return destPath;
     }
 
-    public Integer getNumberOfPart() {
-        return numberOfPart;
+    public Boolean isDir() {
+        return isDir;
     }
 
-    public Byte[] getFilePart() {
+    public Long getLastModified() {
+        return lastModified;
+    }
+
+    public FilePart getFilePart() {
         return filePart;
     }
 }

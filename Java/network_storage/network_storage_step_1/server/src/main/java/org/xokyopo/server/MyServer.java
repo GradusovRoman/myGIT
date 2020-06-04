@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,7 +27,7 @@ public class MyServer {
     private NettyServerConnection nettyServerConnection;
 
     private final Map<Channel, String> userDirs;
-    private boolean printTransferFileLog = false;
+    private boolean printTransferFileLog = true;
 
     public MyServer() {
         this.createExecutors();
@@ -106,8 +105,8 @@ public class MyServer {
             System.out.println(String.format(
                     "%s %s из %s файла %s",
                     msg,
-                    FileUtil.getHumanFileLength(fileFullLength),
                     FileUtil.getHumanFileLength(fileCurrentLength),
+                    FileUtil.getHumanFileLength(fileFullLength),
                     filename
             ));
         }

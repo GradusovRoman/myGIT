@@ -25,6 +25,7 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.50.Final</version>
         </dependency>
+
         <dependency>
             <groupId>org.xokyopo</groupId>
             <artifactId>common</artifactId>

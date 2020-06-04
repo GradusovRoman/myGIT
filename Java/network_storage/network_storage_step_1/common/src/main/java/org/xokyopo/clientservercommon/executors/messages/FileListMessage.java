@@ -1,15 +1,15 @@
 package org.xokyopo.clientservercommon.executors.messages;
 
-import org.xokyopo.clientservercommon.executors.messages.representor.FileRep;
-import org.xokyopo.clientservercommon.simples.entitys.Message;
+import org.xokyopo.clientservercommon.executors.messages.entitys.FileRep;
+import org.xokyopo.clientservercommon.simples.entitys.AbstractMessage;
 
 import java.util.List;
 
-public class FileListMessage extends Message {
+public class FileListMessage extends AbstractMessage {
     private final List<FileRep> fileList;
     private final String path;
 
-    public FileListMessage(Message.Type type, List<FileRep> fileList, String path) {
+    public FileListMessage(AbstractMessage.Type type, List<FileRep> fileList, String path) {
         super(type);
         this.fileList = fileList;
         this.path = path;

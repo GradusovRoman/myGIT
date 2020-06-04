@@ -24,7 +24,7 @@ public class DataBaseManager {
         }
     }
 
-    public static String getUserPassword(String name) {
+    public synchronized static String getUserPassword(String name) {
         String sql = String.format("SELECT pass FROM users WHERE name = '%s'", name);
         try {
             ResultSet rs = statement.executeQuery(sql);
@@ -38,7 +38,7 @@ public class DataBaseManager {
         return null;
     }
 
-    public static void addClient(String login, String password) {
+    public synchronized static void addClient(String login, String password) {
         String sql = String.format("insert into users (name, pass) values('%s','%s')", login, password);
         try {
             statement.execute(sql);

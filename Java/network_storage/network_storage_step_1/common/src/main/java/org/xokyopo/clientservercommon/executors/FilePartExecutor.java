@@ -45,7 +45,7 @@ public class FilePartExecutor extends AbstractMessageExecutor<FilePartMessage> {
 
     @Override
     public final boolean isLongTimeOperation() {
-        return true;
+        return false;
     }
 
     @Override

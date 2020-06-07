@@ -1,6 +1,6 @@
 package org.xokyopo.client.ui.entity;
 
-import org.xokyopo.clientservercommon.executors.messages.entitys.FileRep;
+import org.xokyopo.clientservercommon.seirialization.executors.messages.entitys.FileRep;
 import org.xokyopo.clientservercommon.utils.FileUtil;
 
 import java.io.File;

@@ -1,10 +1,13 @@
 package org.xokyopo.server;
 
 import io.netty.channel.Channel;
-import org.xokyopo.clientservercommon.executors.*;
-import org.xokyopo.clientservercommon.executors.messages.FileOperationMessage;
+import org.xokyopo.clientservercommon.seirialization.executors.AuthorizationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileListExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileOperationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FilePartExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.messages.FileOperationMessage;
 import org.xokyopo.clientservercommon.network.netty.NettyServerConnection;
-import org.xokyopo.clientservercommon.simples.MyHandlerFactory;
+import org.xokyopo.clientservercommon.seirialization.MyHandlerFactory;
 import org.xokyopo.clientservercommon.utils.FileUtil;
 import org.xokyopo.server.dao.DataBaseManager;
 
@@ -16,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MyServer {
+//    private final String repository = "E:/server_repository";
     private final String repository = "server_repository";
     private final int serverPort = 8999;
 
@@ -36,9 +40,12 @@ public class MyServer {
     }
 
     public void run() throws InterruptedException {
-        DataBaseManager.connection();
-        nettyServerConnection.run(this.serverPort);
-        DataBaseManager.disconnection();
+        try {
+            DataBaseManager.connection();
+            nettyServerConnection.run(this.serverPort);
+        } finally {
+            DataBaseManager.disconnection();
+        }
     }
 
     private void constructingServer() {
@@ -70,10 +77,10 @@ public class MyServer {
     }
 
     private boolean authorisationMethod(String login, String password, Channel channel) {
-        boolean auth = this.checkLoginAndPassword(login, password);
+        boolean auth = this.checkLoginAndPassword(login, Integer.toString(password.hashCode()));
         if (auth) {
             this.userDirs.put(channel, login);
-            System.out.println("Подключился пользователь: \t" + login);
+            System.out.println("Подключился пользователь: \t" + login + "\t всего сейчас подключено:" + this.userDirs.size());
         }
         return auth;
     }

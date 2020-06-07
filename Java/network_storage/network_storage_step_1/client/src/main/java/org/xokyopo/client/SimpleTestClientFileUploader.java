@@ -1,12 +1,12 @@
 package org.xokyopo.client;
 
 import io.netty.channel.Channel;
-import org.xokyopo.clientservercommon.executors.AuthorizationExecutor;
-import org.xokyopo.clientservercommon.executors.FileListExecutor;
-import org.xokyopo.clientservercommon.executors.FileOperationExecutor;
-import org.xokyopo.clientservercommon.executors.FilePartExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.AuthorizationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileListExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileOperationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FilePartExecutor;
 import org.xokyopo.clientservercommon.network.netty.NettyClientConnection;
-import org.xokyopo.clientservercommon.simples.MyHandlerFactory;
+import org.xokyopo.clientservercommon.seirialization.MyHandlerFactory;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -22,12 +22,14 @@ public class SimpleTestClientFileUploader {
     private NettyClientConnection nettyClientConnection;
     private CountDownLatch runAwait;
     private String userName;
+    private Long startTimer;
 
     public SimpleTestClientFileUploader(CountDownLatch runAwait, String userName) {
         this.createExecutors();
         this.constructingServer();
         this.runAwait = runAwait;
         this.userName = userName;
+
         try {
             this.runTest();
         } catch (Exception e) {
@@ -67,7 +69,7 @@ public class SimpleTestClientFileUploader {
 
         this.fileListExecutor = new FileListExecutor(this::getRepository, null);
 
-        this.fileOperationExecutor = new FileOperationExecutor(this::getRepository, null);
+        this.fileOperationExecutor = new FileOperationExecutor(this::getRepository, this::finishOperation);
 
         this.filePartExecutor = new FilePartExecutor(
                 this::getRepository,
@@ -97,13 +99,19 @@ public class SimpleTestClientFileUploader {
     private void runTest() throws Exception {
         this.run();
         this.runAwait.await();
-        this.filePartExecutor.uploadFile("test.iso","","", this.channel);
+//        this.startTimer = System.currentTimeMillis();
+//        this.filePartExecutor.uploadFile("test","","", this.channel);
+    }
+
+    private void finishOperation(boolean b) {
+//        long stopTimer = System.currentTimeMillis();
+//        System.out.println(String.format("Передача файла %s завершилась за  %s мсек","test.iso", stopTimer - this.startTimer));
     }
 
     public static void main(String[] args) {
-        int clientCount = 200;
+        int clientCount = 600;
         CountDownLatch countDownLatch = new CountDownLatch(clientCount);
-        for (int i = 0; i < clientCount; i++) {
+        for (int i = 0 ; i < clientCount ; i++) {
             final int f = i;
             new Thread(()->new SimpleTestClientFileUploader(countDownLatch, ("client_" + f))).start();
         }

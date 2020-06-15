@@ -14,10 +14,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.xokyopo.client.ui.dialogs.rename.GFileRenameDialog;
 import org.xokyopo.client.ui.entity.UiFileRep;
-import org.xokyopo.clientservercommon.executors.*;
-import org.xokyopo.clientservercommon.executors.messages.entitys.FileRep;
+import org.xokyopo.clientservercommon.seirialization.executors.AuthorizationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileListExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FileOperationExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.FilePartExecutor;
+import org.xokyopo.clientservercommon.seirialization.executors.messages.entitys.FileRep;
 import org.xokyopo.clientservercommon.network.netty.NettyClientConnection;
-import org.xokyopo.clientservercommon.simples.MyHandlerFactory;
+import org.xokyopo.clientservercommon.seirialization.MyHandlerFactory;
 import org.xokyopo.clientservercommon.utils.FileUtil;
 
 import java.io.File;
@@ -59,6 +62,10 @@ public class GFileManagerController implements Initializable {
     public TableView<UiFileRep> fmLeftTable;
     @FXML
     public TableView<UiFileRep> fmRightTable;
+    @FXML
+    public  TextField fmLeftResourcePath;
+    @FXML
+    public  TextField fmRightResourcePath;
 
     private UiAlert uiAlert;
     private final String repository = "client_repository";
@@ -71,16 +78,14 @@ public class GFileManagerController implements Initializable {
     public FileOperationExecutor fileOperationExecutor;
     private NettyClientConnection nettyClientConnection;
     private CountDownLatch countDownLatch;
-    private Path currentClientPath;
-    private Path currentServerPath;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.uiAlert = new UiAlert();
         this.setTableFactory(this.fmLeftTable, "name", "type", "size");
         this.setTableFactory(this.fmRightTable, "name", "type", "size");
-        this.currentClientPath = Paths.get("");
-        this.currentServerPath = Paths.get("");
+        this.setRemotePath("");
+        this.setLocalPath("");
         this.creatingExecutors();
         this.createNettyClientConnection();
 
@@ -159,7 +164,7 @@ public class GFileManagerController implements Initializable {
             this.awaitConnection();
         }
         if (this.channel != null) {
-            this.authorizationExecutor.sendLoginAndPass(this.loginField.getText(), Integer.toString(this.passField.getText().hashCode()), this.channel);
+            this.authorizationExecutor.sendLoginAndPass(this.loginField.getText(), this.passField.getText(), this.channel);
         } else {
             uiAlert.showErrorAlert("Соединение", "Ошибка подключения", "Удаленный ресурс не найден.");
             this.showLoginPain();
@@ -191,24 +196,24 @@ public class GFileManagerController implements Initializable {
     }
 
     private void updateLeftTable() {
-        this.fillingLeftTable(Paths.get(this.getClientRepository(null), this.currentClientPath.toString()).toFile().listFiles());
+        this.fillingLeftTable(Paths.get(this.getClientRepository(null), this.getLocalPath()).toFile().listFiles());
     }
 
     private void updateRightTable() {
-        this.fileListExecutor.getFileList(this.currentServerPath.toString(), this.channel);
+        this.fileListExecutor.getFileList(this.getRemotePath(), this.channel);
     }
 
     private void fillingLeftTable(File... files) {
         if (files != null) {
             LinkedList<UiFileRep> uiFileRepList = Arrays.stream(files).map(UiFileRep::new).collect(Collectors.toCollection(LinkedList::new));
-            if (!this.currentClientPath.toString().equals("")) uiFileRepList.addFirst(new UiFileRep("..", true, 0L));
+            if (!this.getLocalPath().equals("")) uiFileRepList.addFirst(new UiFileRep("..", true, 0L));
             this.fmLeftTable.setItems(new ObservableListWrapper<>(uiFileRepList));
         }
     }
 
     private void fillingRightTable(List<FileRep> fileRepList) {
         LinkedList<UiFileRep> uiFileRepList = fileRepList.stream().map(UiFileRep::new).collect(Collectors.toCollection(LinkedList::new));
-        if (!this.currentServerPath.toString().equals("")) uiFileRepList.addFirst(new UiFileRep("..", true, 0L));
+        if (!this.getRemotePath().equals("")) uiFileRepList.addFirst(new UiFileRep("..", true, 0L));
         this.fmRightTable.setItems(new ObservableListWrapper<>(uiFileRepList));
     }
 
@@ -233,8 +238,8 @@ public class GFileManagerController implements Initializable {
     private void localRename(String oldName, String newName) throws IOException {
         if (!oldName.equals(newName)) {
             Files.move(
-                    Paths.get(this.getClientRepository(null), this.currentClientPath.toString(), oldName),
-                    Paths.get(this.getClientRepository(null), this.currentClientPath.toString(), newName)
+                    Paths.get(this.getClientRepository(null), this.getLocalPath(), oldName),
+                    Paths.get(this.getClientRepository(null), this.getLocalPath(), newName)
             );
         }
     }
@@ -242,8 +247,8 @@ public class GFileManagerController implements Initializable {
     private void remoteRename(String oldName, String newName) {
         if (!oldName.equals(newName)) {
             this.fileOperationExecutor.moveFile(
-                    Paths.get(this.currentServerPath.toString(), oldName).toString(),
-                    Paths.get(this.currentServerPath.toString(), newName).toString(), this.channel
+                    Paths.get(this.getRemotePath(), oldName).toString(),
+                    Paths.get(this.getRemotePath(), newName).toString(), this.channel
             );
         }
     }
@@ -257,7 +262,7 @@ public class GFileManagerController implements Initializable {
         if (this.fmLeftTable.isFocused()) {
             Thread t = new Thread(()-> {
                 try {
-                    this.filePartExecutor.uploadFile(this.getSelectedItem(this.fmLeftTable).getName(), this.currentClientPath.toString(), this.currentServerPath.toString(), this.channel);
+                    this.filePartExecutor.uploadFile(this.getSelectedItem(this.fmLeftTable).getName(), this.getLocalPath(), this.getRemotePath(), this.channel);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -265,7 +270,7 @@ public class GFileManagerController implements Initializable {
             t.setDaemon(true);
             t.start();
         } else if (this.fmRightTable.isFocused()) {
-            this.filePartExecutor.loadFile(this.getSelectedItem(this.fmRightTable).getName(), this.currentServerPath.toString(), this.currentClientPath.toString(), this.channel);
+            this.filePartExecutor.loadFile(this.getSelectedItem(this.fmRightTable).getName(), this.getRemotePath(), this.getLocalPath(), this.channel);
         }
     }
 
@@ -273,13 +278,13 @@ public class GFileManagerController implements Initializable {
     public void fmDeleteAction(ActionEvent actionEvent) {
         if (this.fmLeftTable.isFocused()) {
             try {
-                FileUtil.recurseDelete(Paths.get(this.getClientRepository(null),this.currentClientPath.toString(), this.getSelectedItem(this.fmLeftTable).getName()));
+                FileUtil.recurseDelete(Paths.get(this.getClientRepository(null),this.getLocalPath(), this.getSelectedItem(this.fmLeftTable).getName()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             this.updateLeftTable();
         } else if (this.fmRightTable.isFocused()) {
-            this.fileOperationExecutor.deleteFile(Paths.get(this.currentServerPath.toString(), this.getSelectedItem(this.fmRightTable).getName()).toString(), this.channel);
+            this.fileOperationExecutor.deleteFile(Paths.get(this.getRemotePath(), this.getSelectedItem(this.fmRightTable).getName()).toString(), this.channel);
         }
     }
 
@@ -338,7 +343,7 @@ public class GFileManagerController implements Initializable {
     @FXML
     public void fmLeftTableMouseClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() >= 2 && mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-            this.currentClientPath = this.getNewPath(this.getSelectedItem(this.fmLeftTable), this.currentClientPath);
+            this.setLocalPath(this.getNewPath(this.getSelectedItem(this.fmLeftTable), this.getLocalPath()));
             this.updateLeftTable();
         }
     }
@@ -346,12 +351,12 @@ public class GFileManagerController implements Initializable {
     @FXML
     public void fmRightTableMouseClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() >= 2 && mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-            this.currentServerPath = this.getNewPath(this.getSelectedItem(this.fmRightTable), this.currentServerPath);
+            this.setRemotePath(this.getNewPath(this.getSelectedItem(this.fmRightTable), this.getRemotePath()));
             this.updateRightTable();
         }
     }
 
-    private Path getNewPath(UiFileRep uiFileRep, Path currentPath) {
+    private String  getNewPath(UiFileRep uiFileRep, String  currentPath) {
         if (uiFileRep != null && uiFileRep.isDir()) {
             return (uiFileRep.getName().equals("..")) ? this.pathUp(currentPath) : this.pathDown(currentPath, uiFileRep.getName());
         }
@@ -359,11 +364,29 @@ public class GFileManagerController implements Initializable {
     }
 
 
-    private Path pathUp(Path path) {
-        return (path.getNameCount() > 1) ? path.getParent() : Paths.get("");
+    private String pathUp(String  path) {
+        Path p = Paths.get(path);
+        return (p.getNameCount() > 1) ? p.getParent().toString() : "";
     }
 
-    private Path pathDown(Path path, String child) {
-        return Paths.get(path.toString(), child);
+    private String pathDown(String path, String child) {
+        return Paths.get(path, child).toString();
+    }
+
+    //TODO переделать на геттеры и сеттеры.
+    public String getLocalPath() {
+        return fmLeftResourcePath.getText();
+    }
+
+    public String getRemotePath() {
+        return fmRightResourcePath.getText();
+    }
+
+    public void setLocalPath(String fmLeftResourcePath) {
+        this.fmLeftResourcePath.setText(fmLeftResourcePath);
+    }
+
+    public void setRemotePath(String fmRightResourcePath) {
+        this.fmRightResourcePath.setText(fmRightResourcePath);
     }
 }

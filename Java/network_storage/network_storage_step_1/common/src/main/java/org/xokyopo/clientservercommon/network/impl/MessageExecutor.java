@@ -1,7 +1,7 @@
 package org.xokyopo.clientservercommon.network.impl;
 
 import io.netty.channel.Channel;
-import org.xokyopo.clientservercommon.simples.entitys.AbstractMessage;
+import org.xokyopo.clientservercommon.seirialization.template.AbstractMessage;
 
 public interface MessageExecutor {
     Class<? extends AbstractMessage> getInputMessageClass();

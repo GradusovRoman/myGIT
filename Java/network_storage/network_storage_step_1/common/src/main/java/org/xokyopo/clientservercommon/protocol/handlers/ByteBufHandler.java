@@ -5,8 +5,11 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.network.impl.Callback;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
+import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,19 +38,21 @@ public class ByteBufHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //TODO а как же долгие операции?
         ByteBuf input = (ByteBuf) msg;
-        IByteBufExecutor byteBufExecutor = this.byteIByteBufExecutorMap.get(input.readByte());
-        if (byteBufExecutor != null) {
-            byteBufExecutor.executeMessage(ctx.channel(), input);
-        } else {
-            input.release();
+        try {
+            IByteBufExecutor byteBufExecutor = this.byteIByteBufExecutorMap.get(input.readByte());
+            if (byteBufExecutor != null) {
+                byteBufExecutor.executeMessage(ctx.channel(), input);
+            }
+        } finally {
+//            ByteBuffCounter.decrement();
+            ReferenceCountUtil.release(input);
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("MyHandler.exceptionCaught");
+//        System.out.println("MyHandler.exceptionCaught");
         ctx.close();
     }
 }

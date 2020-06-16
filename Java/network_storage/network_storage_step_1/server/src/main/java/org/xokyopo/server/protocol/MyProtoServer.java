@@ -1,13 +1,9 @@
-package org.xokyopo.server;
+package org.xokyopo.server.protocol;
 
 import io.netty.channel.Channel;
-import org.xokyopo.clientservercommon.seirialization.executors.AuthorizationExecutor;
-import org.xokyopo.clientservercommon.seirialization.executors.FileListExecutor;
-import org.xokyopo.clientservercommon.seirialization.executors.FileOperationExecutor;
-import org.xokyopo.clientservercommon.seirialization.executors.FilePartExecutor;
-import org.xokyopo.clientservercommon.seirialization.executors.messages.FileOperationMessage;
 import org.xokyopo.clientservercommon.network.netty.NettyServerConnection;
-import org.xokyopo.clientservercommon.seirialization.MyHandlerFactory;
+import org.xokyopo.clientservercommon.protocol.MyProtocolHandlerFactory;
+import org.xokyopo.clientservercommon.protocol.executors.*;
 import org.xokyopo.clientservercommon.utils.FileUtil;
 import org.xokyopo.server.dao.DataBaseManager;
 
@@ -18,22 +14,22 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MyServer {
-//    private final String repository = "E:/server_repository";
-    private final String repository = "server_repository";
+public class MyProtoServer {
+    private final String repository = "E:/server_repository";
+//    private final String repository = "server_repository";
     private final int serverPort = 8999;
 
-    private AuthorizationExecutor authorizationExecutor;
-    private FileOperationExecutor fileOperationExecutor;
-    private FilePartExecutor filePartExecutor;
-    private FileListExecutor fileListExecutor;
+    private PAuthorizationExecutor authorizationExecutor;
+    private PFileOperationExecutor fileOperationExecutor;
+    private PFilePartServerExecutor filePartExecutor;
+    private PFileListExecutor fileListExecutor;
 
     private NettyServerConnection nettyServerConnection;
 
     private final Map<Channel, String> userDirs;
-    private boolean printTransferFileLog = true;
+    private final boolean printTransferFileLog = true;
 
-    public MyServer() {
+    public MyProtoServer() {
         this.createExecutors();
         this.constructingServer();
         this.userDirs = new ConcurrentHashMap<>();
@@ -50,7 +46,7 @@ public class MyServer {
 
     private void constructingServer() {
         this.nettyServerConnection = new NettyServerConnection(
-                new MyHandlerFactory(
+                new MyProtocolHandlerFactory(
                         (ch)->{},
                         this::ifDisconnect,
                         this.authorizationExecutor,
@@ -62,18 +58,13 @@ public class MyServer {
     }
 
     private void createExecutors() {
-        this.authorizationExecutor = new AuthorizationExecutor(null, this::authorisationMethod);
+        this.authorizationExecutor = new PAuthorizationExecutor(null, this::authorisationMethod);
+        this.fileListExecutor = new PFileListExecutor(this::getUserRepository, null);
+        this.fileOperationExecutor = new PFileOperationExecutor(this::getUserRepository, null);
+        this.filePartExecutor = new PFilePartServerExecutor(this::getUserRepository);
 
-        this.fileListExecutor = new FileListExecutor(this::getUserRepository, null);
-
-        this.fileOperationExecutor = new FileOperationExecutor(this::getUserRepository, null);
-
-        this.filePartExecutor = new FilePartExecutor(
-                this::getUserRepository,
-                (ch)->this.fileOperationExecutor.sendResponse(FileOperationMessage.OType.COPY,"","", ch),
-                (fileName,fileFullLength,fileCurrentLength) -> this.printStatistic("Получено", fileName,fileFullLength,fileCurrentLength),
-                (fileName,fileFullLength,fileCurrentLength) -> this.printStatistic("Отправлено", fileName,fileFullLength,fileCurrentLength)
-        );
+        this.filePartExecutor.setInputStats((fileName, fileFullLength, fileCurrentLength) -> this.printStatistic("Получено", fileName.toString(), fileFullLength, fileCurrentLength));
+        this.filePartExecutor.setOutputStats((fileName, fileFullLength, fileCurrentLength) -> this.printStatistic("Отправлено", fileName.toString(), fileFullLength, fileCurrentLength));
     }
 
     private boolean authorisationMethod(String login, String password, Channel channel) {
@@ -125,7 +116,7 @@ public class MyServer {
     }
 
     public static void main(String[] args) {
-        MyServer myServer = new MyServer();
+        MyProtoServer myServer = new MyProtoServer();
         try {
             System.out.println("запускаю сервер");
             myServer.run();

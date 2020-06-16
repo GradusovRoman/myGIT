@@ -1,10 +1,18 @@
 package org.xokyopo.clientservercommon.seirialization.executors.utils;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.*;
 //TODO файл равен 0
@@ -42,4 +50,11 @@ public class FilePartUtil {
         return partSize;
     }
 
+    public List<String> getFilesList(String fileName, String targetPath) throws IOException {
+        Path path = Paths.get(targetPath, fileName);
+        if (path.toFile().exists()) {
+            return Files.walk(path).map(e->e.subpath(path.getNameCount()-1, e.getNameCount())).map(Path::toString).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
 }

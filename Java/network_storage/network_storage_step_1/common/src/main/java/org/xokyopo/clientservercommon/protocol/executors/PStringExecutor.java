@@ -5,7 +5,7 @@ import io.netty.channel.Channel;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IncomingCallback;
-import org.xokyopo.clientservercommon.protocol.executors.template.DefaultSignalByte;
+import org.xokyopo.clientservercommon.protocol.executors.template.ExecutorSignalByte;
 
 public class PStringExecutor implements IByteBufExecutor {
     private IncomingCallback<String> incomingMessage;
@@ -16,13 +16,12 @@ public class PStringExecutor implements IByteBufExecutor {
 
     @Override
     public final byte getSignalByte() {
-        return DefaultSignalByte.ONE_STRING.getSignal();
+        return ExecutorSignalByte.ONE_STRING.getSignal();
     }
 
     @Override
     public final void executeMessage(Channel channel, ByteBuf byteBuf) {
         this.incomingMessage.call(MyByteBufUtil.getString(byteBuf), channel);
-        byteBuf.release();
     }
 
     public void setIncomingMessage(IncomingCallback<String> incomingMessage) {
@@ -30,9 +29,9 @@ public class PStringExecutor implements IByteBufExecutor {
     }
 
     public void send(String msg, Channel channel) {
-        ByteBuf byteBuf = channel.alloc().buffer(1 + MyByteBufUtil.getTextLength(msg));
-        byteBuf.writeByte(this.getSignalByte());
-        MyByteBufUtil.addString(msg, byteBuf);
-        channel.writeAndFlush(byteBuf);
+        ByteBuf outBuff = channel.alloc().buffer(1 + MyByteBufUtil.getTextLength(msg));
+        outBuff.writeByte(this.getSignalByte());
+        MyByteBufUtil.addString(msg, outBuff);
+        channel.writeAndFlush(outBuff);
     }
 }

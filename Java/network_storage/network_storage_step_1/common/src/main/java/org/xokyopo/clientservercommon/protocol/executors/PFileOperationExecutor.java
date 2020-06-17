@@ -4,29 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import org.xokyopo.clientservercommon.network.impl.Callback;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
-<<<<<<< HEAD
-import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
-import org.xokyopo.clientservercommon.protocol.executors.template.DefaultSignalByte;
-import org.xokyopo.clientservercommon.seirialization.executors.impl.IChannelRootDir;
-import org.xokyopo.clientservercommon.utils.FileUtil;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-public class PFileOperationExecutor implements IByteBufExecutor {
-    private IChannelRootDir channelRootDir;
-    private Callback<Boolean> remoteOperationResponse;
-
-    private enum Type {
-        MOVE((byte) 1),
-        DELETE((byte) 2),
-        FINISH((byte) 3)
-        ;
-        public final byte signal;
-
-        Type(byte signal) {
-=======
 import org.xokyopo.clientservercommon.protocol.executors.template.PExecutorAdapter;
 import org.xokyopo.clientservercommon.protocol.executors.template.ExecutorSignalByte;
 import org.xokyopo.clientservercommon.seirialization.executors.impl.IChannelRootDir;
@@ -47,7 +24,6 @@ public class PFileOperationExecutor extends PExecutorAdapter {
         public final byte signal;
 
         FileOperation(byte signal) {
->>>>>>> network_storage_final
             this.signal = signal;
         }
     }
@@ -59,49 +35,6 @@ public class PFileOperationExecutor extends PExecutorAdapter {
 
     @Override
     public byte getSignalByte() {
-<<<<<<< HEAD
-        return DefaultSignalByte.FILE_OPERATION.getSignal();
-    }
-
-    @Override
-    public void executeMessage(Channel channel, ByteBuf byteBuf) {
-        try {
-            byte signal = byteBuf.readByte();
-            if (signal == Type.MOVE.signal) {
-                    Files.move(
-                            Paths.get(this.channelRootDir.getRootDir(channel), MyByteBufUtil.getString(byteBuf)),
-                            Paths.get(this.channelRootDir.getRootDir(channel), MyByteBufUtil.getString(byteBuf))
-                    );
-            } else if (signal == Type.DELETE.signal) {
-                FileUtil.recurseDelete(
-                        Paths.get(this.channelRootDir.getRootDir(channel), MyByteBufUtil.getString(byteBuf))
-                );
-            } else if (signal == Type.FINISH.signal) {
-                this.remoteOperationResponse.callback(byteBuf.readByte() == Type.FINISH.signal);
-            }
-        } catch (IOException e) {
-            System.out.println("PFileOperationExecutor.executeMessage");
-            e.printStackTrace();
-        }
-        byteBuf.release();
-    }
-
-    public void moveFile(String oldFileName, String newFileName, Channel channel) {
-        ByteBuf outer = channel.alloc().buffer(2 + MyByteBufUtil.getTextLength(oldFileName, newFileName));
-        outer.writeByte(this.getSignalByte());
-        outer.writeByte(Type.MOVE.signal);
-        MyByteBufUtil.addString(oldFileName, outer);
-        MyByteBufUtil.addString(newFileName, outer);
-        channel.writeAndFlush(outer);
-    }
-
-    public void deleteFile(String fileName, Channel channel) {
-        ByteBuf outer = channel.alloc().buffer(2 + MyByteBufUtil.getTextLength(fileName));
-        outer.writeByte(this.getSignalByte());
-        outer.writeByte(Type.DELETE.signal);
-        MyByteBufUtil.addString(fileName, outer);
-        channel.writeAndFlush(outer);
-=======
         return ExecutorSignalByte.FILE_OPERATION.getSignal();
     }
 
@@ -147,7 +80,6 @@ public class PFileOperationExecutor extends PExecutorAdapter {
 
     public void deleteFile(String fileName, Channel channel) {
         this.sendRequest(FileOperation.DELETE, fileName, null, channel);
->>>>>>> network_storage_final
     }
 
     public void setChannelRootDir(IChannelRootDir channelRootDir) {

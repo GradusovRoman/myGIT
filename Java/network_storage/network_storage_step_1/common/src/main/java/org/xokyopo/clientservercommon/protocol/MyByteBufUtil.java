@@ -1,21 +1,6 @@
 package org.xokyopo.clientservercommon.protocol;
 
 import io.netty.buffer.ByteBuf;
-<<<<<<< HEAD
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-public class MyByteBufUtil {
-
-    public static void addString(String text, ByteBuf byteBuf) {
-        ByteBuf buffer = byteBuf.alloc().buffer(getTextLength(text));
-        buffer.writeBytes(text.getBytes(StandardCharsets.UTF_8));
-
-        byteBuf.writeInt(buffer.readableBytes());
-        byteBuf.writeBytes(buffer.readBytes(buffer.readableBytes()));
-
-        buffer.release();
-=======
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -50,7 +35,6 @@ public class MyByteBufUtil {
     public static void addString(String text, ByteBuf byteBuf) {
         byteBuf.writeInt(text.getBytes(StandardCharsets.UTF_8).length);
         byteBuf.writeBytes(text.getBytes(StandardCharsets.UTF_8));
->>>>>>> network_storage_final
     }
 
     public static String getString(ByteBuf byteBuf) {
@@ -60,8 +44,6 @@ public class MyByteBufUtil {
     public static int getTextLength(String... msg) {
         return Arrays.stream(msg).mapToInt(text->text.length()* TypeLengthUtilInByte.CHAR_LENGTH).sum() + msg.length * TypeLengthUtilInByte.INT_LENGTH;
     }
-<<<<<<< HEAD
-=======
 
     public static int getTextLength(List<String> msg) {
         return msg.stream().mapToInt(text->text.length()* TypeLengthUtilInByte.CHAR_LENGTH).sum() + msg.size() * TypeLengthUtilInByte.INT_LENGTH;
@@ -111,5 +93,4 @@ public class MyByteBufUtil {
         }
         return result;
     }
->>>>>>> network_storage_final
 }

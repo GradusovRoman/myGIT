@@ -1,4 +1,4 @@
-package org.xokyopo.client;
+package org.xokyopo.client.test.multiclient.serialisation;
 
 import io.netty.channel.Channel;
 import org.xokyopo.clientservercommon.seirialization.executors.AuthorizationExecutor;
@@ -10,7 +10,7 @@ import org.xokyopo.clientservercommon.seirialization.MyHandlerFactory;
 
 import java.util.concurrent.CountDownLatch;
 
-public class SimpleTestClientFileUploader {
+public class MultiSerialisationClientsFileUploader {
     private final String repository = "client_repository";
     private final String remoteUrl = "localhost";
     private final int remotePort = 8999;
@@ -24,7 +24,7 @@ public class SimpleTestClientFileUploader {
     private String userName;
     private Long startTimer;
 
-    public SimpleTestClientFileUploader(CountDownLatch runAwait, String userName) {
+    public MultiSerialisationClientsFileUploader(CountDownLatch runAwait, String userName) {
         this.createExecutors();
         this.constructingServer();
         this.runAwait = runAwait;
@@ -109,11 +109,12 @@ public class SimpleTestClientFileUploader {
     }
 
     public static void main(String[] args) {
+        //TODO max 640
         int clientCount = 600;
         CountDownLatch countDownLatch = new CountDownLatch(clientCount);
         for (int i = 0 ; i < clientCount ; i++) {
             final int f = i;
-            new Thread(()->new SimpleTestClientFileUploader(countDownLatch, ("client_" + f))).start();
+            new Thread(()->new MultiSerialisationClientsFileUploader(countDownLatch, ("client_" + f))).start();
         }
     }
 }

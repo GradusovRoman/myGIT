@@ -2,3 +2,5 @@
 **/.idea/
 **/*.iml
 **/.git/
+/Java/network_storage/network_storage_step_1/client_repository/
+/Java/network_storage/network_storage_step_1/server_repository/

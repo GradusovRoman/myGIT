@@ -8,7 +8,6 @@ import org.xokyopo.clientservercommon.protocol.executors.entitys.PFileInfo;
 import org.xokyopo.clientservercommon.protocol.executors.entitys.QueueElement;
 import org.xokyopo.clientservercommon.protocol.executors.impl.FileTransferStatistic;
 import org.xokyopo.clientservercommon.seirialization.executors.impl.IChannelRootDir;
-import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -145,7 +144,6 @@ public class PFilePartClientExecutor extends PFilePartServerExecutor {
     //Переопределено, для того что бы убрать список файлы из того что отправляется на сервер.
     protected void sendDir(Path fileFrom, Channel channel) throws IOException {
         ByteBuf outBuf = channel.alloc().buffer(3 + PFileInfo.countLengthInByte(fileFrom.toString()));
-
         outBuf.writeByte(this.getSignalByte());
         outBuf.writeByte(MessageType.RESPONSE.signal);
         outBuf.writeByte(Type.DIR.signal);

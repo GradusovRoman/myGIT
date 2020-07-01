@@ -2,6 +2,7 @@ package org.xokyopo.clientservercommon.protocol.executors;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.network.impl.Callback;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
 import org.xokyopo.clientservercommon.protocol.executors.template.PExecutorAdapter;
@@ -23,7 +24,7 @@ public class PAuthorizationExecutor extends PExecutorAdapter {
     }
 
     @Override
-    public void executeRequest(Channel channel, ByteBuf byteBuf) throws Exception {
+    public void executeRequest(Channel channel, ByteBuf byteBuf) {
         if (this.authorisationMethod.check(MyByteBufUtil.getString(byteBuf), MyByteBufUtil.getString(byteBuf), channel)) {
             this.sendFinish(channel);
         } else {
@@ -53,7 +54,7 @@ public class PAuthorizationExecutor extends PExecutorAdapter {
         ByteBuf outBuff = channel.alloc().buffer(2 + MyByteBufUtil.getTextLength(login, pass));
         outBuff.writeByte(this.getSignalByte());
         outBuff.writeByte(MessageType.REQUEST.signal);
-        MyByteBufUtil.addString(login,  outBuff);
+        MyByteBufUtil.addString(login, outBuff);
         MyByteBufUtil.addString(pass, outBuff);
         channel.writeAndFlush(outBuff);
     }

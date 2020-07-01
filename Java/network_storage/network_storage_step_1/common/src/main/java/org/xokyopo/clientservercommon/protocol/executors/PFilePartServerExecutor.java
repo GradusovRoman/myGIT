@@ -2,6 +2,7 @@ package org.xokyopo.clientservercommon.protocol.executors;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
 import org.xokyopo.clientservercommon.protocol.TypeLengthUtilInByte;
 import org.xokyopo.clientservercommon.protocol.executors.entitys.PFileInfo;
@@ -9,7 +10,6 @@ import org.xokyopo.clientservercommon.protocol.executors.impl.FileTransferStatis
 import org.xokyopo.clientservercommon.protocol.executors.template.PExecutorAdapter;
 import org.xokyopo.clientservercommon.protocol.executors.template.ExecutorSignalByte;
 import org.xokyopo.clientservercommon.seirialization.executors.impl.IChannelRootDir;
-import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,20 +55,22 @@ public class PFilePartServerExecutor extends PExecutorAdapter {
     }
 
     @Override
-    public void executeRequest(Channel channel, ByteBuf byteBuf) throws Exception {
+    public void executeRequest(Channel channel, ByteBuf byteBuf) {
         byte incomingSignal = byteBuf.readByte();
         if (incomingSignal == Type.GET_FILE.signal) {
             Path uploadPath = this.getUploadFromPath(MyByteBufUtil.getString(byteBuf), channel);
             if (Files.exists(uploadPath)) {
-                if (Files.isDirectory(uploadPath)) {
-                    this.sendDir(uploadPath, channel);
-                } else {
-                    this.sendFilePart(uploadPath, byteBuf.readLong(), channel);
+                try {
+                    if (Files.isDirectory(uploadPath)) {
+                        this.sendDir(uploadPath, channel);
+                    } else {
+                        this.sendFilePart(uploadPath, byteBuf.readLong(), channel);
+                    }
+                } catch (Exception e) {
+                    this.sendError(channel);
                 }
-                return;
             }
         }
-        this.sendError(channel);
     }
 
     @Override
@@ -117,7 +119,6 @@ public class PFilePartServerExecutor extends PExecutorAdapter {
 
     protected void requestNextFilePart(String fileName, long seed, Channel channel) {
         ByteBuf outBuff = channel.alloc().buffer(3 + MyByteBufUtil.getTextLength(fileName) + TypeLengthUtilInByte.LONG_LENGTH);
-
         outBuff.writeByte(this.getSignalByte());
         outBuff.writeByte(MessageType.REQUEST.signal);
         outBuff.writeByte(Type.GET_FILE.signal);
@@ -129,35 +130,38 @@ public class PFilePartServerExecutor extends PExecutorAdapter {
 
     protected void sendFilePart(Path filePathFrom, long seed, Channel channel) throws IOException {
         ByteBuf outBuff = channel.alloc().buffer(PFilePartServerExecutor.FILE_PART_BUFFER_LENGTH);
-
-        outBuff.writeByte(this.getSignalByte());
-        outBuff.writeByte(MessageType.RESPONSE.signal);
-        outBuff.writeByte(Type.FILE_PART.signal);
-
         ByteBuf fileInfoBuff = PFileInfo.getByte(filePathFrom.toFile(), this.getUploadOutcomePath(filePathFrom, channel));
-        outBuff.writeBytes(fileInfoBuff);
-        fileInfoBuff.release();
+        try {
+            outBuff.writeByte(this.getSignalByte());
+            outBuff.writeByte(MessageType.RESPONSE.signal);
+            outBuff.writeByte(Type.FILE_PART.signal);
+            outBuff.writeBytes(fileInfoBuff);
 
-        int buffWithoutData = outBuff.readableBytes();
-        MyByteBufUtil.writeFilePart(filePathFrom, seed, outBuff);
-        this.outputStats.take(filePathFrom, filePathFrom.toFile().length(), seed + outBuff.readableBytes() - buffWithoutData - TypeLengthUtilInByte.LONG_LENGTH);
-        channel.writeAndFlush(outBuff);
+            int buffWithoutData = outBuff.readableBytes();
+            MyByteBufUtil.writeFilePart(filePathFrom, seed, outBuff);
+            this.outputStats.take(filePathFrom, filePathFrom.toFile().length(), seed + outBuff.readableBytes() - buffWithoutData - TypeLengthUtilInByte.LONG_LENGTH);
+            channel.writeAndFlush(outBuff);
+        } finally {
+            ReferenceCountUtil.release(fileInfoBuff);
+        }
     }
 
     protected void sendDir(Path fileFrom, Channel channel) throws IOException {
         List<String> filesList = Files.list(fileFrom).map(path->path.subpath(fileFrom.getNameCount(), path.getNameCount()).toString()).collect(Collectors.toList());
         ByteBuf outBuf = channel.alloc().buffer(3 + PFileInfo.countLengthInByte(fileFrom.toString()) + MyByteBufUtil.getTextLength(filesList));
-
-        outBuf.writeByte(this.getSignalByte());
-        outBuf.writeByte(MessageType.RESPONSE.signal);
-        outBuf.writeByte(Type.DIR.signal);
-
         ByteBuf fileInfoBuff = PFileInfo.getByte(fileFrom.toFile(), this.getUploadOutcomePath(fileFrom, channel));
-        outBuf.writeBytes(fileInfoBuff);
-        fileInfoBuff.release();
+        try {
+            outBuf.writeByte(this.getSignalByte());
+            outBuf.writeByte(MessageType.RESPONSE.signal);
+            outBuf.writeByte(Type.DIR.signal);
 
-        MyByteBufUtil.addListOfString(filesList, outBuf);
-        channel.writeAndFlush(outBuf);
+            outBuf.writeBytes(fileInfoBuff);
+
+            MyByteBufUtil.addListOfString(filesList, outBuf);
+            channel.writeAndFlush(outBuf);
+        } finally {
+            ReferenceCountUtil.release(fileInfoBuff);
+        }
     }
 
     public void setChannelRootDir(IChannelRootDir channelRootDir) {
@@ -199,7 +203,6 @@ public class PFilePartServerExecutor extends PExecutorAdapter {
 
     public void getFile(String filePath, Channel channel) {
         ByteBuf outBuf = channel.alloc().buffer(3 + MyByteBufUtil.getTextLength(filePath) + TypeLengthUtilInByte.LONG_LENGTH);
-
         outBuf.writeByte(this.getSignalByte());
         outBuf.writeByte(MessageType.REQUEST.signal);
         outBuf.writeByte(Type.GET_FILE.signal);

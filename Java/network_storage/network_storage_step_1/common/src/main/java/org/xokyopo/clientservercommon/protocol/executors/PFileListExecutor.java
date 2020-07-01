@@ -8,7 +8,6 @@ import org.xokyopo.clientservercommon.protocol.executors.entitys.PFileInfo;
 import org.xokyopo.clientservercommon.protocol.executors.template.PExecutorAdapter;
 import org.xokyopo.clientservercommon.protocol.executors.template.ExecutorSignalByte;
 import org.xokyopo.clientservercommon.seirialization.executors.impl.IChannelRootDir;
-import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -33,7 +32,7 @@ public class PFileListExecutor extends PExecutorAdapter {
     }
 
     @Override
-    public void executeRequest(Channel channel, ByteBuf byteBuf) throws Exception {
+    public void executeRequest(Channel channel, ByteBuf byteBuf) {
         Path path = Paths.get(channelRootDir.getRootDir(channel), MyByteBufUtil.getString(byteBuf));
         this.sendResponse(this.getEncodeFileList(path), channel);
     }

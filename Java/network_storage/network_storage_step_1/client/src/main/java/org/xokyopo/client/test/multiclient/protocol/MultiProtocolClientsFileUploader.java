@@ -86,6 +86,7 @@ public class MultiProtocolClientsFileUploader {
     }
 
     public void acceptAuth(boolean isAuth) {
+        System.out.println(this.userName + ": авторизировался" + isAuth);
         this.runAwait.countDown();
     }
 
@@ -102,7 +103,7 @@ public class MultiProtocolClientsFileUploader {
     }
 
     public static void main(String[] args) {
-        int clientCount = 640;
+        int clientCount = 640; // max 640
         CountDownLatch countDownLatch = new CountDownLatch(clientCount);
         for (int i = 0 ; i < clientCount ; i++) {
             final int f = i;

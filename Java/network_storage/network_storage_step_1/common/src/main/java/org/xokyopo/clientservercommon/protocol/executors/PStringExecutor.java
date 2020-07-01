@@ -2,6 +2,7 @@ package org.xokyopo.clientservercommon.protocol.executors;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IncomingCallback;

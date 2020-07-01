@@ -39,14 +39,18 @@ public class PFileOperationExecutor extends PExecutorAdapter {
     }
 
     @Override
-    public void executeRequest(Channel channel, ByteBuf byteBuf) throws Exception {
+    public void executeRequest(Channel channel, ByteBuf byteBuf) {
         byte signal = byteBuf.readByte();
-        if (signal == FileOperation.MOVE.signal) {
-            Files.move(this.getFilePath(byteBuf, channel), this.getFilePath(byteBuf, channel));
-        } else if (signal == FileOperation.DELETE.signal) {
-            FileUtil.recurseDelete(this.getFilePath(byteBuf, channel));
+        try {
+            if (signal == FileOperation.MOVE.signal) {
+                Files.move(this.getFilePath(byteBuf, channel), this.getFilePath(byteBuf, channel));
+            } else if (signal == FileOperation.DELETE.signal) {
+                FileUtil.recurseDelete(this.getFilePath(byteBuf, channel));
+            }
+            this.sendFinish(channel);
+        } catch (Exception e) {
+            this.sendError(channel);
         }
-        this.sendFinish(channel);
     }
 
     @Override

@@ -8,7 +8,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.network.impl.Callback;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
-import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
+import org.xokyopo.clientservercommon.utils.ByteBuffRefCounter;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -45,8 +45,8 @@ public class ByteBufHandler extends ChannelInboundHandlerAdapter {
                 byteBufExecutor.executeMessage(ctx.channel(), input);
             }
         } finally {
-//            ByteBuffCounter.decrement();
             ReferenceCountUtil.release(input);
+            ByteBuffRefCounter.add("ByteBufHandler channelRead input", input);
         }
     }
 

@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import org.xokyopo.clientservercommon.network.netty.NettyServerConnection;
 import org.xokyopo.clientservercommon.protocol.MyProtocolHandlerFactory;
 import org.xokyopo.clientservercommon.protocol.executors.*;
+import org.xokyopo.clientservercommon.utils.ByteBuffRefCounter;
 import org.xokyopo.clientservercommon.utils.FileUtil;
 import org.xokyopo.server.dao.DataBaseManager;
 
@@ -113,6 +114,9 @@ public class MyProtoServer {
     public void ifDisconnect(Channel channel) {
         System.out.println("Отключился пользователь:\t" + this.userDirs.get(channel));
         this.userDirs.remove(channel);
+        if (this.userDirs.size() == 0) {
+            ByteBuffRefCounter.printAllStatus();
+        }
     }
 
     public static void main(String[] args) {

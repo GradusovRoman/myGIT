@@ -3,7 +3,6 @@ package org.xokyopo.clientservercommon.protocol.executors.template;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import org.xokyopo.clientservercommon.protocol.executors.impl.IByteBufExecutor;
-import org.xokyopo.clientservercommon.utils.ByteBuffCounter;
 
 public abstract class PExecutorAdapter implements IByteBufExecutor {
     @Override
@@ -29,7 +28,8 @@ public abstract class PExecutorAdapter implements IByteBufExecutor {
             try {
                 this.executeRequest(channel, byteBuf);
             } catch (Exception e) {
-                this.sendError(channel);
+                System.out.println(this.getClass().getCanonicalName() + "executeMessage exception");
+                e.printStackTrace();
             }
         } else if (signal == MessageType.RESPONSE.signal) {
             this.executeResponse(channel, byteBuf);
@@ -40,7 +40,7 @@ public abstract class PExecutorAdapter implements IByteBufExecutor {
         }
     }
 
-    public void executeRequest(Channel channel, ByteBuf byteBuf) throws Exception {};
+    public void executeRequest(Channel channel, ByteBuf byteBuf) {};
 
     public void executeFinish(Channel channel, ByteBuf byteBuf) {};
 

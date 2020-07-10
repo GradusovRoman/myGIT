@@ -2,6 +2,7 @@ package org.xokyopo.clientservercommon.protocol.executors;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
+import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.network.impl.Callback;
 import org.xokyopo.clientservercommon.protocol.MyByteBufUtil;
 import org.xokyopo.clientservercommon.protocol.executors.entitys.PFileInfo;
@@ -144,12 +145,17 @@ public class PFilePartClientExecutor extends PFilePartServerExecutor {
     //Переопределено, для того что бы убрать список файлы из того что отправляется на сервер.
     protected void sendDir(Path fileFrom, Channel channel) throws IOException {
         ByteBuf outBuf = channel.alloc().buffer(3 + PFileInfo.countLengthInByte(fileFrom.toString()));
-        outBuf.writeByte(this.getSignalByte());
-        outBuf.writeByte(MessageType.RESPONSE.signal);
-        outBuf.writeByte(Type.DIR.signal);
+        ByteBuf fileInfoBuffer = PFileInfo.getByte(fileFrom.toFile(), this.getUploadOutcomePath(fileFrom, channel));
+        try {
+            outBuf.writeByte(this.getSignalByte());
+            outBuf.writeByte(MessageType.RESPONSE.signal);
+            outBuf.writeByte(Type.DIR.signal);
 
-        outBuf.writeBytes(PFileInfo.getByte(fileFrom.toFile(), this.getUploadOutcomePath(fileFrom, channel)));
-        channel.writeAndFlush(outBuf);
+            outBuf.writeBytes(fileInfoBuffer);
+            channel.writeAndFlush(outBuf);
+        } finally {
+            ReferenceCountUtil.release(fileInfoBuffer);
+        }
     }
 
     public void sendFile(String fileName, String sourceDir, String destDir, Channel channel) {

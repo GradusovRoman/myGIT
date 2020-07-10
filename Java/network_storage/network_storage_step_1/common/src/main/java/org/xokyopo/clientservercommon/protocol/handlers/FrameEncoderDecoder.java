@@ -6,7 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.netty.util.ReferenceCountUtil;
 import org.xokyopo.clientservercommon.protocol.TypeLengthUtilInByte;
-import org.xokyopo.clientservercommon.utils.ByteBuffRefCounter;
 
 //TODO улучшить логику!!!!.
 public class FrameEncoderDecoder extends ChannelDuplexHandler {
@@ -18,16 +17,12 @@ public class FrameEncoderDecoder extends ChannelDuplexHandler {
         try {
             ByteBuf resultBuff = ctx.alloc().buffer(TypeLengthUtilInByte.INT_LENGTH + outBuff.readableBytes());
 
-//        System.out.println("отправляю пакет в :" + (outBuff.readableBytes())  + " байт");
-
             resultBuff.writeInt(outBuff.readableBytes());
             resultBuff.writeBytes(outBuff);
             ctx.writeAndFlush(resultBuff);
 
-            ByteBuffRefCounter.add("FrameEncoderDecoder write resultBuff", resultBuff);
         } finally {
             ReferenceCountUtil.release(outBuff);
-            ByteBuffRefCounter.add("FrameEncoderDecoder write outBuff", outBuff);
         }
     }
 
@@ -43,16 +38,14 @@ public class FrameEncoderDecoder extends ChannelDuplexHandler {
                 this.byteBuf.writeBytes(input);
 
                 if (this.byteBuf.readableBytes() == this.byteBuf.capacity()) {
-//                System.out.println("получаю пакет в " + this.byteBuf.readableBytes() + " байт");
                     ctx.fireChannelRead(this.byteBuf);
                     this.byteBuf = null;
                 }
             }
         } finally {
             ReferenceCountUtil.release(input);
-            ByteBuffRefCounter.add("FrameEncoderDecoder channelRead input", input);
         }
-        //TODO слепленных два куска разных посылок возможно ли.
+        //TODO слепленных два куска разных посылок возможно ли?
     }
 
     @Override

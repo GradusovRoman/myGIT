@@ -16,30 +16,30 @@ import static java.nio.file.StandardOpenOption.WRITE;
 
 public class MyByteBufUtil {
 
-    //TODO тут ошбика почему ?
-
-    /**
-     * июн 14, 2020 9:22:35 PM io.netty.util.ResourceLeakDetector reportTracedLeak
-     * SEVERE: LEAK: ByteBuf.release() was not called before it's garbage-collected. See https://netty.io/wiki/reference-counted-objects.html for more information.
-     * Recent access records:
-     */
-//    public static void addString(String text, ByteBuf byteBuf) {
-//        ByteBuf buffer = byteBuf.alloc().buffer(getTextLength(text));
-//        buffer.writeBytes(text.getBytes(StandardCharsets.UTF_8));
-//
-//        byteBuf.writeInt(buffer.readableBytes());
-//        byteBuf.writeBytes(buffer.readBytes(buffer.readableBytes()));
-//
-//        buffer.release();
-//    }
-
     public static void addString(String text, ByteBuf byteBuf) {
-        byteBuf.writeInt(text.getBytes(StandardCharsets.UTF_8).length);
-        byteBuf.writeBytes(text.getBytes(StandardCharsets.UTF_8));
+        ByteBuf buffer = byteBuf.alloc().buffer(getTextLength(text));
+        ByteBuf nettyFixBuffer = null;
+        try {
+            buffer.writeBytes(text.getBytes(StandardCharsets.UTF_8));
+            byteBuf.writeInt(buffer.readableBytes());
+            nettyFixBuffer = buffer.readBytes(buffer.readableBytes());
+            byteBuf.writeBytes(nettyFixBuffer);
+        } finally {
+            ReferenceCountUtil.release(buffer);
+            if (nettyFixBuffer != null) ReferenceCountUtil.release(nettyFixBuffer);
+        }
+    }
+
+
+    public static String getString_withError(ByteBuf byteBuf) {
+        return byteBuf.readBytes(byteBuf.readInt()).toString(StandardCharsets.UTF_8);
     }
 
     public static String getString(ByteBuf byteBuf) {
-        return byteBuf.readBytes(byteBuf.readInt()).toString(StandardCharsets.UTF_8);
+        ByteBuf nettyFixBuffer = byteBuf.readBytes(byteBuf.readInt());
+        String result  = nettyFixBuffer.toString(StandardCharsets.UTF_8);
+        nettyFixBuffer.release();
+        return result;
     }
     
     public static int getTextLength(String... msg) {

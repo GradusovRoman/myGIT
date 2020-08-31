@@ -21,7 +21,7 @@ public abstract class Repository<T extends Entity> {
         List<T> result = new ArrayList<>();
         try (Statement statement = this.dataSource.getConnection().createStatement()) {
             ResultSet rs = statement.executeQuery(sqlQuery);
-            if (rs.next()) {
+            while (rs.next()) {
                 result.add(convertResultSetToEntity(rs));
             }
         } catch (SQLException e) {
@@ -93,8 +93,7 @@ public abstract class Repository<T extends Entity> {
                 fields.entrySet().stream()
                         .map(field->String.format("%s=?", field.getKey()))
                         .reduce((s1, s2) -> String.format("%s, %s", s1, s2))
-                        .orElse(""),
-                entity.getId()
+                        .orElse("")
         );
 
         try (PreparedStatement statement = this.dataSource.getConnection().prepareStatement(sqlQuery)) {
@@ -102,7 +101,7 @@ public abstract class Repository<T extends Entity> {
             for (Map.Entry<String, Object> field: fields.entrySet()) {
                 statement.setObject(paramCount[0]++, field.getValue());
             }
-            statement.executeQuery();
+            statement.execute();
         } catch (SQLException e) {
             System.err.println("<<create>>");
             System.err.println(e.getMessage());

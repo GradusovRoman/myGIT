@@ -1,6 +1,8 @@
 package ru.geekbrains.thirdquarter.springintro.mvc.app.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import ru.geekbrains.thirdquarter.springintro.mvc.app.domain.entities.Product;
 
 import javax.sql.DataSource;
@@ -10,8 +12,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-@org.springframework.stereotype.Repository
-public class ProductRepository extends Repository<Product>{
+@Repository
+public class ProductRepository extends EntityRepository<Product>{
 
     @Autowired
     public ProductRepository(DataSource dataSource) {

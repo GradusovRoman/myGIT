@@ -6,11 +6,11 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
-public abstract class Repository<T extends Entity> {
+public abstract class EntityRepository<T extends Entity> {
     protected final DataSource dataSource;
 
     @Autowired
-    public Repository(DataSource dataSource) {
+    public EntityRepository(DataSource dataSource) {
         this.dataSource = dataSource;
         this.creatIfNotExist(dataSource);
 

@@ -2,17 +2,17 @@ package ru.geekbrains.thirdquarter.springintro.mvc.app.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.geekbrains.thirdquarter.springintro.mvc.app.dao.Repository;
+import ru.geekbrains.thirdquarter.springintro.mvc.app.dao.EntityRepository;
 import ru.geekbrains.thirdquarter.springintro.mvc.app.domain.entities.Product;
 
 import java.util.List;
 
 @Component
 public class ProductService {
-    private Repository<Product> repository;
+    private EntityRepository<Product> repository;
 
     @Autowired
-    public ProductService(Repository<Product> repository) {
+    public ProductService(EntityRepository<Product> repository) {
         this.repository = repository;
     }
 

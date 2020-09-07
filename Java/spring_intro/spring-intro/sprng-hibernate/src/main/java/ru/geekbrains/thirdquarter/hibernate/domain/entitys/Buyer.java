@@ -4,18 +4,21 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "buyers")
 public class Buyer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Product> products;
 
     public long getId() {
@@ -47,6 +50,6 @@ public class Buyer {
 
     @Override
     public String toString() {
-        return String.format("{id = %s; name = %s; productsCount = %s}", id, name, "products.size()");
+        return String.format("{id = %s; name = %s; productsCount = %s}", id, name, products.size());
     }
 }

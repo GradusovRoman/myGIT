@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.geekbrains.thirdquarter.springintro.mvc.app.domain.ProductService;
 import ru.geekbrains.thirdquarter.springintro.mvc.app.domain.entities.Product;
 
@@ -18,9 +19,17 @@ public class ProductController {
         this.service = service;
     }
 
-    @GetMapping("/")
-    public String showAllProducts(Model model) {
+    @GetMapping
+    public String showAllProducts(
+            Model model,
+            @RequestParam(value = "min", required = false) Integer min,
+            @RequestParam(value = "max", required = false) Integer max) {
         model.addAttribute("products", this.service.getAll());
+        if (min == null && max == null) {
+            model.addAttribute("products", this.service.getAll());
+        } else {
+            model.addAttribute("products", this.service.getAllByPriceFilter(min, max));
+        }
         return "products";
     }
 
@@ -40,11 +49,8 @@ public class ProductController {
 
     @PostMapping("/save")
     public String updateProduct(Product product) {
-        if (product.getId() > 0) {
-            this.service.update(product);
-        } else {
-            this.service.create(product);
-        }
+        //TODO проверка введенных данных
+        this.service.save(product);
         return "redirect:/";
     }
 }

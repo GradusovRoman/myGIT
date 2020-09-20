@@ -2,52 +2,71 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
         <title>Products catalog</title>
     </head>
     <body>
-        <a type="button" th:href="@{/show/0}">add</a>
-        <p>фильтр</p>
+        <div class="container">
+            <!-- Content here -->
 
-        <form>
-            <table>
-                <thead>
+            <form>
+                <table class="table">
+                    <thead>
                     <tr>
-                        <th>min Cost</th>
-                        <th>max Cost</th>
+                        <th scope="col">min Cost</th>
+                        <th scope="col">max Cost</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th>
+                        <input class="form-control" type="text" placeholder="введите минимальную цену" th:name="min">
+                    </th>
+                    <th>
+                        <input class="form-control" type="text" placeholder="введите максимальную цену" th:name="max">
+                    </th>
+                    <th>
+                        <button type="submit" class="btn btn-info">Применить</button>
+                    </th>
+                    </tbody>
+                </table>
+            </form>
+
+            <div class="row justify-content-center" style="margin: 10px">
+                <a type="button" class="btn btn-success" th:href="@{/show/0}">add</a>
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">title</th>
+                        <th scope="col">cost</th>
+                        <th scope="col">action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <th>
-                        <input type="text" placeholder="введите минимальную цену" th:name="min">
-                    </th>
-                    <th>
-                        <input type="text" placeholder="введите максимальную цену" th:name="max">
-                    </th>
+                    <tr th:each="product : ${products}">
+                        <th scope="row" th:text="${product.id}">product id</th>
+                        <td th:text="${product.title}">product title</td>
+                        <td th:text="${product.cost}">product cost</td>
+                        <td>
+                            <a type="button" class="btn btn-warning" th:href="@{/show/{id}(id = ${product.id})}">edit</a>
+                            <a type="button" class="btn btn-danger" th:href="@{/del/{id}(id = ${product.id})}">del</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <button type="submit">Применить</button>
-        </form>
-        <p>товар</p>
-        <table>
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>title</th>
-                <th>cost</th>
-                <th>action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="product : ${products}">
-                <th th:text="${product.id}">product id</th>
-                <th th:text="${product.title}">product title</th>
-                <th th:text="${product.cost}">product cost</th>
-                <th>
-                    <a type="button" th:href="@{/show/{id}(id = ${product.id})}">edit</a>
-                    <a type="button" th:href="@{/del/{id}(id = ${product.id})}">del</a>
-                </th>
-            </tr>
-            </tbody>
-        </table>
+        </div>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
     </body>
 </html>

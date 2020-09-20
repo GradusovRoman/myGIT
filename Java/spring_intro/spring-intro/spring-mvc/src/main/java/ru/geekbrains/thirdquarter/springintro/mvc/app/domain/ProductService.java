@@ -27,7 +27,7 @@ public class ProductService {
     }
 
     public Product getById(long id) {
-        return  this.repository.getOne(id);
+        return this.repository.findById(id).get();
     }
 
     public void delById(long id) {

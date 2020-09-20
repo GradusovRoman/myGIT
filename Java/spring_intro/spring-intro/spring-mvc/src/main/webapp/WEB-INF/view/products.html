@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <title>Products catalog</title>
     </head>
     <body>
         <a type="button" th:href="@{/show/0}">add</a>
+        <p>фильтр</p>
+
+        <form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>min Cost</th>
+                        <th>max Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th>
+                        <input type="text" placeholder="введите минимальную цену" th:name="min">
+                    </th>
+                    <th>
+                        <input type="text" placeholder="введите максимальную цену" th:name="max">
+                    </th>
+                </tbody>
+            </table>
+            <button type="submit">Применить</button>
+        </form>
+        <p>товар</p>
         <table>
             <thead>
             <tr>

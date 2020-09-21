@@ -15,7 +15,7 @@ import java.util.Properties;
 @PropertySource("classpath:AppProperties.properties")
 public class PropertiesAppliedConfig {
 
-    private Environment environment;
+    private final Environment environment;
 
     @Autowired
     public PropertiesAppliedConfig(Environment environment) {
@@ -59,6 +59,6 @@ public class PropertiesAppliedConfig {
         //Автоматически создает необходимые для работы сущности
         jpaProperties.put("hibernate.hbm2ddl.auto", this.environment.getProperty("hibernate.hbm2ddl.auto"));
 
-        return  jpaProperties;
+        return jpaProperties;
     }
 }

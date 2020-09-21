@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
-    private ProductRepository repository;
+    private final ProductRepository repository;
 
     @Autowired
     public ProductService(ProductRepository repository) {

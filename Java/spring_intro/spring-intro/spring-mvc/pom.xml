@@ -65,7 +65,7 @@
                 <configuration>
                     <container>
                         <containerId>${server.container}</containerId>
-<!--                        при отключении параметра ниже получаем ошибку с русскими буквами.-->
+<!--                        при отключении параметра ниже получаем ошибку с русскими буквами. но при этом ведет логирование-->
                         <type>embedded</type>
                     </container>
                         <configuration>

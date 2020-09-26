@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+
+    <title>Product</title>
+</head>
+<body>
+<div class="container">
+    <!-- Content here -->
+    <div class="row justify-content-center">
+        <a class="btn btn-primary" style="margin-top: 50px" th:href="@{/}" type="button">Cancel</a>
+    </div>
+
+    <form action="#" method="post" th:action="@{/save}" th:object="${product}">
+        <input id="id" th:field="*{id}" type="hidden"/>
+
+        <div class="form-group">
+            <label for="title">title</label>
+            <input class="form-control" id="title" placeholder="input product name" th:field="*{title}" type="text"/>
+        </div>
+        <div class="form-group">
+            <label for="cost">cost</label>
+            <input class="form-control" id="cost" placeholder="input product cost" th:field="*{cost}" type="text"/>
+        </div>
+        <div class="row justify-content-end" style="margin: 0 5px">
+            <button class="btn btn-success" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+

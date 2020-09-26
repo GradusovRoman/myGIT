@@ -13,7 +13,6 @@
     <properties>
         <server.container>tomcat9x</server.container>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <encoding>UTF-8</encoding>
     </properties>
 
 
@@ -66,13 +65,16 @@
                 <configuration>
                     <container>
                         <containerId>${server.container}</containerId>
+<!--                        при отключении параметра ниже получаем ошибку с русскими буквами. но при этом ведет логирование-->
+                        <type>embedded</type>
                     </container>
-                    <configuration>
-                        <properties>
-                            <cargo.servlet.port>8080</cargo.servlet.port>
-<!--                            <cargo.protocol>https</cargo.protocol>-->
-                        </properties>
-                    </configuration>
+                        <configuration>
+                            <properties>
+                                <cargo.servlet.port>8080</cargo.servlet.port>
+                                <cargo.tomcat.uriencoding>UTF-8</cargo.tomcat.uriencoding>
+    <!--                            <cargo.protocol>https</cargo.protocol>-->
+                            </properties>
+                        </configuration>
                 </configuration>
             </plugin>
         </plugins>

@@ -36,6 +36,7 @@ public class ProductController {
             @RequestParam(value = "sort", required = false) String sort
     ) {
         model.addAttribute("paramManager", new ParamManager());
+        model.addAttribute("sortBySort", (sortBY == null) ? "not" : sortBY + sort);
 
         Pageable pageable = (sortBY == null || sortBY.isEmpty()) ?
                 PageRequest.of(page.orElse(1) - 1, PAGE_PRODUCT_LIMIT) :

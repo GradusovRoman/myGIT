@@ -54,23 +54,29 @@
         <tr>
             <th scope="col" th:with="fieldName = 'id'">
                 <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}"
+                       th:if="${sortBySort} == ${fieldName +'up'}">▼</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}"
+                       th:if="${sortBySort} != ${fieldName +'up'}">▲</a>
                     <span style="padding-left:5px" th:text="${fieldName}">id</span>
                 </div>
             </th>
             <th scope="col" th:with="fieldName = 'title'">
                 <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}"
+                       th:if="${sortBySort} == ${fieldName +'up'}">▼</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}"
+                       th:if="${sortBySort} != ${fieldName +'up'}">▲</a>
                     <span style="..." th:text="${fieldName}">title</span>
                 </div>
             </th>
 
             <th scope="col" th:with="fieldName = 'cost'">
                 <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
-                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}"
+                       th:if="${sortBySort} == ${fieldName +'up'}">▼</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}"
+                       th:if="${sortBySort} != ${fieldName +'up'}">▲</a>
                     <span style="..." th:text="${fieldName}">title</span>
                 </div>
             </th>

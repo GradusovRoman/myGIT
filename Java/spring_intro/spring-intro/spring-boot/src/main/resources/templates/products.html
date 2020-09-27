@@ -11,10 +11,13 @@
     <title>Products catalog</title>
 </head>
 <body>
-<div class="container">
+<div class="container" th:start="${paramManager.setAll(param)}" th:with="rootUrl=@{/}">
     <!-- Content here -->
+    <form th:with="curentParamBuilder=${paramManager.getBuilder().remove('page')}">
 
-    <form>
+        <input th:each="hideParam : ${curentParamBuilder.remove('min', 'max', 'page').getValuesList()}"
+               th:name="${hideParam.getKey()}" th:value="${hideParam.getValue()}" type="hidden">
+
         <table class="table">
             <thead>
             <tr>
@@ -25,13 +28,19 @@
             </thead>
             <tbody>
             <th>
-                <input class="form-control" placeholder="введите минимальную цену" th:name="min" type="text">
+                <input class="form-control" placeholder="введите минимальную цену" th:name="min"
+                       th:value="${param.get('min')}" type="text">
             </th>
             <th>
-                <input class="form-control" placeholder="введите максимальную цену" th:name="max" type="text">
+                <input class="form-control" placeholder="введите максимальную цену" th:name="max"
+                       th:value="${param.get('max')}" type="text">
             </th>
             <th>
                 <button class="btn btn-info" type="submit">Применить</button>
+            </th>
+            <th>
+                <a class="btn btn-secondary" href="#"
+                   th:href="${rootUrl + curentParamBuilder.remove('min','max').compile()}">Сбросить</a>
             </th>
             </tbody>
         </table>
@@ -43,21 +52,29 @@
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">
-                <a href="#" th:href="@{/(sortBy = 'id', sort = 'down')}">V</a>
-                <a href="#" th:href="@{/(sortBy = 'id', sort = 'up')}">A</a>
-                <span style="padding-left:5px">id</span>
+            <th scope="col" th:with="fieldName = 'id'">
+                <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <span style="padding-left:5px" th:text="${fieldName}">id</span>
+                </div>
             </th>
-            <th scope="col">
-                <a href="#" th:href="@{/(sortBy = 'title', sort = 'down')}">V</a>
-                <a href="#" th:href="@{/(sortBy = 'title', sort = 'up')}">A</a>
-                <span style="padding-left:5px">title</span>
+            <th scope="col" th:with="fieldName = 'title'">
+                <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <span style="..." th:text="${fieldName}">title</span>
+                </div>
             </th>
-            <th scope="col">
-                <a href="#" th:href="@{/(sortBy = 'cost', sort = 'down')}">V</a>
-                <a href="#" th:href="@{/(sortBy = 'cost', sort = 'up')}">A</a>
-                <span style="padding-left:5px">cost</span>
+
+            <th scope="col" th:with="fieldName = 'cost'">
+                <div th:with="currentParamBuilder=${paramManager.getBuilder().add('sortBy', fieldName)}">
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'down').compile()}">V</a>
+                    <a href="#" th:href="${rootUrl + currentParamBuilder.add('sort', 'up').compile()}">A</a>
+                    <span style="..." th:text="${fieldName}">title</span>
+                </div>
             </th>
+
             <th scope="col">action</th>
         </tr>
         </thead>
@@ -74,20 +91,24 @@
         </tbody>
     </table>
 
-    <nav aria-label="Product's catalog">
+    <nav aria-label="Product's catalog" th:if="${page.totalPages} > 1"
+         th:with="paramBuilder=${paramManager.getBuilder()}">
         <ul class="pagination justify-content-center">
 
             <li class="page-item " th:classappend="${page.isFirst()} ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{/(page = ${page.getNumber()})}">Previous</a>
+                <a class="page-link" href="#"
+                   th:href="${rootUrl + paramBuilder.add('page', page.getNumber()).compile()}">Previous</a>
             </li>
 
             <li class="page-item" th:classappend="${num == page.getNumber() + 1} ? 'active'"
                 th:each="num : ${#numbers.sequence(1, page.totalPages)}">
-                <a class="page-link" href="#" th:href="@{/(page = ${num})}" th:text="${num}">1</a></li>
+                <a class="page-link" href="#" th:href="${rootUrl + paramBuilder.add('page', num).compile()}"
+                   th:text="${num}">1</a></li>
             </li>
 
             <li class="page-item" th:classappend="${page.isLast()} ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{/(page = ${page.getNumber() + 2})}">Next</a>
+                <a class="page-link" href="#"
+                   th:href="${rootUrl + paramBuilder.add('page', page.getNumber() + 2).compile()}">Next</a>
             </li>
         </ul>
     </nav>

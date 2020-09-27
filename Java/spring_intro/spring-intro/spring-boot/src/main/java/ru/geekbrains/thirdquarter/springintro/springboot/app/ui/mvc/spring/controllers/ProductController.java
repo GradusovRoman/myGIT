@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductService;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
+import ru.geekbrains.thirdquarter.springintro.springboot.app.ui.mvc.spring.controllers.utils.ParamManager;
 
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class ProductController {
             @RequestParam(value = "sortBy", required = false) String sortBY,
             @RequestParam(value = "sort", required = false) String sort
     ) {
+        model.addAttribute("paramManager", new ParamManager());
 
         Pageable pageable = (sortBY == null || sortBY.isEmpty()) ?
                 PageRequest.of(page.orElse(1) - 1, PAGE_PRODUCT_LIMIT) :

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
+public interface ProductsRepository extends JpaRepository<Product, Long>, PagingAndSortingRepository<Product, Long> {
     Page<Product> findAllByCostBetween(int min, int max, Pageable pageable);
 
     Page<Product> findAllByCostAfter(int min, Pageable pageable);

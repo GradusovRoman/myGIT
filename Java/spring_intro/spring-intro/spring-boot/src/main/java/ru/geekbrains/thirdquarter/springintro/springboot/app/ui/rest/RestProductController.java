@@ -3,7 +3,7 @@ package ru.geekbrains.thirdquarter.springintro.springboot.app.ui.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductService;
+import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductsService;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 public class RestProductController {
-    private final ProductService service;
+    private final ProductsService service;
 
     @Autowired
-    public RestProductController(ProductService service) {
+    public RestProductController(ProductsService service) {
         this.service = service;
     }
 

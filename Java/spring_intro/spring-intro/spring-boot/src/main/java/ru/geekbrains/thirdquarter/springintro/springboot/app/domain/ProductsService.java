@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.thirdquarter.springintro.springboot.app.dao.ProductRepository;
+import ru.geekbrains.thirdquarter.springintro.springboot.app.dao.ProductsRepository;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService {
-    private final ProductRepository repository;
+public class ProductsService {
+    private final ProductsRepository repository;
 
     @Autowired
-    public ProductService(ProductRepository repository) {
+    public ProductsService(ProductsRepository repository) {
         this.repository = repository;
     }
 

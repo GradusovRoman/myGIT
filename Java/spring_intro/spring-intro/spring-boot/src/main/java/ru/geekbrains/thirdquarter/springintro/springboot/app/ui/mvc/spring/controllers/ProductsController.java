@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductService;
+import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductsService;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.ui.mvc.spring.controllers.utils.ParamManager;
 
 import java.util.Optional;
 
 @Controller
-public class ProductController {
+public class ProductsController {
     private static final int PAGE_PRODUCT_LIMIT = 5;
-    private final ProductService service;
+    private final ProductsService service;
 
     @Autowired
-    public ProductController(ProductService service) {
+    public ProductsController(ProductsService service) {
         this.service = service;
     }
 
@@ -62,7 +62,7 @@ public class ProductController {
     @GetMapping("/show/{id}")
     public String showProduct(@PathVariable long id, Model model) {
         model.addAttribute("product", (id > 0) ? this.service.getById(id) : new Product());
-        return "product";
+        return "product-edit-form";
     }
 
     @PostMapping("/save")

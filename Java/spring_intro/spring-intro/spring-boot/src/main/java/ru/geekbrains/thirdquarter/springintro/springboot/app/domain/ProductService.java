@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.dao.ProductRepository;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class ProductService {
     @Autowired
     public ProductService(ProductRepository repository) {
         this.repository = repository;
+    }
+
+    public List<Product> getAll() {
+        return this.repository.findAll();
     }
 
     public Page<Product> getAll(Pageable pageable) {

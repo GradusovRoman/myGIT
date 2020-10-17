@@ -10,7 +10,7 @@ public class Role {
     private long id;
     private String name;
     private String description;
-    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {

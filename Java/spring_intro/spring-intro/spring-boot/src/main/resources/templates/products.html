@@ -11,7 +11,23 @@
     <title>Products catalog</title>
 </head>
 <body>
-<div class="container" th:start="${paramManager.setAll(param)}" th:with="rootUrl=@{/}">
+<div class="container" th:start="${paramManager.setAll(param)}" th:with="rootUrl=@{/products}">
+    <!-- Nav bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler" data-target="#navbarNavAltMarkup" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="#" th:href="@{/}">Home</a>
+                <a class="nav-link" href="#" th:href="@{/products}">Products</a>
+                <a class="nav-link" href="#" th:href="@{/users}">Users</a>
+                <a class="nav-link" href="#" th:href="@{/roles}">Roles</a>
+                <a aria-disabled="true" class="nav-link disabled" href="#" tabindex="-1">Login</a>
+            </div>
+        </div>
+    </nav>
     <!-- Content here -->
     <form th:with="curentParamBuilder=${paramManager.getBuilder().remove('page')}">
 
@@ -47,7 +63,7 @@
     </form>
 
     <div class="row justify-content-center" style="margin: 10px">
-        <a class="btn btn-success" th:href="@{/show/0}" type="button">add</a>
+        <a class="btn btn-success" th:href="@{/products/show/0}" type="button">add</a>
     </div>
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -90,8 +106,8 @@
             <td th:text="${product.title}">product title</td>
             <td th:text="${product.cost}">product cost</td>
             <td>
-                <a class="btn btn-warning" th:href="@{/show/{id}(id = ${product.id})}" type="button">edit</a>
-                <a class="btn btn-danger" th:href="@{/del/{id}(id = ${product.id})}" type="button">del</a>
+                <a class="btn btn-warning" th:href="@{/products/show/{id}(id = ${product.id})}" type="button">edit</a>
+                <a class="btn btn-danger" th:href="@{/products/del/{id}(id = ${product.id})}" type="button">del</a>
             </td>
         </tr>
         </tbody>

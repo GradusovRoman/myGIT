@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+
+    <title>Roles</title>
+</head>
+<body>
+<div class="container" th:with="rootDir='/roles'">
+    <!-- Nav bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler" data-target="#navbarNavAltMarkup" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="#" th:href="@{/}">Home</a>
+                <a class="nav-link" href="#" th:href="@{/products}">Products</a>
+                <a class="nav-link" href="#" th:href="@{/users}">Users</a>
+                <a class="nav-link" href="#" th:href="@{/roles}">Roles</a>
+                <a aria-disabled="true" class="nav-link disabled" href="#" tabindex="-1">Login</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Content here -->
+
+    <div class="row justify-content-center" style="margin: 10px">
+        <a class="btn btn-success" th:href="@{${rootDir} + '/show/0'}" type="button">add</a>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" th:with="fieldName = 'id'">
+                <span style="padding-left:5px" th:text="${fieldName}">id</span>
+            </th>
+            <th scope="col" th:with="fieldName = 'name'">
+                <span style="padding-left:5px" th:text="${fieldName}">name</span>
+            </th>
+            <th scope="col" th:with="fieldName = 'description'">
+                <span style="padding-left:5px" th:text="${fieldName}">description</span>
+            </th>
+
+            <th scope="col" th:with="fieldName = 'number of users'">
+                <span style="padding-left:5px" th:text="${fieldName}">users</span>
+            </th>
+
+            <th scope="col">action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="role : ${page.getContent()}">
+            <th scope="row" th:text="${role.id}">id</th>
+            <td th:text="${role.name}">name</td>
+            <td th:text="${role.description}">description</td>
+            <td th:text="${role.users.size()}">number of users</td>
+            <td>
+                <div th:if="${!(role.name.equals('ADMIN') || role.name.equals('USER'))}">
+                    <a class="btn btn-warning" th:href="@{${rootDir} + '/show/{id}'(id = ${role.id})}" type="button">edit</a>
+                    <a class="btn btn-danger" th:href="@{${rootDir} + '/del/{id}'(id = ${role.id})}"
+                       type="button">del</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Product's catalog" th:if="${page.totalPages} > 1">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item " th:classappend="${page.isFirst()} ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = page.getNumber())}">Previous</a>
+            </li>
+
+            <li class="page-item" th:classappend="${num == page.getNumber() + 1} ? 'active'"
+                th:each="num : ${#numbers.sequence(1, page.totalPages)}">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = num)}" th:text="${num}">1</a></li>
+            </li>
+
+            <li class="page-item" th:classappend="${page.isLast()} ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = page.getNumber() + 2)}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

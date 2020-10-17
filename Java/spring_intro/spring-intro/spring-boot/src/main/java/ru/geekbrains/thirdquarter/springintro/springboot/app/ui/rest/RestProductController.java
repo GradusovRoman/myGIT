@@ -27,13 +27,13 @@ public class RestProductController {
     @DeleteMapping("/del/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable long id) {
-        this.service.delById(id);
+        this.service.delete(id);
     }
 
     @GetMapping("/show/{id}")
     public Product showProduct(@PathVariable long id) {
         //TODO ошибка если нет.
-        return this.service.getById(id);
+        return this.service.getOrNew(id);
     }
 
     @PostMapping("/save")

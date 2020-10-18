@@ -26,7 +26,7 @@ public class UsersController extends AController<UsersService, User, Long> {
     }
 
     @Override
-    @GetMapping("show/{id}")
+    @GetMapping("/show/{id}")
     public String showById(Model model, @PathVariable(value = "id") Long id) {
         model.addAttribute("allRole", rolesService.getAll());
         model.addAttribute(elementName, service.getOrNew(id));

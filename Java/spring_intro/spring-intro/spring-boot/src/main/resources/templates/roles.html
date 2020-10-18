@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
 
@@ -47,7 +48,7 @@
             <td th:text="${role.description}">description</td>
             <td th:text="${role.users.size()}">number of users</td>
             <td>
-                <div th:if="${!(role.name.equals('ADMIN') || role.name.equals('USER'))}">
+                <div th:if="${!(role.name.equals('ROLE_ADMIN') || role.name.equals('ROLE_USER'))}">
                     <a class="btn btn-warning" th:href="@{${rootDir} + '/show/{id}'(id = ${role.id})}" type="button">edit</a>
                     <a class="btn btn-danger" th:href="@{${rootDir} + '/del/{id}'(id = ${role.id})}"
                        type="button">del</a>

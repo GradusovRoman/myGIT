@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
 
@@ -41,9 +42,9 @@
         </thead>
         <tbody>
         <tr th:each="user : ${page.getContent()}">
-            <th scope="row" th:text="${user.id}">product id</th>
-            <td th:text="${user.username}">product id</td>
-            <td th:text="${user.password}">product id</td>
+            <th scope="row" th:text="${user.id}">id</th>
+            <td th:text="${user.username}">user name</td>
+            <td class="text-wrap" th:text="${user.password}">user password</td>
             <td>
                 <p class="d-inline p-1 bg-primary text-white mb-0" th:each="role : ${user.roles}"
                    th:text="${role.name}">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:fragment="head">
         <meta charset="UTF-8">
@@ -27,8 +28,17 @@
                 <a class="nav-link" href="#" th:href="@{/users}">Users</a>
                 <a class="nav-link" href="#" th:href="@{/roles}">Roles</a>
             </div>
-            <div class="navbar-nav">
-                <a aria-disabled="true" class="nav-link disabled" href="#" tabindex="-1">Login</a>
+            <div class="navbar-nav" tabindex="-1">
+                <div class="row" sec:authorize="isAnonymous()">
+                    <a class="nav-link" href="#" th:href="@{/registration}">Registration</a>
+                    <a class="nav-link" href="#" th:href="@{/login}">Login</a>
+                </div>
+                <form method="post" sec:authorize="isAuthenticated()" th:action="@{/logout}">
+                    <button class="btn nav-link" type="submit">
+                        <span sec:authentication="name">userName</span>
+                        :logout
+                    </button>
+                </form>
             </div>
         </div>
     </nav>

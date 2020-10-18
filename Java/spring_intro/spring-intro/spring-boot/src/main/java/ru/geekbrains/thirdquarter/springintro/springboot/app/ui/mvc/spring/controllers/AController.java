@@ -45,8 +45,8 @@ public abstract class AController<S extends AService<? extends ARepository<E, I>
     }
 
     @PostMapping("/save")
-    public String save(E role) {
-        service.save(role);
+    public String save(E entity) {
+        service.save(entity);
         return "redirect:" + rootUrl;
     }
 }

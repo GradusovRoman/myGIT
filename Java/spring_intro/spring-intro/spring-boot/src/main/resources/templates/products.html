@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
 
@@ -50,7 +51,8 @@
     </form>
 
     <div class="row justify-content-center" style="margin: 10px">
-        <a class="btn btn-success" th:href="@{/products/show/0}" type="button">add</a>
+        <a class="btn btn-success" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"
+           th:href="@{/products/show/0}" type="button">add</a>
     </div>
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -84,7 +86,7 @@
                 </div>
             </th>
 
-            <th scope="col">action</th>
+            <th scope="col" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">action</th>
         </tr>
         </thead>
         <tbody>
@@ -92,7 +94,7 @@
             <th scope="row" th:text="${product.id}">product id</th>
             <td th:text="${product.title}">product title</td>
             <td th:text="${product.cost}">product cost</td>
-            <td>
+            <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
                 <a class="btn btn-warning" th:href="@{/products/show/{id}(id = ${product.id})}" type="button">edit</a>
                 <a class="btn btn-danger" th:href="@{/products/del/{id}(id = ${product.id})}" type="button">del</a>
             </td>

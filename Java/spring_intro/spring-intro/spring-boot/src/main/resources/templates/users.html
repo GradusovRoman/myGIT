@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+
+    <title>Users</title>
+</head>
+<body>
+<div class="container" th:with="rootDir='/users'">
+    <!-- Nav bar -->
+    <div th:replace="/fragments/basic :: navBar"></div>
+
+    <!-- Content here -->
+
+    <div class="row justify-content-center" style="margin: 10px">
+        <a class="btn btn-success" th:href="@{${rootDir} + '/show/0'}" type="button">add</a>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" th:with="fieldName = 'id'">
+                <span style="padding-left:5px" th:text="${fieldName}">id</span>
+            </th>
+            <th scope="col" th:with="fieldName = 'name'">
+                <span style="padding-left:5px" th:text="${fieldName}">id</span>
+            </th>
+            <th scope="col" th:with="fieldName = 'password'">
+                <span style="padding-left:5px" th:text="${fieldName}">id</span>
+            </th>
+            <th scope="col" th:with="fieldName = 'roles'">
+                <span style="padding-left:5px" th:text="${fieldName}">id</span>
+            </th>
+
+            <th scope="col">action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${page.getContent()}">
+            <th scope="row" th:text="${user.id}">id</th>
+            <td th:text="${user.username}">user name</td>
+            <td class="text-wrap" th:text="${user.password}">user password</td>
+            <td>
+                <p class="d-inline p-1 bg-primary text-white mb-0" th:each="role : ${user.roles}"
+                   th:text="${role.name}">
+                </p>
+            </td>
+            <th scope="row">
+                <a class="btn btn-warning" th:href="@{${rootDir} + '/show/{id}'(id = ${user.id})}"
+                   type="button">edit</a>
+                <a class="btn btn-danger" th:href="@{${rootDir} + '/del/{id}'(id = ${user.id})}" type="button">del</a>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Product's catalog" th:if="${page.totalPages} > 1">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item " th:classappend="${page.isFirst()} ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = page.getNumber())}">Previous</a>
+            </li>
+
+            <li class="page-item" th:classappend="${num == page.getNumber() + 1} ? 'active'"
+                th:each="num : ${#numbers.sequence(1, page.totalPages)}">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = num)}" th:text="${num}">1</a></li>
+            </li>
+
+            <li class="page-item" th:classappend="${page.isLast()} ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{${rootDir}(page = page.getNumber() + 2)}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<div th:replace="/fragments/basic :: bodySripts"></div>
+
+</body>
+</html>

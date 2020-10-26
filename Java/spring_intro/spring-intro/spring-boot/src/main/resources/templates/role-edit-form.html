@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+
+    <title>Roles edit form</title>
+</head>
+<body>
+<div class="container" th:with="rootDir='/roles'">
+    <!-- Nav bar -->
+    <div th:replace="/fragments/basic :: navBar"></div>
+
+    <!-- Content here -->
+    <div class="row justify-content-center">
+        <a class="btn btn-primary" style="margin-top: 50px" th:href="@{${rootDir}}" type="button">Cancel</a>
+    </div>
+
+    <form action="#" method="post" th:action="@{${rootDir} + '/save'}" th:object="${role}">
+        <input id="id" th:field="*{id}" type="hidden"/>
+
+        <div class="form-group">
+            <label for="name">name</label>
+            <input class="form-control" id="name" placeholder="enter name" th:field="*{name}" type="text"/>
+        </div>
+
+        <div class="form-group">
+            <label for="description">description</label>
+            <input class="form-control" id="description" placeholder="enter description" th:field="*{description}"
+                   type="text"/>
+        </div>
+
+        <input id="roles" th:field="*{users}" type="hidden"/>
+
+        <div class="row justify-content-end" style="margin: 0 5px">
+            <button class="btn btn-success" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="/fragments/basic :: bodySripts"></div>
+
+</body>
+</html>

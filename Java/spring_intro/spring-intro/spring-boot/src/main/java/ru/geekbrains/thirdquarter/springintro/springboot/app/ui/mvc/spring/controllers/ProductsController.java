@@ -1,37 +1,37 @@
 package ru.geekbrains.thirdquarter.springintro.springboot.app.ui.mvc.spring.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductService;
+import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.ProductsService;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.domain.entities.Product;
 import ru.geekbrains.thirdquarter.springintro.springboot.app.ui.mvc.spring.controllers.utils.ParamManager;
 
 import java.util.Optional;
 
 @Controller
-public class ProductController {
-    private static final int PAGE_PRODUCT_LIMIT = 5;
-    private final ProductService service;
+@RequestMapping("/products")
+public class ProductsController extends AController<ProductsService, Product, Long> {
 
-    @Autowired
-    public ProductController(ProductService service) {
-        this.service = service;
+    @Override
+    @GetMapping(params = {"page"})
+    public String showAll(Model model, @RequestParam(value = "page") Optional<Integer> pageNumber) {
+        model.addAttribute("paramManager", new ParamManager());
+        model.addAttribute("page", this.service.getAll(pageNumber.orElse(0), PAGE_PRODUCT_LIMIT));
+        return rootUrl;
     }
 
     @GetMapping
-    public String showAllProducts(
+    public String showAll(
             Model model,
+            @RequestParam(value = "page") Optional<Integer> page,
             @RequestParam(value = "min", required = false) Integer min,
             @RequestParam(value = "max", required = false) Integer max,
-            @RequestParam(value = "page") Optional<Integer> page,
             @RequestParam(value = "sortBy", required = false) String sortBY,
             @RequestParam(value = "sort", required = false) String sort
     ) {
@@ -49,26 +49,11 @@ public class ProductController {
             model.addAttribute("page", this.service.getAllByPriceFilter(min, max, pageable));
         }
 
-        return "products";
+        return rootUrl;
     }
 
-
-    @GetMapping("/del/{id}")
-    public String deleteProduct(@PathVariable long id, Model model) {
-        this.service.delById(id);
-        return "redirect:/";
-    }
-
-    @GetMapping("/show/{id}")
-    public String showProduct(@PathVariable long id, Model model) {
-        model.addAttribute("product", (id > 0) ? this.service.getById(id) : new Product());
+    @Override
+    protected String getElementName() {
         return "product";
-    }
-
-    @PostMapping("/save")
-    public String updateProduct(Product product) {
-        //TODO проверка введенных данных
-        this.service.save(product);
-        return "redirect:/";
     }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+
+    <title>Home</title>
+</head>
+<body>
+<div class="container">
+    <!-- Nav bar -->
+    <div th:replace="/fragments/basic :: navBar"></div>
+
+    <!-- Content here -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Welcome page</h1>
+            <p class="lead">Какой то текст приветствия</p>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/basic :: bodySripts"></div>
+</body>
+</html>

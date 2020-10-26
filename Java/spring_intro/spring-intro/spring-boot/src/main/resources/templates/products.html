@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
 
@@ -11,7 +12,10 @@
     <title>Products catalog</title>
 </head>
 <body>
-<div class="container" th:start="${paramManager.setAll(param)}" th:with="rootUrl=@{/}">
+<div class="container" th:start="${paramManager.setAll(param)}" th:with="rootUrl=@{/products}">
+    <!-- Nav bar -->
+    <div th:replace="/fragments/basic :: navBar"></div>
+
     <!-- Content here -->
     <form th:with="curentParamBuilder=${paramManager.getBuilder().remove('page')}">
 
@@ -47,7 +51,8 @@
     </form>
 
     <div class="row justify-content-center" style="margin: 10px">
-        <a class="btn btn-success" th:href="@{/show/0}" type="button">add</a>
+        <a class="btn btn-success" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"
+           th:href="@{/products/show/0}" type="button">add</a>
     </div>
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -81,7 +86,7 @@
                 </div>
             </th>
 
-            <th scope="col">action</th>
+            <th scope="col" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">action</th>
         </tr>
         </thead>
         <tbody>
@@ -89,9 +94,9 @@
             <th scope="row" th:text="${product.id}">product id</th>
             <td th:text="${product.title}">product title</td>
             <td th:text="${product.cost}">product cost</td>
-            <td>
-                <a class="btn btn-warning" th:href="@{/show/{id}(id = ${product.id})}" type="button">edit</a>
-                <a class="btn btn-danger" th:href="@{/del/{id}(id = ${product.id})}" type="button">del</a>
+            <td sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
+                <a class="btn btn-warning" th:href="@{/products/show/{id}(id = ${product.id})}" type="button">edit</a>
+                <a class="btn btn-danger" th:href="@{/products/del/{id}(id = ${product.id})}" type="button">del</a>
             </td>
         </tr>
         </tbody>
@@ -121,17 +126,6 @@
 
 </div>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script crossorigin="anonymous"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+<div th:replace="/fragments/basic :: bodySripts"></div>
 </body>
 </html>
